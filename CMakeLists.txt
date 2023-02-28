@@ -7,11 +7,24 @@ set(CMAKE_CXX_STANDARD 20)
 add_subdirectory(generator)
 add_subdirectory(engine)
 
+include(FetchContent)
+FetchContent_Declare(
+    tiny_xml
+    GIT_REPOSITORY https://github.com/leethomason/tinyxml2.git
+    GIT_TAG 9.0.0
+    )
+
+FetchContent_MakeAvailable(tiny_xml)
+
 find_package(GLUT REQUIRED)
 
-target_link_libraries(engine GLUT::GLUT)
+target_link_libraries(engine GLUT::GLUT tinyxml2::tinyxml2)
 
 find_package(OpenGL REQUIRED)
+
+include_directories(${OpenGL_INCLUDE_DIRS})
+link_directories(${OpenGL_LIBRARY_DIRS})
+add_definitions(${OpenGL_DEFINITIONS})
 
 if(NOT OPENGL_FOUND)
     message(ERROR " OPENGL not found!")
@@ -37,4 +50,18 @@ if(WIN32)
 
 	set_property(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT ${PROJECT_NAME})
 
+    else (WIN32) #Linux and Mac
+
+	set( CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} Wno-deprecated")
+	find_package(GLUT REQUIRED)
+	include_directories(${GLUT_INCLUDE_DIR})
+	link_directories(${GLUT_LIBRARY_DIRS})
+	add_definitions(${GLUT_DEFINITIONS})
+	
+	target_link_libraries(engine ${OPENGL_LIBRARIES} ${GLUT_LIBRARIES} )
+	if(NOT GLUT_FOUND)
+	   message(ERROR ": GLUT not found!")
+	endif(NOT GLUT_FOUND)
+
 endif(WIN32)
+
