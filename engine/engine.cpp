@@ -2,6 +2,7 @@
 #include "camera.h"
 #include "tinyxml2.h"
 #include <GLUT/glut.h>
+#include <OpenGL/OpenGL.h>
 #include <iostream>
 #include <memory>
 #include <string_view>
@@ -112,6 +113,7 @@ void Engine::run(int argc, char *argv[]) const {
 
   glEnable(GL_DEPTH_TEST);
   glEnable(GL_CULL_FACE);
+  glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
   glutMainLoop();
 }

@@ -1,6 +1,13 @@
 #ifndef INPUT_H
 #define INPUT_H
+#include "../figures/Triangle.h"
+#include "../figures/Plane.h"
+#include "../figures/figure.h"
+#include "utils.h"
+#include <array>
 #include <cstdint>
+#include <functional>
+#include <memory>
 #include <ostream>
 #include <stdexcept>
 #include <string>
@@ -9,6 +16,8 @@
 #include <vector>
 
 namespace input {
+
+using namespace utils;
 
 enum class Figures {
   Sphere = 3,
@@ -36,10 +45,14 @@ public:
     return dimensions;
   }
 
+  [[nodiscard]] std::unique_ptr<Figure> getFigure() const noexcept;
+
 private:
   Figures figure;
   std::vector<std::uint32_t> dimensions;
   std::string outFile;
+
+  std::vector<Triangle> triangles;
 };
 
 }; // namespace input
