@@ -5,6 +5,12 @@
 #include <string_view>
 #include <vector>
 class Model {
+
+private:
+  struct Coordinates {
+    float x, y, z;
+  };
+
 public:
   Model() = default;
   explicit Model(std::string_view filename);
@@ -14,11 +20,13 @@ public:
   Model &operator=(const Model &) = default;
   ~Model() = default;
 
-private:
-  struct Coordinates {
-    float x, y, z;
-  };
+  [[nodiscard]] const std::vector<Coordinates> &getVertices() const noexcept {
+    return this->vertices;
+  }
 
+  void draw() const noexcept;
+
+private:
   std::string filename;
   std::vector<Coordinates> vertices;
 };

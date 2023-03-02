@@ -24,6 +24,22 @@ public:
   Camera &operator=(const Camera &) = default;
   ~Camera() = default;
 
+  [[nodiscard]] inline camera_engine::Pov getProjection() const noexcept {
+    return projection;
+  }
+
+  [[nodiscard]] inline camera_engine::Coordinates getPosition() const noexcept {
+    return position;
+  }
+
+  [[nodiscard]] inline camera_engine::Coordinates getLookAt() const noexcept {
+    return lookAt;
+  }
+
+  [[nodiscard]] inline camera_engine::Coordinates getUp() const noexcept {
+    return up;
+  }
+
 private:
   Coordinates position{0, 0, 0};
   Coordinates lookAt{0, 0, 0};

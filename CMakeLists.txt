@@ -14,11 +14,18 @@ FetchContent_Declare(
     GIT_TAG 9.0.0
     )
 
-FetchContent_MakeAvailable(tiny_xml)
+FetchContent_Declare(
+    glm
+    GIT_REPOSITORY https://github.com/g-truc/glm.git
+    GIT_TAG 0.9.9.8
+    )
+
+FetchContent_MakeAvailable(tiny_xml glm)
 
 find_package(GLUT REQUIRED)
 
 target_link_libraries(engine GLUT::GLUT tinyxml2::tinyxml2)
+target_link_libraries(generator glm::glm)
 
 find_package(OpenGL REQUIRED)
 

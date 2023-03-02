@@ -14,6 +14,8 @@ public:
   Group &operator=(const Group &) = default;
   ~Group() = default;
 
+  void draw() const noexcept;
+
 private:
   std::vector<Model> models;
 };

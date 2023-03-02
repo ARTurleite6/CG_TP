@@ -1,12 +1,14 @@
 #include "engine.h"
 #include "camera.h"
 #include "tinyxml2.h"
+#include <GLUT/glut.h>
 #include <iostream>
 #include <memory>
 #include <string_view>
 
 Engine::Engine(std::string_view xml_file)
-    : doc(), window_width(800), window_height(800), camera(nullptr) {
+    : xml_file(xml_file), doc(), window_width(800), window_height(800),
+      camera(nullptr) {
 
   this->doc.LoadFile(xml_file.data());
 
@@ -41,6 +43,10 @@ Engine::Engine(std::string_view xml_file)
   this->loadCamera(camera);
 
   auto group = world->FirstChildElement("group");
+  if (group == nullptr) {
+    std::cout << "Error: group element not found" << '\n';
+    return;
+  }
   this->group = std::make_unique<Group>(group);
 }
 
@@ -88,4 +94,71 @@ void Engine::loadCamera(tinyxml2::XMLElement *camera) {
 
   this->camera = std::make_unique<camera_engine::Camera>(
       position, lookAtCoordinates, upCoordinates, pov);
+}
+
+void Engine::run(int argc, char *argv[]) const {
+  engine = (Engine *)this;
+  std::cout << "Engine::run()" << '\n';
+  glutInit(&argc, argv);
+  glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
+  glutInitWindowPosition(100, 100);
+  glutInitWindowSize(static_cast<int>(this->window_width),
+                     static_cast<int>(this->window_height));
+  glutCreateWindow("CGEngine");
+
+  glutDisplayFunc(display);
+
+  glutReshapeFunc(reshape);
+
+  glEnable(GL_DEPTH_TEST);
+  glEnable(GL_CULL_FACE);
+
+  glutMainLoop();
+}
+
+void reshape(int width, int height) {
+  if (height == 0)
+    height = 1;
+  float ratio = (1.0f * static_cast<float>(width)) / static_cast<float>(height);
+  glMatrixMode(GL_PROJECTION);
+  glLoadIdentity();
+  glViewport(0, 0, width, height);
+  auto pov_camera = engine->getCamera().getProjection();
+  gluPerspective(pov_camera.fov, ratio, pov_camera.near, pov_camera.far);
+
+  glMatrixMode(GL_MODELVIEW);
+}
+
+void display() {
+  glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+  if (engine == nullptr) {
+    std::cout << "Error: engine is null" << '\n';
+    return;
+  }
+  auto camera = engine->getCamera();
+  auto position = camera.getPosition();
+  auto lookAt = camera.getLookAt();
+  auto up = camera.getUp();
+  glLoadIdentity();
+//  gluLookAt(position.x, position.y, position.z, lookAt.x, lookAt.y, lookAt.z,
+//            up.x, up.y, up.z);
+
+  gluLookAt(5.0, 5.0, 5.0, 0.0, 0.0, 0.0, 0.0f, 1.0f, 0.0f);
+
+  glBegin(GL_LINES);
+  glColor3f(1.0f, 0.0f, 0.0f);
+  glVertex3f(100.0f, 0.0f, 0.0f);
+  glVertex3f(-100.0f, 0.0f, 0.0f);
+
+  glColor3f(0.0f, 1.0f, 0.0f);
+  glVertex3f(0.0f, 100.0f, 0.0f);
+  glVertex3f(0.0f, -100.0f, 0.0f);
+
+  glColor3f(0.0f, 0.0f, 1.0f);
+  glVertex3f(0.0f, 0.0f, 100.0f);
+  glVertex3f(0.0f, 0.0f, -100.0f);
+  glEnd();
+
+  engine->draw();
+  glutSwapBuffers();
 }
