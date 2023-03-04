@@ -26,6 +26,8 @@ find_package(GLUT REQUIRED)
 
 target_link_libraries(engine GLUT::GLUT tinyxml2::tinyxml2)
 target_link_libraries(generator glm::glm)
+target_precompile_headers(engine PRIVATE include/pch.h)
+target_precompile_headers(generator PRIVATE include/pch.h)
 
 find_package(OpenGL REQUIRED)
 

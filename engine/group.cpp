@@ -1,6 +1,4 @@
 #include "group.h"
-#include <GLUT/glut.h>
-#include <iostream>
 
 Group::Group(tinyxml2::XMLElement *group) {
   tinyxml2::XMLElement *models = group->FirstChildElement("models");

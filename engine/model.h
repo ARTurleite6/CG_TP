@@ -1,9 +1,6 @@
 #ifndef MODEL_H
 #define MODEL_H
 
-#include <string>
-#include <string_view>
-#include <vector>
 class Model {
 
 private:

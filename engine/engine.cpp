@@ -1,11 +1,5 @@
 #include "engine.h"
 #include "camera.h"
-#include "tinyxml2.h"
-#include <GLUT/glut.h>
-#include <OpenGL/OpenGL.h>
-#include <iostream>
-#include <memory>
-#include <string_view>
 
 Engine::Engine(std::string_view xml_file)
     : xml_file(xml_file), doc(), window_width(800), window_height(800),

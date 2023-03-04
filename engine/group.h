@@ -1,9 +1,9 @@
 #ifndef GROUP_H
 #define GROUP_H
-#include <vector>
 
 #include "model.h"
 #include <tinyxml2.h>
+#include <GLUT/glut.h>
 class Group {
 public:
   Group() = default;

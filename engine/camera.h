@@ -1,8 +1,6 @@
 #ifndef CAMERA_H
 #define CAMERA_H
 
-#include <cstdint>
-
 namespace camera_engine {
 
 struct Coordinates {

@@ -21,7 +21,7 @@ using namespace utils;
 
 enum class Figures {
   Sphere = 3,
-  Plane = 2,
+  Plane = 1,
   Box = 2,
   Cone = 4,
 };

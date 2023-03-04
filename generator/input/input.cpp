@@ -1,4 +1,5 @@
 #include "input.h"
+#include "../figures/box.h"
 #include <cstdint>
 #include <fstream>
 #include <iostream>
@@ -29,10 +30,6 @@ Input::Input(int argc, char *argv[]) {
 
   Figures fig = fromString(argv[1]);
 
-  if (argc != 3 + static_cast<int>(fig)) {
-    throw std::invalid_argument("Invalid number of arguments");
-  }
-
   for (int i = 2; i < argc - 1; ++i) {
     dimensions.push_back(std::stoul(argv[i]));
   }
@@ -49,9 +46,37 @@ std::ostream &operator<<(std::ostream &os, const Input &input) {
   return os;
 }
 
+std::ostream &operator<<(std::ostream &os, const Figures &fig) {
+    switch (fig) {
+    case Figures::Sphere:
+        os << "Sphere";
+        break;
+    case Figures::Plane:
+        os << "Plane";
+        break;
+    case Figures::Box:
+        os << "Box";
+        break;
+    case Figures::Cone:
+        os << "Cone";
+        break;
+    default:
+        os << "Unknown";
+        break;
+    }
+    return os;
+}
+
 std::unique_ptr<Figure> Input::getFigure() const noexcept {
+    std::cout << "Deciding...\n";
   if (this->figure == Figures::Plane) {
+      std::cout << "Entering plane...\n";
     return std::make_unique<Plane>(
+        std::vector<float>{static_cast<float>(this->dimensions[0]),
+                           static_cast<float>(this->dimensions[1])});
+  } else if (this->figure == Figures::Box) {
+      std::cout << "Making a box...\n";
+    return std::make_unique<Box>(
         std::vector<float>{static_cast<float>(this->dimensions[0]),
                            static_cast<float>(this->dimensions[1])});
   }

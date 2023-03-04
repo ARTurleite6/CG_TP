@@ -42,7 +42,7 @@ Plane::Plane(const std::vector<float> &args)
                               Vertex{-translate, 0.0f, -translate, 0.0f});
   for (auto &triangle : this->triangles) {
     for (auto &vertice : triangle.vertices) {
-      vertice = m * vertice;
+      vertice = vertice * m;
     }
   }
 }

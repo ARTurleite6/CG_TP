@@ -1,10 +1,4 @@
 #include "model.h"
-#include <array>
-#include <cstdint>
-#include <fstream>
-#include <iostream>
-#include <string>
-#include <string_view>
 #include <GLUT/glut.h>
 
 template <std::uint32_t N>

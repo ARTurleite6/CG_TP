@@ -1,8 +1,11 @@
 #ifndef UTILS_H
 #define UTILS_H
 #include <array>
+#include <type_traits>
 
 namespace utils {
+
+struct Matrix;
 
 struct Vertex {
   Vertex() = default;
@@ -11,6 +14,7 @@ struct Vertex {
   Vertex(const Vertex &) = default;
   Vertex &operator=(Vertex &&) = default;
   Vertex &operator=(const Vertex &) = default;
+  Vertex &operator*(const Matrix &m) noexcept;
   ~Vertex() = default;
   float x, y, z, w;
 };
@@ -22,18 +26,21 @@ struct Matrix {
   Matrix(const Matrix &) = default;
   Matrix &operator=(Matrix &&) = default;
   Matrix &operator=(const Matrix &) = default;
+  const std::array<float, 4> &operator[](int i) const noexcept;
   ~Matrix() = default;
 
-  Vertex &operator*(const Vertex &v) const noexcept;
-  Matrix &operator*(Matrix &m) const noexcept;
+  Matrix &operator*(const Matrix &m) noexcept; // ainda não está feito
 
   std::array<std::array<float, 4>, 4> m;
 };
 
 Matrix translate(const Matrix &m, const Vertex &v) noexcept;
 Matrix scale(const Matrix &m, const Vertex &v) noexcept;
-Matrix rotate(const Matrix &m, const Vertex &v) noexcept;
+Matrix rotate(const Matrix &m, const Vertex &v, float angle) noexcept;
 
 }; // namespace utils
+
+// template <> std::is_swappable_v<utils::Vertex>{
+// };
 
 #endif

@@ -24,10 +24,6 @@ void Figure::storeVertices(std::string_view outFile) const noexcept {
 void Figure::computeOperation(const Matrix &m) noexcept {
   for (auto &triangle : this->triangles)
     for (auto &v : triangle.vertices) {
-      std::cout << "before: \n";
-      std::cout << v.x << " " << v.y << " " << v.z << '\n';
-      v = m * v;
-      std::cout << "after: \n";
-      std::cout << v.x << " " << v.y << " " << v.z << '\n';
+      v = v * m;
     }
 }
