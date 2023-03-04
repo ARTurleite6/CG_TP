@@ -3,17 +3,9 @@
 #include "../figures/Triangle.h"
 #include "../figures/Plane.h"
 #include "../figures/figure.h"
+#include "../figures/Sphere.h"
 #include "utils.h"
-#include <array>
-#include <cstdint>
-#include <functional>
-#include <memory>
-#include <ostream>
-#include <stdexcept>
-#include <string>
 
-#include <string_view>
-#include <vector>
 
 namespace input {
 

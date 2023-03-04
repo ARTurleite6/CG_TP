@@ -9,3 +9,5 @@
 #include <numbers>
 #include <cstdint>
 #include <cmath>
+#include <ostream>
+#include <stdexcept>

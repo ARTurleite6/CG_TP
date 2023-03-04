@@ -139,7 +139,7 @@ void display() {
 //  gluLookAt(position.x, position.y, position.z, lookAt.x, lookAt.y, lookAt.z,
 //            up.x, up.y, up.z);
 
-  gluLookAt(5.0, 5.0, 5.0, 0.0, 0.0, 0.0, 0.0f, 1.0f, 0.0f);
+  gluLookAt(0.0, 0.0, 5.0, 0.0, 0.0, 0.0, 0.0f, 1.0f, 0.0f);
 
   glBegin(GL_LINES);
   glColor3f(1.0f, 0.0f, 0.0f);

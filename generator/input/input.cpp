@@ -1,8 +1,5 @@
 #include "input.h"
 #include "../figures/box.h"
-#include <cstdint>
-#include <fstream>
-#include <iostream>
 
 namespace input {
 
@@ -47,40 +44,72 @@ std::ostream &operator<<(std::ostream &os, const Input &input) {
 }
 
 std::ostream &operator<<(std::ostream &os, const Figures &fig) {
-    switch (fig) {
-    case Figures::Sphere:
-        os << "Sphere";
-        break;
-    case Figures::Plane:
-        os << "Plane";
-        break;
-    case Figures::Box:
-        os << "Box";
-        break;
-    case Figures::Cone:
-        os << "Cone";
-        break;
-    default:
-        os << "Unknown";
-        break;
-    }
-    return os;
+  switch (fig) {
+  case Figures::Sphere:
+    os << "Sphere";
+    break;
+  case Figures::Plane:
+    os << "Plane";
+    break;
+  case Figures::Box:
+    os << "Box";
+    break;
+  case Figures::Cone:
+    os << "Cone";
+    break;
+  default:
+    os << "Unknown";
+    break;
+  }
+  return os;
 }
 
 std::unique_ptr<Figure> Input::getFigure() const noexcept {
-    std::cout << "Deciding...\n";
+  std::cout << "Deciding...\n";
   if (this->figure == Figures::Plane) {
-      std::cout << "Entering plane...\n";
+    std::cout << "Entering plane...\n";
     return std::make_unique<Plane>(
         std::vector<float>{static_cast<float>(this->dimensions[0]),
                            static_cast<float>(this->dimensions[1])});
   } else if (this->figure == Figures::Box) {
-      std::cout << "Making a box...\n";
+    std::cout << "Making a box...\n";
     return std::make_unique<Box>(
         std::vector<float>{static_cast<float>(this->dimensions[0]),
                            static_cast<float>(this->dimensions[1])});
   }
 
+  switch (this->figure) {
+  case Figures::Plane: {
+    std::cout << "Entering plane...\n";
+    return std::make_unique<Plane>(
+        std::vector<float>{static_cast<float>(this->dimensions[0]),
+                           static_cast<float>(this->dimensions[1])});
+
+    break;
+  }
+  case Figures::Box: {
+    std::cout << "Making a box...\n";
+    return std::make_unique<Box>(
+        std::vector<float>{static_cast<float>(this->dimensions[0]),
+                           static_cast<float>(this->dimensions[1])});
+    break;
+  }
+  case Figures::Sphere: {
+    std::cout << "Making a sphere...\n";
+    return std::make_unique<Sphere>(
+        std::vector<float>{static_cast<float>(this->dimensions[0]),
+                           static_cast<float>(this->dimensions[1]),
+                           static_cast<float>(this->dimensions[2])});
+    break;
+  }
+  case Figures::Cone: {
+    std::cerr << "Uninplemented figure\n";
+    break;
+  }
+  default:
+    std::cerr << "Unknown figure\n";
+    break;
+  }
   return nullptr;
 }
 
