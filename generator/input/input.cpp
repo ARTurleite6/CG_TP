@@ -1,5 +1,4 @@
 #include "input.h"
-#include "../figures/box.h"
 
 namespace input {
 
@@ -103,7 +102,12 @@ std::unique_ptr<Figure> Input::getFigure() const noexcept {
     break;
   }
   case Figures::Cone: {
-    std::cerr << "Uninplemented figure\n";
+    std::cout << "Making a cone...\n";
+    return std::make_unique<Cone>(
+        std::vector<float>{static_cast<float>(this->dimensions[0]),
+                           static_cast<float>(this->dimensions[1]),
+                           static_cast<float>(this->dimensions[2]),
+                           static_cast<float>(this->dimensions[3])});
     break;
   }
   default:

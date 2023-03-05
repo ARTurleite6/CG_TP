@@ -4,6 +4,8 @@
 #include "../figures/Plane.h"
 #include "../figures/figure.h"
 #include "../figures/Sphere.h"
+#include "../figures/cone.h"
+#include "../figures/box.h"
 #include "utils.h"
 
 
