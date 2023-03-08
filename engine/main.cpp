@@ -1,6 +1,5 @@
 #include "engine.h"
 #include <GLUT/glut.h>
-#include <iostream>
 
 void changeSize(int w, int h) {
   if (h == 0)

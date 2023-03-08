@@ -4,11 +4,11 @@
 namespace camera_engine {
 
 struct Coordinates {
-  std::uint32_t x{}, y{}, z{};
+  int x{}, y{}, z{};
 };
 
 struct Pov {
-  std::uint32_t fov{}, near{}, far{};
+  int fov{}, near{}, far{};
 };
 
 class Camera {

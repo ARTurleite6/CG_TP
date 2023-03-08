@@ -1,6 +1,4 @@
 #include "figure.h"
-#include <fstream>
-#include <iostream>
 
 Figure::Figure(const std::vector<float> &args) {}
 

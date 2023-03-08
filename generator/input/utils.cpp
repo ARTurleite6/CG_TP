@@ -1,5 +1,4 @@
 #include "utils.h"
-#include <cmath>
 
 namespace utils {
 Vertex::Vertex(float x, float y, float z, float w) : x(x), y(y), z(z), w(w) {}

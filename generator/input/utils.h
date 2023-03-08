@@ -1,7 +1,5 @@
 #ifndef UTILS_H
 #define UTILS_H
-#include <array>
-#include <type_traits>
 
 namespace utils {
 

@@ -1,5 +1,4 @@
 #include "Plane.h"
-#include <iostream>
 
 Plane::Plane(const std::vector<float> &args)
     : Figure(args), dimension(args[0]), divisions(args[1]) {

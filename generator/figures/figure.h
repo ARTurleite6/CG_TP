@@ -1,8 +1,6 @@
 #ifndef FIGURE_H
 #define FIGURE_H
 #include "Triangle.h"
-#include <vector>
-#include <string_view>
 
 class Figure {
 public:

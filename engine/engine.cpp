@@ -47,9 +47,14 @@ Engine::Engine(std::string_view xml_file)
 
 void Engine::loadCamera(tinyxml2::XMLElement *camera) {
   camera_engine::Coordinates position;
-  camera->QueryUnsignedAttribute("x", &position.x);
-  camera->QueryUnsignedAttribute("y", &position.y);
-  camera->QueryUnsignedAttribute("z", &position.z);
+  auto position_xml = camera->FirstChildElement("position");
+  if(position_xml == nullptr) {
+    std::cout << "Error: position element not found" << '\n';
+    return;
+  }
+  position_xml->QueryAttribute("x", &position.x);
+  position_xml->QueryAttribute("y", &position.y);
+  position_xml->QueryAttribute("z", &position.z);
   std::cout << position.x << ' ' << position.y << ' ' << position.z << '\n';
 
   auto lookAt = camera->FirstChildElement("lookAt");
@@ -58,9 +63,9 @@ void Engine::loadCamera(tinyxml2::XMLElement *camera) {
     return;
   }
   camera_engine::Coordinates lookAtCoordinates;
-  lookAt->QueryUnsignedAttribute("x", &lookAtCoordinates.x);
-  lookAt->QueryUnsignedAttribute("y", &lookAtCoordinates.y);
-  lookAt->QueryUnsignedAttribute("z", &lookAtCoordinates.z);
+  lookAt->QueryAttribute("x", &lookAtCoordinates.x);
+  lookAt->QueryAttribute("y", &lookAtCoordinates.y);
+  lookAt->QueryAttribute("z", &lookAtCoordinates.z);
   std::cout << lookAtCoordinates.x << ' ' << lookAtCoordinates.y << ' '
             << lookAtCoordinates.z << '\n';
 
@@ -70,9 +75,9 @@ void Engine::loadCamera(tinyxml2::XMLElement *camera) {
     return;
   }
   camera_engine::Coordinates upCoordinates;
-  up->QueryUnsignedAttribute("x", &upCoordinates.x);
-  up->QueryUnsignedAttribute("y", &upCoordinates.y);
-  up->QueryUnsignedAttribute("z", &upCoordinates.z);
+  up->QueryAttribute("x", &upCoordinates.x);
+  up->QueryAttribute("y", &upCoordinates.y);
+  up->QueryAttribute("z", &upCoordinates.z);
   std::cout << upCoordinates.x << ' ' << upCoordinates.y << ' '
             << upCoordinates.z << '\n';
 
@@ -82,9 +87,9 @@ void Engine::loadCamera(tinyxml2::XMLElement *camera) {
     return;
   }
   camera_engine::Pov pov;
-  projection->QueryUnsignedAttribute("fov", &pov.fov);
-  projection->QueryUnsignedAttribute("near", &pov.near);
-  projection->QueryUnsignedAttribute("far", &pov.far);
+  projection->QueryAttribute("fov", &pov.fov);
+  projection->QueryAttribute("near", &pov.near);
+  projection->QueryAttribute("far", &pov.far);
   std::cout << pov.fov << ' ' << pov.near << ' ' << pov.far << '\n';
 
   this->camera = std::make_unique<camera_engine::Camera>(
@@ -136,24 +141,27 @@ void display() {
   auto lookAt = camera.getLookAt();
   auto up = camera.getUp();
   glLoadIdentity();
-//  gluLookAt(pos0tion.x, position.y, position.z, lookAt.x, lookAt.y, lookAt.z,
-//            up.x, up.y, up.z);
+  std::cout << position.x << position.y << position.z << '\n';
+  std::cout << lookAt.x << lookAt.y << lookAt.z << '\n';
+  std::cout << up.x << up.y << up.z << '\n';
+  gluLookAt(position.x, position.y, position.z, lookAt.x, lookAt.y, lookAt.z,
+            up.x, up.y, up.z);
 
-  gluLookAt(5.0, 5.0, 5.0, 0.0, 0.0, 0.0, 0.0f, 1.0f, 0.0f);
+  //gluLookAt(5.0, 5.0, 5.0, 0.0, 0.0, 0.0, 0.0f, 1.0f, 0.0f);
 
-  glBegin(GL_LINES);
-  glColor3f(1.0f, 0.0f, 0.0f);
-  glVertex3f(100.0f, 0.0f, 0.0f);
-  glVertex3f(-100.0f, 0.0f, 0.0f);
+  //glBegin(GL_LINES);
+  //glColor3f(1.0f, 0.0f, 0.0f);
+  //glVertex3f(100.0f, 0.0f, 0.0f);
+  //glVertex3f(-100.0f, 0.0f, 0.0f);
 
-  glColor3f(0.0f, 1.0f, 0.0f);
-  glVertex3f(0.0f, 100.0f, 0.0f);
-  glVertex3f(0.0f, -100.0f, 0.0f);
+  //glColor3f(0.0f, 1.0f, 0.0f);
+  //glVertex3f(0.0f, 100.0f, 0.0f);
+  //glVertex3f(0.0f, -100.0f, 0.0f);
 
-  glColor3f(0.0f, 0.0f, 1.0f);
-  glVertex3f(0.0f, 0.0f, 100.0f);
-  glVertex3f(0.0f, 0.0f, -100.0f);
-  glEnd();
+  //glColor3f(0.0f, 0.0f, 1.0f);
+  //glVertex3f(0.0f, 0.0f, 100.0f);
+  //glVertex3f(0.0f, 0.0f, -100.0f);
+  //glEnd();
 
   engine->draw();
   glutSwapBuffers();

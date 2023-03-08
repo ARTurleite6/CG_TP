@@ -1,9 +1,4 @@
 #include "box.h"
-#include <fstream>
-#include <iostream>
-#include <memory>
-#include <numbers>
-#include <algorithm>
 
 Box::Box(const std::vector<float> &args) noexcept
     : dimensions(args[0]), divisions(args[1]) {
