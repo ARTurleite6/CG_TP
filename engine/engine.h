@@ -3,8 +3,8 @@
 #include "camera.h"
 #include "group.h"
 #include "model.h"
-#include <tinyxml2.h>
 #include <GLUT/glut.h>
+#include <tinyxml2.h>
 
 class Engine {
 public:

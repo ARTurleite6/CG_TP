@@ -1,5 +1,4 @@
 #include "model.h"
-#include <GLUT/glut.h>
 
 template <std::uint32_t N>
 std::array<std::string_view, N> split(std::string_view str, char delimiter) {

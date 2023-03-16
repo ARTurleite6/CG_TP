@@ -1,5 +1,6 @@
 #include "group.h"
 #include "transformations/transform.h"
+#include <OpenGL/OpenGL.h>
 
 Group::Group(tinyxml2::XMLElement *group) {
 
@@ -17,14 +18,21 @@ void Group::load_models(tinyxml2::XMLElement *group) noexcept {
   }
 }
 
+void Group::push_transformation(
+    const std::shared_ptr<transformations::Transform> &transform) noexcept {
+  this->transformations.push_back(transform);
+  for (auto &group : this->children) {
+    group.push_transformation(transform);
+  }
+}
+
 void Group::load_transform(tinyxml2::XMLElement *group) noexcept {
   auto *transforms = group->FirstChildElement("transform");
 
   if (transforms != nullptr) {
     auto *transformation = transforms->FirstChild()->ToElement();
-    int i = 0;
-    while (transformation != nullptr && i < 3) {
-      this->transformations.push_back(
+    while (transformation != nullptr) {
+      this->push_transformation(
           transformations::create_transform(transformation));
       transformation = transformation->NextSiblingElement();
     }
@@ -40,17 +48,16 @@ void Group::load_children(tinyxml2::XMLElement *group) noexcept {
 }
 
 void Group::draw() const noexcept {
-  std::cout << "comecei" << '\n';
   glPushMatrix();
   this->apply_transformations();
-  glBegin(GL_TRIANGLES);
   glColor3f(1.0f, 1.0f, 1.0f);
+  glBegin(GL_TRIANGLES);
   for (const auto &model : this->models) {
     model.draw();
   }
+  glEnd();
   this->draw_children();
   glPopMatrix();
-  glEnd();
 }
 
 void Group::draw_children() const noexcept {
@@ -61,6 +68,7 @@ void Group::draw_children() const noexcept {
 
 void Group::apply_transformations() const noexcept {
   for (const auto &transformation : this->transformations) {
+    std::cout << "aplicando" << '\n';
     transformation->apply();
   }
 }

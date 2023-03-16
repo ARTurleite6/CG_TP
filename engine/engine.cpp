@@ -147,21 +147,20 @@ void display() {
   gluLookAt(position.x, position.y, position.z, lookAt.x, lookAt.y, lookAt.z,
             up.x, up.y, up.z);
 
-  //gluLookAt(5.0, 5.0, 5.0, 0.0, 0.0, 0.0, 0.0f, 1.0f, 0.0f);
 
-  //glBegin(GL_LINES);
-  //glColor3f(1.0f, 0.0f, 0.0f);
-  //glVertex3f(100.0f, 0.0f, 0.0f);
-  //glVertex3f(-100.0f, 0.0f, 0.0f);
+  glBegin(GL_LINES);
+  glColor3f(1.0f, 0.0f, 0.0f);
+  glVertex3f(100.0f, 0.0f, 0.0f);
+  glVertex3f(-100.0f, 0.0f, 0.0f);
 
-  //glColor3f(0.0f, 1.0f, 0.0f);
-  //glVertex3f(0.0f, 100.0f, 0.0f);
-  //glVertex3f(0.0f, -100.0f, 0.0f);
+  glColor3f(0.0f, 1.0f, 0.0f);
+  glVertex3f(0.0f, 100.0f, 0.0f);
+  glVertex3f(0.0f, -100.0f, 0.0f);
 
-  //glColor3f(0.0f, 0.0f, 1.0f);
-  //glVertex3f(0.0f, 0.0f, 100.0f);
-  //glVertex3f(0.0f, 0.0f, -100.0f);
-  //glEnd();
+  glColor3f(0.0f, 0.0f, 1.0f);
+  glVertex3f(0.0f, 0.0f, 100.0f);
+  glVertex3f(0.0f, 0.0f, -100.0f);
+  glEnd();
 
   engine->draw();
   glutSwapBuffers();
