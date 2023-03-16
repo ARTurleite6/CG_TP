@@ -11,3 +11,4 @@
 #include <cmath>
 #include <ostream>
 #include <stdexcept>
+#include <optional>
