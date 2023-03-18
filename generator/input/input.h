@@ -1,13 +1,13 @@
 #ifndef INPUT_H
 #define INPUT_H
-#include "../figures/Triangle.h"
 #include "../figures/Plane.h"
-#include "../figures/figure.h"
 #include "../figures/Sphere.h"
-#include "../figures/cone.h"
+#include "../figures/Triangle.h"
 #include "../figures/box.h"
+#include "../figures/cone.h"
+#include "../figures/figure.h"
+#include "../figures/torus.h"
 #include "utils.h"
-
 
 namespace input {
 
@@ -18,6 +18,7 @@ enum class Figures {
   Plane = 1,
   Box = 2,
   Cone = 4,
+  Torus = 5,
 };
 
 Figures fromString(std::string_view str);

@@ -11,6 +11,8 @@ Figures fromString(std::string_view str) {
     return Figures::Box;
   } else if (str == "cone") {
     return Figures::Cone;
+  } else if (str == "torus") {
+    return Figures::Torus;
   } else {
     throw std::invalid_argument("Invalid figure");
   }
@@ -110,11 +112,18 @@ std::unique_ptr<Figure> Input::getFigure() const noexcept {
                            static_cast<float>(this->dimensions[3])});
     break;
   }
+  case Figures::Torus: {
+    std::cout << "Making a torus...\n";
+    return std::make_unique<Torus>(
+        std::vector<float>{static_cast<float>(this->dimensions[0]),
+                           static_cast<float>(this->dimensions[1]),
+                           static_cast<float>(this->dimensions[2]),
+                           static_cast<float>(this->dimensions[3])});
+  }
   default:
     std::cerr << "Unknown figure\n";
     break;
   }
   return nullptr;
 }
-
 }; // namespace input
