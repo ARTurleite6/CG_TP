@@ -13,6 +13,8 @@ Figures fromString(std::string_view str) {
     return Figures::Cone;
   } else if (str == "torus") {
     return Figures::Torus;
+  } else if (str == "pyramid") {
+    return Figures::Pyramid;
   } else {
     throw std::invalid_argument("Invalid figure");
   }
@@ -29,7 +31,7 @@ Input::Input(int argc, char *argv[]) {
   Figures fig = fromString(argv[1]);
 
   for (int i = 2; i < argc - 1; ++i) {
-    dimensions.push_back(std::stoul(argv[i]));
+    dimensions.push_back(std::stof(argv[i]));
   }
 }
 
@@ -119,6 +121,13 @@ std::unique_ptr<Figure> Input::getFigure() const noexcept {
                            static_cast<float>(this->dimensions[1]),
                            static_cast<float>(this->dimensions[2]),
                            static_cast<float>(this->dimensions[3])});
+  }
+  case Figures::Pyramid: {
+    std::cout << "Making a pyramid...\n";
+    return std::make_unique<Pyramid>(
+        std::vector<float>{static_cast<float>(this->dimensions[0]), // height
+                           static_cast<float>(this->dimensions[1]), // slices
+                           });
   }
   default:
     std::cerr << "Unknown figure\n";

@@ -3,6 +3,7 @@
 #include "../figures/Plane.h"
 #include "../figures/Sphere.h"
 #include "../figures/Triangle.h"
+#include "../figures/pyramid.h"
 #include "../figures/box.h"
 #include "../figures/cone.h"
 #include "../figures/figure.h"
@@ -19,6 +20,7 @@ enum class Figures {
   Box = 2,
   Cone = 4,
   Torus = 5,
+  Pyramid = 6,
 };
 
 Figures fromString(std::string_view str);
@@ -35,7 +37,7 @@ public:
     return outFile;
   }
 
-  [[nodiscard]] inline const std::vector<std::uint32_t> &
+  [[nodiscard]] inline const std::vector<float> &
   getDimensions() const noexcept {
     return dimensions;
   }
@@ -44,7 +46,7 @@ public:
 
 private:
   Figures figure;
-  std::vector<std::uint32_t> dimensions;
+  std::vector<float> dimensions;
   std::string outFile;
 
   std::vector<Triangle> triangles;

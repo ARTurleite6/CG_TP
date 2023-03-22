@@ -4,12 +4,8 @@
 
 class Figure {
 public:
-  Figure() = default;
+    Figure() = default;
   explicit Figure(const std::vector<float> &args);
-  Figure(Figure &&) = default;
-  Figure(const Figure &) = default;
-  Figure &operator=(Figure &&) = default;
-  Figure &operator=(const Figure &) = default;
   virtual ~Figure() = default;
 
   void storeVertices(std::string_view outFile) const noexcept;

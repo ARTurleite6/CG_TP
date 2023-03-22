@@ -10,4 +10,5 @@ add_executable(generator
     figures/sphere.cpp
     figures/cone.cpp
     figures/torus.cpp
+    figures/pyramid.cpp
 )
