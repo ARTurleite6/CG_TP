@@ -1,7 +1,7 @@
 #ifndef CUBE_H
 #define CUBE_H
 #include "figure.h"
-#include "plane.h"
+#include "Plane.h"
 
 class Box : public Figure {
 public:

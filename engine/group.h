@@ -3,7 +3,6 @@
 
 #include "model.h"
 #include "transformations/transform.h"
-#include <GLUT/glut.h>
 #include <tinyxml2.h>
 
 class Transform;

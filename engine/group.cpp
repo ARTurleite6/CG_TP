@@ -1,6 +1,5 @@
 #include "group.h"
 #include "transformations/transform.h"
-#include <OpenGL/OpenGL.h>
 
 Group::Group(tinyxml2::XMLElement *group) {
 

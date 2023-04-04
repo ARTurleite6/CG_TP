@@ -18,10 +18,6 @@ FetchContent_MakeAvailable(tiny_xml)
 
 find_package(GLUT REQUIRED)
 
-target_link_libraries(engine GLUT::GLUT tinyxml2::tinyxml2)
-target_precompile_headers(engine PRIVATE include/pch.h)
-target_precompile_headers(generator PRIVATE include/pch.h)
-
 find_package(OpenGL REQUIRED)
 
 include_directories(${OpenGL_INCLUDE_DIRS})
@@ -31,6 +27,17 @@ add_definitions(${OpenGL_DEFINITIONS})
 if(NOT OPENGL_FOUND)
     message(ERROR " OPENGL not found!")
 endif(NOT OPENGL_FOUND)
+
+if(NOT APPLE)
+    find_package(GLEW REQUIRED)
+    include_directories(${GLEW_INCLUDE_DIRS})
+    link_libraries(${GLEW_LIBRARIES})
+endif(NOT APPLE)
+
+target_link_libraries(engine GLUT::GLUT tinyxml2::tinyxml2 ${GLEW_LIBRARIES})
+target_precompile_headers(engine PRIVATE include/pch.h)
+target_precompile_headers(generator PRIVATE include/pch.h)
+
 
 if(WIN32)
 

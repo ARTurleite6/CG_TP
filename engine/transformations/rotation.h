@@ -1,8 +1,12 @@
 #ifndef ROTATION_H
 #define ROTATION_H
+#ifdef __APPLE__
+#include <GLUT/glut.h>
+#else
+#include <GL/glut.h>
+#endif
 
 #include "transform.h"
-#include <GLUT/glut.h>
 namespace transformations {
 class Rotation : public Transform {
 public:

@@ -1,8 +1,12 @@
 #ifndef TRANSLATION_H
 #define TRANSLATION_H
+#ifdef __APPLE__
+#include <GLUT/glut.h>
+#else
+#include <GL/glut.h>
+#endif
 
 #include "transform.h"
-#include <GLUT/glut.h>
 
 namespace transformations {
 class Translation : public Transform {

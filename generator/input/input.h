@@ -1,7 +1,7 @@
 #ifndef INPUT_H
 #define INPUT_H
 #include "../figures/Plane.h"
-#include "../figures/Sphere.h"
+#include "../figures/sphere.h"
 #include "../figures/Triangle.h"
 #include "../figures/pyramid.h"
 #include "../figures/box.h"

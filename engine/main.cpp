@@ -1,5 +1,9 @@
 #include "engine.h"
+#ifdef __APPLE__
 #include <GLUT/glut.h>
+#else
+#include <GL/glut.h>
+#endif
 
 void changeSize(int w, int h) {
   if (h == 0)

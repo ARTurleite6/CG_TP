@@ -3,8 +3,12 @@
 #include "camera.h"
 #include "group.h"
 #include "model.h"
-#include <GLUT/glut.h>
 #include <tinyxml2.h>
+#ifdef __APPLE__
+#include <GLUT/glut.h>
+#else
+#include <GL/glut.h>
+#endif
 
 class Engine {
 public:
