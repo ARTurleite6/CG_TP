@@ -26,7 +26,11 @@ public:
     return *this->camera;
   }
 
-  inline void draw() const noexcept { this->group->draw(); }
+  inline void draw() const noexcept {
+    for (const auto &group : this->groups) {
+      group.draw();
+    }
+  }
 
 private:
   void loadCamera(tinyxml2::XMLElement *camera);
@@ -35,7 +39,7 @@ private:
 
   std::uint32_t window_width{}, window_height{};
   std::unique_ptr<camera_engine::Camera> camera;
-  std::unique_ptr<Group> group;
+  std::vector<Group> groups;
   std::string xml_file;
 };
 

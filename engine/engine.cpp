@@ -38,17 +38,21 @@ Engine::Engine(std::string_view xml_file)
   this->loadCamera(camera);
 
   auto group = world->FirstChildElement("group");
-  if (group == nullptr) {
-    std::cout << "Error: group element not found" << '\n';
-    return;
+  while (group != nullptr) {
+    this->groups.emplace_back(group);
+    group = group->NextSiblingElement("group");
   }
-  this->group = std::make_unique<Group>(group);
+
+  if (this->groups.empty()) {
+    std::cerr << "No group found to draw\n";
+    throw std::runtime_error("No group found to draw\n");
+  }
 }
 
 void Engine::loadCamera(tinyxml2::XMLElement *camera) {
   camera_engine::Coordinates position;
   auto position_xml = camera->FirstChildElement("position");
-  if(position_xml == nullptr) {
+  if (position_xml == nullptr) {
     std::cout << "Error: position element not found" << '\n';
     return;
   }
@@ -146,7 +150,6 @@ void display() {
   std::cout << up.x << up.y << up.z << '\n';
   gluLookAt(position.x, position.y, position.z, lookAt.x, lookAt.y, lookAt.z,
             up.x, up.y, up.z);
-
 
   glBegin(GL_LINES);
   glColor3f(1.0f, 0.0f, 0.0f);
