@@ -44,6 +44,15 @@ class SolarSystemElement(Dom):
 
         transforms: minidom.Element | None = None
 
+        if self.distance != 0:
+            if not transforms:
+                transforms = root_xml.createElement("transform")
+            translate = root_xml.createElement("translate")
+            translate.setAttribute("x", str(self.distance))
+            translate.setAttribute("y", "0")
+            translate.setAttribute("z", "0")
+            transforms.appendChild(translate)
+
         if self.scale != 1:
             if not transforms:
                 transforms = root_xml.createElement("transform")
@@ -53,14 +62,6 @@ class SolarSystemElement(Dom):
             scale.setAttribute("z", str(self.scale))
             transforms.appendChild(scale)
 
-        if self.distance != 0:
-            if not transforms:
-                transforms = root_xml.createElement("transform")
-            translate = root_xml.createElement("translate")
-            translate.setAttribute("x", str(self.distance))
-            translate.setAttribute("y", "0")
-            translate.setAttribute("z", "0")
-            transforms.appendChild(translate)
 
         if transforms:
             group.appendChild(transforms)
@@ -131,15 +132,26 @@ class SolarSystem():
 
     def init_elements(self):
         #PLANETS = ["Mercury", "Venus", "Earth", "Mars", "Jupiter, Saturn", "Uranus", "Neptune"]
-        self.elements.append(SolarSystemElement(scale=3, name="sun"))
-        self.elements.append(SolarSystemElement(scale=0.0108303249, distance=5, name="mercury"))
-        self.elements.append(SolarSystemElement(scale=1, distance=8, name="venus"))
-        self.elements.append(SolarSystemElement(scale=1, distance=10, name="earth"))
-        self.elements.append(SolarSystemElement(scale=1, distance=15, name="mars"))
-        self.elements.append(SolarSystemElement(scale=1, distance=20, name="jupiter"))
-        self.elements.append(SolarSystemElement(scale=1, distance=30, name="saturn"))
-        self.elements.append(SolarSystemElement(scale=1, distance=40, name="uranus"))
-        self.elements.append(SolarSystemElement(scale=1, distance=50, name="neptune"))
+        SUN_SCALE = 3
+        sun = SolarSystemElement(scale=SUN_SCALE, name="sun")
+        mercury = SolarSystemElement(scale=0.040661666666666665, distance=SUN_SCALE * 2.2, name="mercury")
+        venus = SolarSystemElement(scale=0.10086333333333333, distance=SUN_SCALE * 5.625, name="venus")
+        earth = SolarSystemElement(scale=0.10618333333333334, distance=SUN_SCALE * 9.125, name="earth")
+        mars = SolarSystemElement(scale=0.05649166666666667, distance=SUN_SCALE * 17.175, name="mars")
+        jupiter = SolarSystemElement(scale=1.1651833333333332, distance=SUN_SCALE * 159.15, name="jupiter")
+        saturn = SolarSystemElement(scale=0.9705333333333334, distance=SUN_SCALE * 264.625, name="saturn")
+        uranus = SolarSystemElement(scale=0.4227, distance=SUN_SCALE * 766.5, name="uranus")
+        neptune = SolarSystemElement(scale=0.4110333333333333, distance=SUN_SCALE * 1505.625, name="neptune")
+
+        self.elements.append(sun)
+        self.elements.append(mercury)
+        self.elements.append(venus)
+        self.elements.append(earth)
+        self.elements.append(mars)
+        self.elements.append(jupiter)
+        self.elements.append(saturn)
+        self.elements.append(uranus)
+        self.elements.append(neptune)
 
     def get_xml(self) -> str:
         for element in self.elements:
