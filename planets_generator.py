@@ -14,7 +14,6 @@ from subprocess import run
 </world>
 """
 
-
 class Dom():
     @abstractmethod
     def get_dom_element(self, root_xml: minidom.Document) -> minidom.Element:
@@ -134,14 +133,14 @@ class SolarSystem():
         #PLANETS = ["Mercury", "Venus", "Earth", "Mars", "Jupiter, Saturn", "Uranus", "Neptune"]
         SUN_SCALE = 3
         sun = SolarSystemElement(scale=SUN_SCALE, name="sun")
-        mercury = SolarSystemElement(scale=0.040661666666666665, distance=SUN_SCALE * 2.2, name="mercury")
-        venus = SolarSystemElement(scale=0.10086333333333333, distance=SUN_SCALE * 5.625, name="venus")
-        earth = SolarSystemElement(scale=0.10618333333333334, distance=SUN_SCALE * 9.125, name="earth")
-        mars = SolarSystemElement(scale=0.05649166666666667, distance=SUN_SCALE * 17.175, name="mars")
-        jupiter = SolarSystemElement(scale=1.1651833333333332, distance=SUN_SCALE * 159.15, name="jupiter")
-        saturn = SolarSystemElement(scale=0.9705333333333334, distance=SUN_SCALE * 264.625, name="saturn")
-        uranus = SolarSystemElement(scale=0.4227, distance=SUN_SCALE * 766.5, name="uranus")
-        neptune = SolarSystemElement(scale=0.4110333333333333, distance=SUN_SCALE * 1505.625, name="neptune")
+        mercury = SolarSystemElement(scale=0.04332129963, distance=3.6, name="mercury")
+        venus = SolarSystemElement(scale=0.10434782608, distance=6.7, name="venus")
+        earth = SolarSystemElement(scale=0.11009174311, distance=9.3, name="earth")
+        mars = SolarSystemElement(scale=0.05797101449, distance=14.2, name="mars")
+        jupiter = SolarSystemElement(scale=1.09090909091, distance=48.4, name="jupiter")
+        saturn = SolarSystemElement(scale=1, distance=88.6, name="saturn")
+        uranus = SolarSystemElement(scale=0.43795620438, distance=180.0, name="uranus")
+        neptune = SolarSystemElement(scale=0.43321299639, distance=SUN_SCALE * 280.0, name="neptune")
 
         self.elements.append(sun)
         self.elements.append(mercury)

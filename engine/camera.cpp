@@ -34,6 +34,15 @@ void Camera::handleInput(
   if (keyboard['a'])
     this->moveLeft(speedToUse);
 
+  if (keyboard['+']) {
+    this->radius -= 1.0f;
+    if (this->radius < 0)
+      this->radius = 0.0f;
+  }
+
+  if (keyboard['-'])
+    this->radius += 1.0f;
+
   if (keyboard['m'])
     this->toggleMode();
 }
