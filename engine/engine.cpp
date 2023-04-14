@@ -197,6 +197,11 @@ void processInput(unsigned char key, int x, int y) {
     engine->moveCameraLeft();
     break;
   }
+
+  case 'm': {
+    engine->toggleCameraMode();
+    break;
+  }
   default:
     break;
   }

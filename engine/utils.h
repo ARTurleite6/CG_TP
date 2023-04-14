@@ -16,6 +16,7 @@ struct Vertex {
   Vertex &operator*(const Matrix &m) noexcept;
   Vertex operator+(const Vertex &m) const noexcept;
   Vertex operator-(const Vertex &) const noexcept;
+  Vertex &operator*(float constant) noexcept;
   ~Vertex() = default;
   void normalize() noexcept;
 

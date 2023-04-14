@@ -8,4 +8,5 @@ add_executable(engine
     transformations/translation.cpp
     transformations/rotation.cpp
     transformations/scale.cpp
+    utils.cpp
     )

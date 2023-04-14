@@ -1,5 +1,6 @@
 #ifndef CAMERA_H
 #define CAMERA_H
+#include "utils.h"
 #include <cmath>
 
 namespace camera_engine {
@@ -30,11 +31,15 @@ public:
   }
 
   [[nodiscard]] inline camera_engine::Coordinates getPosition() const noexcept {
-    return camera_engine::Coordinates{
-        this->radius * std::sin(this->alpha) * std::cos(this->beta),
-        this->radius * std::sin(this->beta),
-        this->radius * std::cos(this->alpha) * std::cos(this->beta),
-    };
+    if (this->currentMode == CameraMode::Explorer) {
+      return camera_engine::Coordinates{
+          this->radius * std::sin(this->alpha) * std::cos(this->beta),
+          this->radius * std::sin(this->beta),
+          this->radius * std::cos(this->alpha) * std::cos(this->beta),
+      };
+    } else {
+      return this->position;
+    }
     // return position;
   }
 
@@ -46,11 +51,20 @@ public:
     return up;
   }
 
-  void moveHorizontally(float dx) noexcept;
+  inline void toggleMode() noexcept {
+    this->currentMode = this->currentMode == CameraMode::FPS
+                            ? CameraMode::Explorer
+                            : CameraMode::FPS;
+  }
 
-  void moveVertically(float dx) noexcept;
+  void moveRight(float dx);
+  void moveUp(float dx);
+  void moveLeft(float dx);
+  void moveDown(float dx);
 
 private:
+  [[nodiscard]] utils::Vertex getNewPosition(float dx) const noexcept;
+
   CameraMode currentMode{CameraMode::Explorer};
   float alpha{0.0f};
   float beta{0.0f};

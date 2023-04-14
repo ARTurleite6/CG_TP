@@ -32,19 +32,15 @@ public:
     }
   }
 
-  inline void moveCameraRight() noexcept {
-    this->camera->moveHorizontally(0.1f);
-  }
+  inline void moveCameraRight() { this->camera->moveRight(0.1f); }
 
-  inline void moveCameraLeft() noexcept {
-    this->camera->moveHorizontally(-0.1f);
-  }
+  inline void moveCameraLeft() { this->camera->moveLeft(0.1f); }
 
-  inline void moveCameraUp() noexcept { this->camera->moveVertically(0.1f); }
+  inline void moveCameraUp() { this->camera->moveUp(0.1f); }
 
-  inline void moveCameraDown() noexcept {
-    this->camera->moveVertically(-0.1f);
-  }
+  inline void moveCameraDown() { this->camera->moveDown(0.1f); }
+
+  inline void toggleCameraMode() { this->camera->toggleMode(); }
 
 private:
   void loadCamera(tinyxml2::XMLElement *camera);

@@ -109,4 +109,13 @@ Vertex Vertex::operator+(const Vertex &m) const noexcept {
   };
 }
 
+Vertex &Vertex::operator*(float constant) noexcept {
+  this->x *= constant;
+  this->y *= constant;
+  this->z *= constant;
+  this->w *= constant;
+
+  return *this;
+}
+
 }; // namespace utils

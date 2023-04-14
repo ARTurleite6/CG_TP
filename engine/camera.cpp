@@ -1,5 +1,6 @@
 #include "camera.h"
 #include <cmath>
+#include <stdexcept>
 
 namespace camera_engine {
 
@@ -16,28 +17,90 @@ Camera::Camera(Coordinates position, Coordinates lookAt, Coordinates up,
   std::cout << "beta = " << this->beta << '\n';
 }
 
-void Camera::moveHorizontally(float dx) noexcept {
+void Camera::moveUp(float dx) {
+  if (dx < 0)
+    throw std::invalid_argument("dx must be greater than zero");
+
   if (this->currentMode == CameraMode::Explorer) {
+
+    std::cout << "moving_beta = "
+              << (this->beta == std::numbers::pi_v<float> / 2.0f) << '\n';
+    if (this->beta + 0.1f < std::numbers::pi_v<float> / 2.0f ||
+        this->beta > std::numbers::pi_v<float> * (3.0f / 2.0f)) {
+      this->beta += dx;
+      if (this->beta > 2 * std::numbers::pi_v<float>)
+        this->beta = 0;
+    }
+    this->position = this->getPosition();
+  } else {
+
+    auto new_position = this->getNewPosition(dx);
+    this->position =
+        Coordinates{new_position.x, new_position.y, new_position.z};
+  }
+}
+
+void Camera::moveDown(float dx) {
+  if (dx < 0)
+    throw std::invalid_argument("dx must be greater than zero");
+
+  if (this->currentMode == CameraMode::Explorer) {
+
+    if (this->beta - 0.1f > std::numbers::pi_v<float> * (3.0f / 2.0f) ||
+        this->beta < std::numbers::pi_v<float> / 2.0f) {
+      this->beta -= dx;
+      if (this->beta < 0)
+        this->beta = std::numbers::pi_v<float> * 2;
+    }
+    this->position = this->getPosition();
+  } else {
+
+      auto new_position = this->getNewPosition(-dx);
+      this->position = 
+        Coordinates{new_position.x, new_position.y, new_position.z};
+  }
+}
+
+void Camera::moveRight(float dx) {
+  if (dx < 0)
+    throw std::invalid_argument("dx must be greater than zero");
+
+  if (this->currentMode == CameraMode::Explorer) {
+
     this->alpha += dx;
-    if (this->alpha < 0)
-      this->alpha = 2 * std::numbers::pi_v<float>;
-    else if (this->alpha > 2 * std::numbers::pi_v<float>)
-      this->alpha = 0;
+    if (this->alpha > 2 * std::numbers::pi_v<float>)
+      this->alpha = 0.0f;
+    this->position = this->getPosition();
   } else {
   }
 }
 
-inline void Camera::moveVertically(float dx) noexcept {
+void Camera::moveLeft(float dx) {
+  if (dx < 0)
+    throw std::invalid_argument("dx must be greater than zero");
+
   if (this->currentMode == CameraMode::Explorer) {
-    this->beta += dx;
-    if (this->beta > std::numbers::pi_v<float> * (3.0f / 2.0f)) {
-      this->beta = std::numbers::pi_v<float> * (3.0f / 2.0f);
-    } else if (this->beta < std::numbers::pi_v<float> / 2.0f) {
-      this->beta = std::numbers::pi_v<float> / 2.0f;
-    } else if (this->beta < 0)
-      this->beta = 2 * std::numbers::pi_v<float>;
+
+    this->alpha -= dx;
+    if (this->alpha < 0)
+      this->alpha = 2 * std::numbers::pi_v<float>;
+    this->position = this->getPosition();
   } else {
   }
+}
+
+[[nodiscard]] utils::Vertex Camera::getNewPosition(float dx) const noexcept {
+
+  auto lookAt =
+      utils::Vertex{this->lookAt.x, this->lookAt.y, this->lookAt.z, 1.0f};
+
+  auto position =
+      utils::Vertex{this->position.x, this->position.y, this->position.z, 1.0f};
+
+  auto direction = lookAt - position;
+  direction.normalize();
+
+  return position + (direction * dx);
 }
 
 } // namespace camera_engine
