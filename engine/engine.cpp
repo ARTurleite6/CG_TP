@@ -1,5 +1,6 @@
 #include "engine.h"
 #include "camera.h"
+#include <GL/freeglut_std.h>
 
 Engine::Engine(std::string_view xml_file)
     : xml_file(xml_file), doc(), window_width(800), window_height(800),
@@ -114,6 +115,8 @@ void Engine::run(int argc, char *argv[]) const {
 
   glutReshapeFunc(reshape);
 
+  glutKeyboardFunc(processInput);
+
   glEnable(GL_DEPTH_TEST);
   glEnable(GL_CULL_FACE);
   glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
@@ -145,7 +148,9 @@ void display() {
   auto lookAt = camera.getLookAt();
   auto up = camera.getUp();
   glLoadIdentity();
-  std::cout << position.x << position.y << position.z << '\n';
+  std::cout << "Positions = "
+            << "position_x = " << position.x << ", position_y = " << position.y
+            << "position_z = " << position.z << '\n';
   std::cout << lookAt.x << lookAt.y << lookAt.z << '\n';
   std::cout << up.x << up.y << up.z << '\n';
   gluLookAt(position.x, position.y, position.z, lookAt.x, lookAt.y, lookAt.z,
@@ -167,4 +172,34 @@ void display() {
 
   engine->draw();
   glutSwapBuffers();
+}
+
+void processInput(unsigned char key, int x, int y) {
+  if (engine == nullptr) {
+    std::cout << "Engine is null\n";
+    return;
+  }
+
+  switch (key) {
+  case 'w': {
+    engine->moveCameraUp();
+    break;
+  }
+  case 's': {
+    engine->moveCameraDown();
+    break;
+  }
+  case 'd': {
+    engine->moveCameraRight();
+    break;
+  }
+  case 'a': {
+    engine->moveCameraLeft();
+    break;
+  }
+  default:
+    break;
+  }
+
+  glutPostRedisplay();
 }

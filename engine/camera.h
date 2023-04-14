@@ -1,14 +1,17 @@
 #ifndef CAMERA_H
 #define CAMERA_H
+#include <cmath>
 
 namespace camera_engine {
 
+enum class CameraMode { FPS, Explorer };
+
 struct Coordinates {
-  int x{}, y{}, z{};
+  float x{}, y{}, z{};
 };
 
 struct Pov {
-  int fov{}, near{}, far{};
+  float fov{}, near{}, far{};
 };
 
 class Camera {
@@ -27,7 +30,12 @@ public:
   }
 
   [[nodiscard]] inline camera_engine::Coordinates getPosition() const noexcept {
-    return position;
+    return camera_engine::Coordinates{
+        this->radius * std::sin(this->alpha) * std::cos(this->beta),
+        this->radius * std::sin(this->beta),
+        this->radius * std::cos(this->alpha) * std::cos(this->beta),
+    };
+    // return position;
   }
 
   [[nodiscard]] inline camera_engine::Coordinates getLookAt() const noexcept {
@@ -38,7 +46,15 @@ public:
     return up;
   }
 
+  void moveHorizontally(float dx) noexcept;
+
+  void moveVertically(float dx) noexcept;
+
 private:
+  CameraMode currentMode{CameraMode::Explorer};
+  float alpha{0.0f};
+  float beta{0.0f};
+  float radius{0.0f};
   Coordinates position{0, 0, 0};
   Coordinates lookAt{0, 0, 0};
   Coordinates up{0, 0, 0};
