@@ -118,4 +118,14 @@ Vertex &Vertex::operator*(float constant) noexcept {
   return *this;
 }
 
+[[nodiscard]] Vertex Vertex::crossProduct(const Vertex &v) const noexcept {
+
+  return Vertex{
+      this->y * v.z - this->z * v.y,
+      this->z * v.x - this->x * v.z,
+      this->x * v.y - this->y * v.x,
+      0.0f,
+  };
+}
+
 }; // namespace utils

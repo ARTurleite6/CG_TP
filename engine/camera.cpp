@@ -34,9 +34,7 @@ void Camera::moveUp(float dx) {
     this->position = this->getPosition();
   } else {
 
-    auto new_position = this->getNewPosition(dx);
-    this->position =
-        Coordinates{new_position.x, new_position.y, new_position.z};
+    this->updateNewPosition(dx);
   }
 }
 
@@ -55,9 +53,7 @@ void Camera::moveDown(float dx) {
     this->position = this->getPosition();
   } else {
 
-      auto new_position = this->getNewPosition(-dx);
-      this->position = 
-        Coordinates{new_position.x, new_position.y, new_position.z};
+    this->updateNewPosition(-dx);
   }
 }
 
@@ -72,6 +68,32 @@ void Camera::moveRight(float dx) {
       this->alpha = 0.0f;
     this->position = this->getPosition();
   } else {
+
+    auto lookAt =
+        utils::Vertex{this->lookAt.x, this->lookAt.y, this->lookAt.z, 1.0f};
+
+    auto position = utils::Vertex{this->position.x, this->position.y,
+                                  this->position.z, 1.0f};
+
+    auto direction = lookAt - position;
+    direction.normalize();
+
+    auto up = utils::Vertex{this->up.x, this->up.y, this->up.z, 0.0f};
+    up.normalize();
+
+    auto vector = direction.crossProduct(up);
+
+    this->position = Coordinates{
+        position.x + vector.x * dx,
+        position.y + vector.y * dx,
+        position.z + vector.z * dx,
+    };
+
+    this->lookAt = Coordinates{
+        lookAt.x + vector.x * dx,
+        lookAt.y + vector.y * dx,
+        lookAt.z + vector.z * dx,
+    };
   }
 }
 
@@ -86,10 +108,35 @@ void Camera::moveLeft(float dx) {
       this->alpha = 2 * std::numbers::pi_v<float>;
     this->position = this->getPosition();
   } else {
+    auto lookAt =
+        utils::Vertex{this->lookAt.x, this->lookAt.y, this->lookAt.z, 1.0f};
+
+    auto position = utils::Vertex{this->position.x, this->position.y,
+                                  this->position.z, 1.0f};
+
+    auto direction = lookAt - position;
+    direction.normalize();
+
+    auto up = utils::Vertex{this->up.x, this->up.y, this->up.z, 0.0f};
+    up.normalize();
+
+    auto vector = up.crossProduct(direction);
+
+    this->position = Coordinates{
+        position.x + vector.x * dx,
+        position.y + vector.y * dx,
+        position.z + vector.z * dx,
+    };
+
+    this->lookAt = Coordinates{
+        lookAt.x + vector.x * dx,
+        lookAt.y + vector.y * dx,
+        lookAt.z + vector.z * dx,
+    };
   }
 }
 
-[[nodiscard]] utils::Vertex Camera::getNewPosition(float dx) const noexcept {
+void Camera::updateNewPosition(float dx) noexcept {
 
   auto lookAt =
       utils::Vertex{this->lookAt.x, this->lookAt.y, this->lookAt.z, 1.0f};
@@ -100,7 +147,10 @@ void Camera::moveLeft(float dx) {
   auto direction = lookAt - position;
   direction.normalize();
 
-  return position + (direction * dx);
+  auto new_position = position + (direction * dx);
+  this->position = Coordinates{new_position.x, new_position.y, new_position.z};
+  auto new_lookat = lookAt + (direction * dx);
+  this->lookAt = Coordinates{new_lookat.x, new_lookat.y, new_lookat.z};
 }
 
 } // namespace camera_engine

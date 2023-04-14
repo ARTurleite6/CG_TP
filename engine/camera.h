@@ -63,7 +63,7 @@ public:
   void moveDown(float dx);
 
 private:
-  [[nodiscard]] utils::Vertex getNewPosition(float dx) const noexcept;
+  void updateNewPosition(float dx) noexcept;
 
   CameraMode currentMode{CameraMode::Explorer};
   float alpha{0.0f};
