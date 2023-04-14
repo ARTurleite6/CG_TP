@@ -133,13 +133,13 @@ class SolarSystem():
         #PLANETS = ["Mercury", "Venus", "Earth", "Mars", "Jupiter, Saturn", "Uranus", "Neptune"]
         self.elements.append(SolarSystemElement(scale=3, name="sun"))
         self.elements.append(SolarSystemElement(scale=0.0108303249, distance=5, name="mercury"))
-        self.elements.append(SolarSystemElement(scale=1, distance=5, name="venus"))
-        self.elements.append(SolarSystemElement(scale=1, distance=5, name="earth"))
-        self.elements.append(SolarSystemElement(scale=1, distance=5, name="mars"))
-        self.elements.append(SolarSystemElement(scale=1, distance=5, name="jupiter"))
-        self.elements.append(SolarSystemElement(scale=1, distance=5, name="saturn"))
-        self.elements.append(SolarSystemElement(scale=1, distance=5, name="uranus"))
-        self.elements.append(SolarSystemElement(scale=1, distance=5, name="neptune"))
+        self.elements.append(SolarSystemElement(scale=1, distance=8, name="venus"))
+        self.elements.append(SolarSystemElement(scale=1, distance=10, name="earth"))
+        self.elements.append(SolarSystemElement(scale=1, distance=15, name="mars"))
+        self.elements.append(SolarSystemElement(scale=1, distance=20, name="jupiter"))
+        self.elements.append(SolarSystemElement(scale=1, distance=30, name="saturn"))
+        self.elements.append(SolarSystemElement(scale=1, distance=40, name="uranus"))
+        self.elements.append(SolarSystemElement(scale=1, distance=50, name="neptune"))
 
     def get_xml(self) -> str:
         for element in self.elements:

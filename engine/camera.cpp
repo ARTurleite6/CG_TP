@@ -52,7 +52,6 @@ void Camera::moveDown(float dx) {
     }
     this->position = this->getPosition();
   } else {
-
     this->updateNewPosition(-dx);
   }
 }

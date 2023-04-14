@@ -55,6 +55,9 @@ public:
     this->currentMode = this->currentMode == CameraMode::FPS
                             ? CameraMode::Explorer
                             : CameraMode::FPS;
+    if (this->currentMode == CameraMode::Explorer) {
+      this->lookAt = Coordinates{0.0f, 0.0f, 0.0f};
+    }
   }
 
   void moveRight(float dx);
