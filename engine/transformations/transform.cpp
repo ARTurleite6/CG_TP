@@ -9,11 +9,9 @@ std::unique_ptr<Transform>
 create_transform(const tinyxml2::XMLElement *transform) {
   std::string_view name = transform->Value();
   float x{0.0f}, y{0.0f}, z{0.0f};
-  std::cout << name << '\n';
   transform->QueryFloatAttribute("x", &x);
   transform->QueryFloatAttribute("y", &y);
   transform->QueryFloatAttribute("z", &z);
-  std::cout << x << ' ' << y << ' ' << z << '\n';
 
   if (name == "translate") {
     return std::make_unique<Translation>(x, y, z);

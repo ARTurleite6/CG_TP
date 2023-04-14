@@ -7,7 +7,6 @@ int main(int argc, char *argv[]) {
   try {
 
     Input input(argc, argv);
-    std::cout << input << '\n';
 
     auto figure = input.getFigure();
 

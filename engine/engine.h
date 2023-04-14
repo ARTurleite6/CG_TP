@@ -32,15 +32,23 @@ public:
     }
   }
 
-  inline void moveCameraRight() { this->camera->moveRight(0.1f); }
+  inline void handleMouseMotion(int x, int y) noexcept {
+    this->camera->handleMouseMotion(x, y);
+  }
 
-  inline void moveCameraLeft() { this->camera->moveLeft(0.1f); }
+  void registerKey(unsigned char key);
+  void unregisterKey(unsigned char key);
 
-  inline void moveCameraUp() { this->camera->moveUp(0.1f); }
+  void handleInput();
 
-  inline void moveCameraDown() { this->camera->moveDown(0.1f); }
+  inline void setMousePosition(int x, int y) noexcept {
+    this->camera->setMousePosition(x, y);
+  }
 
-  inline void toggleCameraMode() { this->camera->toggleMode(); }
+  inline void setCameraTracking(int tracking) {
+    this->camera->setTrackingMode(tracking);
+  }
+
 
 private:
   void loadCamera(tinyxml2::XMLElement *camera);
@@ -51,11 +59,18 @@ private:
   std::unique_ptr<camera_engine::Camera> camera;
   std::vector<Group> groups;
   std::string xml_file;
+
+  std::array<bool, std::numeric_limits<unsigned char>::max()> keyboard{};
 };
 
 void reshape(int width, int height);
 void display();
-void processInput(unsigned char key, int x, int y);
+void processKeyDown(unsigned char key, int x, int y);
+void processKeyUp(unsigned char key, int x, int y);
+
+void passiveMouseFunc(int x, int y);
+void mouseFunc(int button, int state, int x, int y);
+void motionFunc(int x, int y);
 
 static Engine *engine = nullptr;
 

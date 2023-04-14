@@ -67,7 +67,6 @@ void Group::draw_children() const noexcept {
 
 void Group::apply_transformations() const noexcept {
   for (const auto &transformation : this->transformations) {
-    std::cout << "aplicando" << '\n';
     transformation->apply();
   }
 }

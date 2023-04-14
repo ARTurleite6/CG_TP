@@ -3,8 +3,6 @@
 Figure::Figure(const std::vector<float> &args) {}
 
 void Figure::storeVertices(std::string_view outFile) const noexcept {
-  std::cout << "storeVertices()\n";
-  std::cout << "vertices: " << triangles.size() << '\n';
 
   std::ofstream file;
   file.open(outFile.data());

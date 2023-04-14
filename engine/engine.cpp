@@ -8,6 +8,10 @@ Engine::Engine(std::string_view xml_file)
 
   this->doc.LoadFile(xml_file.data());
 
+  for (auto &key : this->keyboard) {
+    key = false;
+  }
+
   if (doc.Error()) {
     std::cout << "Error: " << doc.ErrorStr() << '\n';
     return;
@@ -26,8 +30,6 @@ Engine::Engine(std::string_view xml_file)
   }
   window->QueryUnsignedAttribute("width", &this->window_width);
   window->QueryUnsignedAttribute("height", &this->window_height);
-
-  std::cout << this->window_width << ' ' << this->window_height << '\n';
 
   auto camera = world->FirstChildElement("camera");
 
@@ -60,8 +62,6 @@ void Engine::loadCamera(tinyxml2::XMLElement *camera) {
   position_xml->QueryAttribute("x", &position.x);
   position_xml->QueryAttribute("y", &position.y);
   position_xml->QueryAttribute("z", &position.z);
-  std::cout << position.x << ' ' << position.y << ' ' << position.z << '\n';
-
   auto lookAt = camera->FirstChildElement("lookAt");
   if (lookAt == nullptr) {
     std::cout << "Error: lookAt element not found" << '\n';
@@ -71,8 +71,6 @@ void Engine::loadCamera(tinyxml2::XMLElement *camera) {
   lookAt->QueryAttribute("x", &lookAtCoordinates.x);
   lookAt->QueryAttribute("y", &lookAtCoordinates.y);
   lookAt->QueryAttribute("z", &lookAtCoordinates.z);
-  std::cout << lookAtCoordinates.x << ' ' << lookAtCoordinates.y << ' '
-            << lookAtCoordinates.z << '\n';
 
   auto up = camera->FirstChildElement("up");
   if (up == nullptr) {
@@ -83,8 +81,6 @@ void Engine::loadCamera(tinyxml2::XMLElement *camera) {
   up->QueryAttribute("x", &upCoordinates.x);
   up->QueryAttribute("y", &upCoordinates.y);
   up->QueryAttribute("z", &upCoordinates.z);
-  std::cout << upCoordinates.x << ' ' << upCoordinates.y << ' '
-            << upCoordinates.z << '\n';
 
   auto projection = camera->FirstChildElement("projection");
   if (projection == nullptr) {
@@ -95,15 +91,12 @@ void Engine::loadCamera(tinyxml2::XMLElement *camera) {
   projection->QueryAttribute("fov", &pov.fov);
   projection->QueryAttribute("near", &pov.near);
   projection->QueryAttribute("far", &pov.far);
-  std::cout << pov.fov << ' ' << pov.near << ' ' << pov.far << '\n';
-
   this->camera = std::make_unique<camera_engine::Camera>(
       position, lookAtCoordinates, upCoordinates, pov);
 }
 
 void Engine::run(int argc, char *argv[]) const {
   engine = (Engine *)this;
-  std::cout << "Engine::run()" << '\n';
   glutInit(&argc, argv);
   glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
   glutInitWindowPosition(100, 100);
@@ -115,13 +108,32 @@ void Engine::run(int argc, char *argv[]) const {
 
   glutReshapeFunc(reshape);
 
-  glutKeyboardFunc(processInput);
+  glutKeyboardFunc(processKeyDown);
+  glutKeyboardUpFunc(processKeyUp);
+
+  glutMouseFunc(mouseFunc);
+  glutMotionFunc(motionFunc);
 
   glEnable(GL_DEPTH_TEST);
   glEnable(GL_CULL_FACE);
   glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
   glutMainLoop();
+}
+
+void motionFunc(int x, int y) { 
+    engine->handleMouseMotion(x, y); 
+    glutPostRedisplay();
+}
+
+void mouseFunc(int button, int state, int x, int y) {
+  if (button == GLUT_LEFT_BUTTON && state == GLUT_DOWN) {
+    std::cout << "Tracking set to 1\n";
+    engine->setCameraTracking(1);
+  } else if (button == GLUT_LEFT_BUTTON && state == GLUT_UP) {
+    std::cout << "Tracking set to 0\n";
+    engine->setCameraTracking(0);
+  }
 }
 
 void reshape(int width, int height) {
@@ -148,11 +160,6 @@ void display() {
   auto lookAt = camera.getLookAt();
   auto up = camera.getUp();
   glLoadIdentity();
-  std::cout << "Positions = "
-            << "position_x = " << position.x << ", position_y = " << position.y
-            << "position_z = " << position.z << '\n';
-  std::cout << lookAt.x << lookAt.y << lookAt.z << '\n';
-  std::cout << up.x << up.y << up.z << '\n';
   gluLookAt(position.x, position.y, position.z, lookAt.x, lookAt.y, lookAt.z,
             up.x, up.y, up.z);
 
@@ -174,37 +181,43 @@ void display() {
   glutSwapBuffers();
 }
 
-void processInput(unsigned char key, int x, int y) {
+void processKeyDown(unsigned char key, int x, int y) {
   if (engine == nullptr) {
     std::cout << "Engine is null\n";
     return;
   }
 
-  switch (key) {
-  case 'w': {
-    engine->moveCameraUp();
-    break;
-  }
-  case 's': {
-    engine->moveCameraDown();
-    break;
-  }
-  case 'd': {
-    engine->moveCameraRight();
-    break;
-  }
-  case 'a': {
-    engine->moveCameraLeft();
-    break;
+  std::cout << "Pressed key: " << key << '\n';
+
+  engine->registerKey(key);
+  engine->handleInput();
+  glutPostRedisplay();
+}
+
+void Engine::handleInput() { this->camera->handleInput(this->keyboard); }
+
+void processKeyUp(unsigned char key, int x, int y) {
+  if (engine == nullptr) {
+    std::cout << "Engine is null\n";
+    return;
   }
 
-  case 'm': {
-    engine->toggleCameraMode();
-    break;
-  }
-  default:
-    break;
-  }
+  std::cout << "Released key: " << key << '\n';
+
+  engine->unregisterKey(key);
 
   glutPostRedisplay();
+}
+
+void Engine::registerKey(unsigned char key) {
+  if (static_cast<int>(key) > std::numeric_limits<unsigned char>::max())
+    throw std::invalid_argument("keycode not valid");
+
+  this->keyboard[key] = true;
+}
+
+void Engine::unregisterKey(unsigned char key) {
+  if (static_cast<int>(key) > std::numeric_limits<unsigned char>::max())
+    throw std::invalid_argument("keycode not valid");
+  this->keyboard[key] = false;
 }
