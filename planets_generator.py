@@ -1,6 +1,8 @@
 from abc import abstractmethod
 from xml.dom import minidom
 from subprocess import run
+from math import pi
+from random import randint
 
 """
 <world>
@@ -16,59 +18,98 @@ from subprocess import run
 
 class Dom():
     @abstractmethod
-    def get_dom_element(self, root_xml: minidom.Document) -> minidom.Element:
+    def get_dom_element(self, root_xml: minidom.Document, angle_rotation = 0) -> minidom.Element:
         pass
 
+class Ring(Dom):
+    def __init__(self, raio_interno, raio_externo, name):
+        self.raio_interno = raio_interno
+        self.raio_externo = raio_externo
+        self.file_name = name
+
+    def get_dom_element(self, root_xml: minidom.Document, _ = 0) -> minidom.Element:
+        group = root_xml.createElement("group")
+        models = root_xml.createElement("models")
+        model = root_xml.createElement("model")
+        model.setAttribute(attname="file", value="solar_system_elements/" + self.file_name)
+        models.appendChild(model)
+        group.appendChild(models)
+        return group
+
+    def generate_coords_file(self):
+        run(args=["cmake-build-debug/generator/generator", "torus", str(self.raio_interno), str(self.raio_externo), "100", "2", "solar_system_elements/" + self.file_name], text=True)
+
 class SolarSystemElement(Dom):
-    def __init__(self, name: str, scale = 1.0, distance = 0.0):
+    def __init__(self, name: str, ring: Ring | None = None, scale = 1.0, distance = 0.0):
         self.name = name
         self.scale = scale
         self.distance = distance
-        self.stars: list["SolarSystemElement"] = []
+        self.stars = []
         self.file_name = f"{self.name}.3d"
+        self.ring = ring
 
     def add_star(self, star: "SolarSystemElement"):
         self.stars.append(star)
 
     def generate_coords_file(self):
+        if self.ring:
+            self.ring.generate_coords_file()
         for star in self.stars:
             star.generate_coords_file()
-        run(args=["cmake-build-debug/generator/generator", "sphere", "1", "10", "10", "solar_system_elements/" + self.file_name], text=True)
+        run(args=["cmake-build-debug/generator/generator", "sphere", "1", "100", "100", "solar_system_elements/" + self.file_name], text=True)
 
-    def get_dom_element(self, root_xml: minidom.Document) -> minidom.Element:
-        group = root_xml.createElement("group")
-        models = root_xml.createElement("models")
-        model = root_xml.createElement("model")
-        model.setAttribute(attname="file", value="solar_system_elements/" + self.file_name)
+    def get_dom_element(self, root_xml: minidom.Document, angle_rotation = 0) -> minidom.Element:
+            group = root_xml.createElement("group")
+            models = root_xml.createElement("models")
+            model = root_xml.createElement("model")
+            model.setAttribute(attname="file", value="solar_system_elements/" + self.file_name)
 
-        transforms: minidom.Element | None = None
+            transforms: minidom.Element | None = None
 
-        if self.distance != 0:
             if not transforms:
                 transforms = root_xml.createElement("transform")
-            translate = root_xml.createElement("translate")
-            translate.setAttribute("x", str(self.distance))
-            translate.setAttribute("y", "0")
-            translate.setAttribute("z", "0")
-            transforms.appendChild(translate)
-
-        if self.scale != 1:
-            if not transforms:
-                transforms = root_xml.createElement("transform")
-            scale = root_xml.createElement("scale")
-            scale.setAttribute("x", str(self.scale))
-            scale.setAttribute("y", str(self.scale))
-            scale.setAttribute("z", str(self.scale))
-            transforms.appendChild(scale)
+            rotate = root_xml.createElement("rotate")
+            rotate.setAttribute("angle", str(randint(0, 360)))
+            rotate.setAttribute("x", "0")
+            rotate.setAttribute("y", "1")
+            rotate.setAttribute("z", "0")
+            transforms.appendChild(rotate)
 
 
-        if transforms:
-            group.appendChild(transforms)
+            if self.distance != 0:
+                if not transforms:
+                    transforms = root_xml.createElement("transform")
+                translate = root_xml.createElement("translate")
+                translate.setAttribute("x", str(self.distance))
+                translate.setAttribute("y", "0")
+                translate.setAttribute("z", "0")
+                transforms.appendChild(translate)
 
-        group.appendChild(models)
-        models.appendChild(model)
+            if self.scale != 1:
+                if not transforms:
+                    transforms = root_xml.createElement("transform")
+                scale = root_xml.createElement("scale")
+                scale.setAttribute("x", str(self.scale))
+                scale.setAttribute("y", str(self.scale))
+                scale.setAttribute("z", str(self.scale))
+                transforms.appendChild(scale)
 
-        return group
+
+            if transforms:
+                group.appendChild(transforms)
+
+            group.appendChild(models)
+            models.appendChild(model)
+
+            if self.ring:
+                group.appendChild(self.ring.get_dom_element(root_xml))
+
+            for moon in self.stars:
+                group_moon = moon.get_dom_element(root_xml)
+                group.appendChild(group_moon)
+
+            return group
+
 
 class Camera(Dom):
     def __init__(self, position = (5, 5, 5), 
@@ -126,8 +167,10 @@ class SolarSystem():
         self.camera = Camera()
         self.world.appendChild(self.camera.get_dom_element(self.root))
         self.root.appendChild(self.world)
-        self.elements: list[SolarSystemElement] = []
+        self.elements = []
         self.init_elements()
+
+        self.current_angle = 0
 
     def init_elements(self):
         #PLANETS = ["Mercury", "Venus", "Earth", "Mars", "Jupiter, Saturn", "Uranus", "Neptune"]
@@ -136,11 +179,24 @@ class SolarSystem():
         mercury = SolarSystemElement(scale=0.04332129963, distance=3.6, name="mercury")
         venus = SolarSystemElement(scale=0.10434782608, distance=6.7, name="venus")
         earth = SolarSystemElement(scale=0.11009174311, distance=9.3, name="earth")
+        earth.add_star(SolarSystemElement(scale=0.25, distance=9.8, name="moon"))
         mars = SolarSystemElement(scale=0.05797101449, distance=14.2, name="mars")
+        mars.add_star(SolarSystemElement(scale=0.00308641975, distance=5.5176617942886566, name="phobos"))
+        mars.add_star(SolarSystemElement(scale=0.00189933523, distance=7.8335344536757265, name="deimos"))
         jupiter = SolarSystemElement(scale=1.09090909091, distance=48.4, name="jupiter")
-        saturn = SolarSystemElement(scale=1, distance=88.6, name="saturn")
-        uranus = SolarSystemElement(scale=0.43795620438, distance=180.0, name="uranus")
+        jupiter.add_star(SolarSystemElement(scale=0.026055985467236916, distance=7.398371343153356, name="io"))
+        jupiter.add_star(SolarSystemElement(scale=0.02232552817153238, distance=8.263971011265888, name="europa"))
+        jupiter.add_star(SolarSystemElement(scale=0.037636423452675545, distance=7.4420035672774105, name="ganymedes"))
+        jupiter.add_star(SolarSystemElement(scale=0.03447669179385219, distance=8.734574273614136, name="callisto"))
+        saturn = SolarSystemElement(scale=1, distance=88.6, name="saturn", 
+                                    ring=Ring(raio_interno=3, raio_externo=0.75, name="ring-saturn"))
+        uranus = SolarSystemElement(scale=0.43795620438, distance=180.0, name="uranus", 
+                                    ring=Ring(raio_interno=3, raio_externo=0.25, name="ring-uranus"))
         neptune = SolarSystemElement(scale=0.43321299639, distance=SUN_SCALE * 280.0, name="neptune")
+        neptune.add_star(SolarSystemElement(scale=0.054877949882410196, distance=8.387304877916142, name="triton"))
+        neptune.add_star(SolarSystemElement(scale=0.006893196010055958, distance=8.44113655252599, name="triton"))
+
+        asth_ring = Ring(raio_interno=20.4, raio_externo=4, name="asteroides-anel")
 
         self.elements.append(sun)
         self.elements.append(mercury)
@@ -151,12 +207,16 @@ class SolarSystem():
         self.elements.append(saturn)
         self.elements.append(uranus)
         self.elements.append(neptune)
+        self.elements.append(asth_ring)
 
     def get_xml(self) -> str:
         for element in self.elements:
             element.generate_coords_file()
-            group_element = element.get_dom_element(self.root)
+            group_element = element.get_dom_element(self.root, self.current_angle)
             self.world.appendChild(group_element)
+            self.current_angle += 15
+            if self.current_angle > 360:
+                self.current_angle = 0
 
         return self.root.toprettyxml(indent='\t')
 
@@ -164,7 +224,7 @@ def main():
     root = SolarSystem()
     xml_str = root.get_xml()
 
-    with open("solar_system.xml", "w") as file:
+    with open("scenes/solar_system.xml", "w") as file:
         file.write(xml_str)
 
 if __name__ == "__main__":
