@@ -2,6 +2,7 @@
 #define GROUP_H
 
 #include "model.h"
+#include "renderer.h"
 #include "transformations/transform.h"
 #include <tinyxml2.h>
 
@@ -11,7 +12,7 @@ class Group {
 public:
   explicit Group(tinyxml2::XMLElement *group);
 
-  void draw() const noexcept;
+  void draw(Renderer &renderer) const noexcept;
 
 private:
   void push_transformation(
@@ -20,7 +21,7 @@ private:
   void load_children(tinyxml2::XMLElement *group) noexcept;
   void load_transform(tinyxml2::XMLElement *group) noexcept;
   void apply_transformations() const noexcept;
-  void draw_children() const noexcept;
+  void draw_children(Renderer &renderer) const noexcept;
   std::vector<Model> models;
   std::vector<std::shared_ptr<transformations::Transform>> transformations;
   std::vector<Group> children;

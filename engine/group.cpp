@@ -46,22 +46,22 @@ void Group::load_children(tinyxml2::XMLElement *group) noexcept {
   }
 }
 
-void Group::draw() const noexcept {
+void Group::draw(Renderer &renderer) const noexcept {
   glPushMatrix();
   this->apply_transformations();
   glColor3f(1.0f, 1.0f, 1.0f);
-  glBegin(GL_TRIANGLES);
+  //glBegin(GL_TRIANGLES);
   for (const auto &model : this->models) {
-    model.draw();
+    model.draw(renderer);
   }
-  glEnd();
-  this->draw_children();
+  //glEnd();
+  this->draw_children(renderer);
   glPopMatrix();
 }
 
-void Group::draw_children() const noexcept {
+void Group::draw_children(Renderer &renderer) const noexcept {
   for (const auto &child : this->children) {
-    child.draw();
+    child.draw(renderer);
   }
 }
 

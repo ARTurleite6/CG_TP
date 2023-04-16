@@ -28,7 +28,6 @@ Model::Model(std::string_view filename) : filename(filename) {
 
   std::string buffer;
   while (std::getline(file, buffer)) {
-    std::cout << buffer << '\n';
     std::array<std::string_view, 3> arr = split<3>(buffer, ' ');
 
     this->vertices.emplace_back(std::stof(std::string(arr[0])),
@@ -37,8 +36,6 @@ Model::Model(std::string_view filename) : filename(filename) {
   }
 }
 
-void Model::draw() const noexcept {
-  for (const auto &coord : this->vertices) {
-    glVertex3f(coord.x, coord.y, coord.z);
-  }
+void Model::draw(Renderer &renderer) const noexcept {
+  renderer.draw(this->filename);
 }

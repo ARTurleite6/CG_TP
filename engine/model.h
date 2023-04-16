@@ -1,11 +1,8 @@
 #ifndef MODEL_H
 #define MODEL_H
 
-#ifdef __APPLE__
-#include <GLUT/glut.h>
-#else
-#include <GL/glut.h>
-#endif
+#include "include.h"
+#include "renderer.h"
 
 class Model {
 
@@ -27,7 +24,7 @@ public:
     return this->vertices;
   }
 
-  void draw() const noexcept;
+  void draw(Renderer &renderer) const noexcept;
 
 private:
   std::string filename;

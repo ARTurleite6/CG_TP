@@ -1,6 +1,5 @@
 #include "engine.h"
 #include "camera.h"
-#include <GL/freeglut_std.h>
 
 Engine::Engine(std::string_view xml_file)
     : xml_file(xml_file), doc(), window_width(800), window_height(800),
@@ -114,6 +113,9 @@ void Engine::run(int argc, char *argv[]) const {
   glutMouseFunc(mouseFunc);
   glutMotionFunc(motionFunc);
 
+  glewInit();
+
+  glEnableClientState(GL_VERTEX_ARRAY);
   glEnable(GL_DEPTH_TEST);
   glEnable(GL_CULL_FACE);
   glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
@@ -121,9 +123,9 @@ void Engine::run(int argc, char *argv[]) const {
   glutMainLoop();
 }
 
-void motionFunc(int x, int y) { 
-    engine->handleMouseMotion(x, y); 
-    glutPostRedisplay();
+void motionFunc(int x, int y) {
+  engine->handleMouseMotion(x, y);
+  glutPostRedisplay();
 }
 
 void mouseFunc(int button, int state, int x, int y) {

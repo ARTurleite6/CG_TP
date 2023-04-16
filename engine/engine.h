@@ -4,11 +4,7 @@
 #include "group.h"
 #include "model.h"
 #include <tinyxml2.h>
-#ifdef __APPLE__
-#include <GLUT/glut.h>
-#else
-#include <GL/glut.h>
-#endif
+#include "renderer.h"
 
 class Engine {
 public:
@@ -26,9 +22,9 @@ public:
     return *this->camera;
   }
 
-  inline void draw() const noexcept {
+  inline void draw() noexcept {
     for (const auto &group : this->groups) {
-      group.draw();
+      group.draw(this->renderer);
     }
   }
 
@@ -49,7 +45,6 @@ public:
     this->camera->setTrackingMode(tracking);
   }
 
-
 private:
   void loadCamera(tinyxml2::XMLElement *camera);
 
@@ -59,6 +54,8 @@ private:
   std::unique_ptr<camera_engine::Camera> camera;
   std::vector<Group> groups;
   std::string xml_file;
+
+  Renderer renderer;
 
   std::array<bool, std::numeric_limits<unsigned char>::max()> keyboard{};
 };
