@@ -128,4 +128,12 @@ Vertex &Vertex::operator*(float constant) noexcept {
   };
 }
 
+Vertex &Vertex::operator+=(const Vertex &v) noexcept {
+  this->x += v.x;
+  this->y += v.y;
+  this->z += v.z;
+  this->w += v.w;
+  return *this;
+}
+
 }; // namespace utils

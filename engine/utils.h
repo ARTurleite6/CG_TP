@@ -17,11 +17,12 @@ struct Vertex {
   Vertex operator+(const Vertex &m) const noexcept;
   Vertex operator-(const Vertex &) const noexcept;
   Vertex &operator*(float constant) noexcept;
-  [[nodiscard]]Vertex crossProduct(const Vertex &) const noexcept;
+  Vertex &operator+=(const Vertex &) noexcept;
+  [[nodiscard]] Vertex crossProduct(const Vertex &) const noexcept;
   ~Vertex() = default;
   void normalize() noexcept;
 
-  float x, y, z, w;
+  float x{}, y{}, z{}, w{};
 };
 
 struct Matrix {
@@ -47,5 +48,6 @@ Matrix rotate(const Matrix &m, const Vertex &v, float angle) noexcept;
 
 // template <> std::is_swappable_v<utils::Vertex>{
 // };
+
 
 #endif

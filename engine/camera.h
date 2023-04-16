@@ -8,10 +8,6 @@ namespace camera_engine {
 
 enum class CameraMode { FPS, Explorer };
 
-struct Coordinates {
-  float x{}, y{}, z{};
-};
-
 struct Pov {
   float fov{}, near{}, far{};
 };
@@ -19,13 +15,15 @@ struct Pov {
 class Camera {
 public:
   Camera() = default;
-  Camera(Coordinates position, Coordinates lookAt, Coordinates up,
+  Camera(utils::Vertex position, utils::Vertex lookAt, utils::Vertex up,
          Pov projection);
   Camera(Camera &&) = default;
   Camera(const Camera &) = default;
   Camera &operator=(Camera &&) = default;
   Camera &operator=(const Camera &) = default;
   ~Camera() = default;
+
+  [[nodiscard]] utils::Vertex getPolarCoordinates() const noexcept;
 
   [[nodiscard]] inline camera_engine::Pov getProjection() const noexcept {
     return projection;
@@ -37,33 +35,11 @@ public:
 
   void handleMouseMotion(int x, int y) noexcept;
 
-  [[nodiscard]] inline camera_engine::Coordinates getPosition() const noexcept {
-    if (this->currentMode == CameraMode::Explorer) {
-      return camera_engine::Coordinates{
-          this->radius * std::sin(this->alpha) * std::cos(this->beta),
-          this->radius * std::sin(this->beta),
-          this->radius * std::cos(this->alpha) * std::cos(this->beta),
-      };
-    } else {
-      return this->position;
-    }
-  }
+  [[nodiscard]] utils::Vertex getPosition() const noexcept;
 
-  [[nodiscard]] inline camera_engine::Coordinates getLookAt() const noexcept {
-    if (this->currentMode == CameraMode::Explorer)
-      return lookAt;
-    else {
-      return Coordinates{
-          this->radius * std::sin(this->alpha) * std::cos(this->beta),
-          this->radius * std::sin(this->beta),
-          this->radius * std::cos(this->alpha) * std::cos(this->beta),
-      };
-    }
-  }
+  [[nodiscard]] utils::Vertex getLookAt() const noexcept;
 
-  [[nodiscard]] inline camera_engine::Coordinates getUp() const noexcept {
-    return up;
-  }
+  [[nodiscard]] inline utils::Vertex getUp() const noexcept { return up; }
 
   inline void setTrackingMode(int tracking) { this->tracking = tracking; }
 
@@ -80,32 +56,19 @@ private:
   void moveLeft(float dx);
   void moveDown(float dx);
 
-  inline void toggleMode() noexcept {
-    this->currentMode = this->currentMode == CameraMode::FPS
-                            ? CameraMode::Explorer
-                            : CameraMode::FPS;
-    if (this->currentMode == CameraMode::Explorer) {
-      this->lookAt = Coordinates{0.0f, 0.0f, 0.0f};
-      this->alpha = this->previousAlpha;
-      this->beta = this->previousBeta;
-    } else {
-      this->previousAlpha = this->alpha;
-      this->previousBeta = this->beta;
-      this->beta = this->alpha = 0.0f;
-    }
-  }
+  void toggleMode() noexcept;
 
   CameraMode currentMode{CameraMode::Explorer};
   float alpha{0.0f};
   float beta{0.0f};
   float radius{0.0f};
   bool doubleSpeed{false};
-  Coordinates position{0, 0, 0};
-  Coordinates lookAt{0, 0, 0};
-  Coordinates up{0, 0, 0};
+  utils::Vertex position{0, 0, 0, 1.0f};
+  utils::Vertex initialLookAt{0, 0, 0, 1.0f};
+  utils::Vertex currentLookAt{0, 0, 0, 1.0f};
+  utils::Vertex up{0, 0, 0, 0.0f};
   Pov projection{0, 0, 0};
 
-  float previousAlpha{0.0f}, previousBeta{0.0f};
   int initialMouseX{0}, initialMouseY{0};
 
   int tracking{0};
