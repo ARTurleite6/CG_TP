@@ -106,6 +106,7 @@ void Engine::run(int argc, char *argv[]) const {
   glutCreateWindow("CGEngine");
 
   glutDisplayFunc(display);
+  glutIdleFunc(display);
 
   glutReshapeFunc(reshape);
 
@@ -125,15 +126,9 @@ void Engine::run(int argc, char *argv[]) const {
   glutMainLoop();
 }
 
-void passiveMouseFunc(int x, int y) {
-  engine->handleMouseMotion(x, y);
-  glutPostRedisplay();
-}
+void passiveMouseFunc(int x, int y) { engine->handleMouseMotion(x, y); }
 
-void motionFunc(int x, int y) {
-  engine->handleMouseMotion(x, y);
-  glutPostRedisplay();
-}
+void motionFunc(int x, int y) { engine->handleMouseMotion(x, y); }
 
 void mouseFunc(int button, int state, int x, int y) {
   if (button == GLUT_LEFT_BUTTON && state == GLUT_DOWN) {
@@ -165,6 +160,8 @@ void display() {
   }
   engine->placeCamera();
 
+  engine->handleInput();
+
   glBegin(GL_LINES);
   glColor3f(1.0f, 0.0f, 0.0f);
   glVertex3f(100.0f, 0.0f, 0.0f);
@@ -192,8 +189,6 @@ void processKeyDown(unsigned char key, int x, int y) {
   std::cout << "Pressed key: " << key << '\n';
 
   engine->registerKey(key);
-  engine->handleInput();
-  glutPostRedisplay();
 }
 
 void Engine::handleInput() { this->camera->handleInput(this->keyboard); }
@@ -207,8 +202,6 @@ void processKeyUp(unsigned char key, int x, int y) {
   std::cout << "Released key: " << key << '\n';
 
   engine->unregisterKey(key);
-
-  glutPostRedisplay();
 }
 
 void Engine::registerKey(unsigned char key) {

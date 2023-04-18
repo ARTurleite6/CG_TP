@@ -1,0 +1,3 @@
+/home/arturl/dev/CG/CG_TP/build/_deps/tiny_xml-subbuild/CMakeFiles/tiny_xml-populate.dir
+/home/arturl/dev/CG/CG_TP/build/_deps/tiny_xml-subbuild/CMakeFiles/edit_cache.dir
+/home/arturl/dev/CG/CG_TP/build/_deps/tiny_xml-subbuild/CMakeFiles/rebuild_cache.dir

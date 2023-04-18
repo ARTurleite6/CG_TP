@@ -9,7 +9,7 @@
 	</camera>
 	<group>
 		<transform>
-			<rotate angle="85" x="0" y="1" z="0"/>
+			<rotate angle="42" x="0" y="1" z="0"/>
 			<scale x="3" y="3" z="3"/>
 		</transform>
 		<models>
@@ -18,7 +18,7 @@
 	</group>
 	<group>
 		<transform>
-			<rotate angle="264" x="0" y="1" z="0"/>
+			<rotate angle="292" x="0" y="1" z="0"/>
 			<translate x="3.6" y="0" z="0"/>
 			<scale x="0.04332129963" y="0.04332129963" z="0.04332129963"/>
 		</transform>
@@ -28,7 +28,7 @@
 	</group>
 	<group>
 		<transform>
-			<rotate angle="194" x="0" y="1" z="0"/>
+			<rotate angle="34" x="0" y="1" z="0"/>
 			<translate x="6.7" y="0" z="0"/>
 			<scale x="0.10434782608" y="0.10434782608" z="0.10434782608"/>
 		</transform>
@@ -38,7 +38,7 @@
 	</group>
 	<group>
 		<transform>
-			<rotate angle="196" x="0" y="1" z="0"/>
+			<rotate angle="304" x="0" y="1" z="0"/>
 			<translate x="9.3" y="0" z="0"/>
 			<scale x="0.11009174311" y="0.11009174311" z="0.11009174311"/>
 		</transform>
@@ -47,7 +47,7 @@
 		</models>
 		<group>
 			<transform>
-				<rotate angle="195" x="0" y="1" z="0"/>
+				<rotate angle="116" x="0" y="1" z="0"/>
 				<translate x="9.8" y="0" z="0"/>
 				<scale x="0.25" y="0.25" z="0.25"/>
 			</transform>
@@ -58,7 +58,7 @@
 	</group>
 	<group>
 		<transform>
-			<rotate angle="34" x="0" y="1" z="0"/>
+			<rotate angle="125" x="0" y="1" z="0"/>
 			<translate x="14.2" y="0" z="0"/>
 			<scale x="0.05797101449" y="0.05797101449" z="0.05797101449"/>
 		</transform>
@@ -67,7 +67,7 @@
 		</models>
 		<group>
 			<transform>
-				<rotate angle="212" x="0" y="1" z="0"/>
+				<rotate angle="282" x="0" y="1" z="0"/>
 				<translate x="5.5176617942886566" y="0" z="0"/>
 				<scale x="0.00308641975" y="0.00308641975" z="0.00308641975"/>
 			</transform>
@@ -77,7 +77,7 @@
 		</group>
 		<group>
 			<transform>
-				<rotate angle="265" x="0" y="1" z="0"/>
+				<rotate angle="77" x="0" y="1" z="0"/>
 				<translate x="7.8335344536757265" y="0" z="0"/>
 				<scale x="0.00189933523" y="0.00189933523" z="0.00189933523"/>
 			</transform>
@@ -88,7 +88,7 @@
 	</group>
 	<group>
 		<transform>
-			<rotate angle="289" x="0" y="1" z="0"/>
+			<rotate angle="265" x="0" y="1" z="0"/>
 			<translate x="48.4" y="0" z="0"/>
 			<scale x="1.09090909091" y="1.09090909091" z="1.09090909091"/>
 		</transform>
@@ -97,7 +97,7 @@
 		</models>
 		<group>
 			<transform>
-				<rotate angle="245" x="0" y="1" z="0"/>
+				<rotate angle="127" x="0" y="1" z="0"/>
 				<translate x="7.398371343153356" y="0" z="0"/>
 				<scale x="0.026055985467236916" y="0.026055985467236916" z="0.026055985467236916"/>
 			</transform>
@@ -107,7 +107,7 @@
 		</group>
 		<group>
 			<transform>
-				<rotate angle="315" x="0" y="1" z="0"/>
+				<rotate angle="260" x="0" y="1" z="0"/>
 				<translate x="8.263971011265888" y="0" z="0"/>
 				<scale x="0.02232552817153238" y="0.02232552817153238" z="0.02232552817153238"/>
 			</transform>
@@ -117,7 +117,7 @@
 		</group>
 		<group>
 			<transform>
-				<rotate angle="111" x="0" y="1" z="0"/>
+				<rotate angle="149" x="0" y="1" z="0"/>
 				<translate x="7.4420035672774105" y="0" z="0"/>
 				<scale x="0.037636423452675545" y="0.037636423452675545" z="0.037636423452675545"/>
 			</transform>
@@ -127,7 +127,7 @@
 		</group>
 		<group>
 			<transform>
-				<rotate angle="310" x="0" y="1" z="0"/>
+				<rotate angle="19" x="0" y="1" z="0"/>
 				<translate x="8.734574273614136" y="0" z="0"/>
 				<scale x="0.03447669179385219" y="0.03447669179385219" z="0.03447669179385219"/>
 			</transform>
@@ -138,7 +138,7 @@
 	</group>
 	<group>
 		<transform>
-			<rotate angle="316" x="0" y="1" z="0"/>
+			<rotate angle="298" x="0" y="1" z="0"/>
 			<translate x="88.6" y="0" z="0"/>
 		</transform>
 		<models>
@@ -146,13 +146,13 @@
 		</models>
 		<group>
 			<models>
-				<model file="solar_system_elements/ring-saturn"/>
+				<model file="solar_system_elements/ring-saturn.3d"/>
 			</models>
 		</group>
 	</group>
 	<group>
 		<transform>
-			<rotate angle="314" x="0" y="1" z="0"/>
+			<rotate angle="346" x="0" y="1" z="0"/>
 			<translate x="180.0" y="0" z="0"/>
 			<scale x="0.43795620438" y="0.43795620438" z="0.43795620438"/>
 		</transform>
@@ -161,13 +161,13 @@
 		</models>
 		<group>
 			<models>
-				<model file="solar_system_elements/ring-uranus"/>
+				<model file="solar_system_elements/ring-uranus.3d"/>
 			</models>
 		</group>
 	</group>
 	<group>
 		<transform>
-			<rotate angle="23" x="0" y="1" z="0"/>
+			<rotate angle="130" x="0" y="1" z="0"/>
 			<translate x="840.0" y="0" z="0"/>
 			<scale x="0.43321299639" y="0.43321299639" z="0.43321299639"/>
 		</transform>
@@ -176,7 +176,7 @@
 		</models>
 		<group>
 			<transform>
-				<rotate angle="340" x="0" y="1" z="0"/>
+				<rotate angle="72" x="0" y="1" z="0"/>
 				<translate x="8.387304877916142" y="0" z="0"/>
 				<scale x="0.054877949882410196" y="0.054877949882410196" z="0.054877949882410196"/>
 			</transform>
@@ -186,7 +186,7 @@
 		</group>
 		<group>
 			<transform>
-				<rotate angle="90" x="0" y="1" z="0"/>
+				<rotate angle="288" x="0" y="1" z="0"/>
 				<translate x="8.44113655252599" y="0" z="0"/>
 				<scale x="0.006893196010055958" y="0.006893196010055958" z="0.006893196010055958"/>
 			</transform>
@@ -197,7 +197,7 @@
 	</group>
 	<group>
 		<models>
-			<model file="solar_system_elements/asteroides-anel"/>
+			<model file="solar_system_elements/asteroides-anel.3d"/>
 		</models>
 	</group>
 </world>

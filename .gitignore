@@ -31,7 +31,7 @@
 *.out
 *.app
 
-cmake-build-debug
+build
 .idea
 compile_commands.json
 .cache
