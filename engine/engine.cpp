@@ -92,7 +92,8 @@ void Engine::loadCamera(tinyxml2::XMLElement *camera) {
   projection->QueryAttribute("near", &pov.near);
   projection->QueryAttribute("far", &pov.far);
   this->camera = std::make_unique<camera_engine::Camera>(
-      position, lookAtCoordinates, upCoordinates, pov);
+      position, lookAtCoordinates, upCoordinates, pov, this->window_width,
+      this->window_height);
 }
 
 void Engine::run(int argc, char *argv[]) const {
@@ -113,6 +114,7 @@ void Engine::run(int argc, char *argv[]) const {
 
   glutMouseFunc(mouseFunc);
   glutMotionFunc(motionFunc);
+  glutPassiveMotionFunc(passiveMouseFunc);
 
   glewInit();
 
@@ -121,6 +123,11 @@ void Engine::run(int argc, char *argv[]) const {
   glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
   glutMainLoop();
+}
+
+void passiveMouseFunc(int x, int y) {
+  engine->handleMouseMotion(x, y);
+  glutPostRedisplay();
 }
 
 void motionFunc(int x, int y) {
@@ -146,9 +153,7 @@ void reshape(int width, int height) {
   glMatrixMode(GL_PROJECTION);
   glLoadIdentity();
   glViewport(0, 0, width, height);
-  auto pov_camera = engine->getCamera().getProjection();
-  gluPerspective(pov_camera.fov, ratio, pov_camera.near, pov_camera.far);
-
+  engine->setCameraPerspective(ratio);
   glMatrixMode(GL_MODELVIEW);
 }
 
@@ -158,13 +163,7 @@ void display() {
     std::cout << "Error: engine is null" << '\n';
     return;
   }
-  auto camera = engine->getCamera();
-  auto position = camera.getPosition();
-  auto lookAt = camera.getLookAt();
-  auto up = camera.getUp();
-  glLoadIdentity();
-  gluLookAt(position.x, position.y, position.z, lookAt.x, lookAt.y, lookAt.z,
-            up.x, up.y, up.z);
+  engine->placeCamera();
 
   glBegin(GL_LINES);
   glColor3f(1.0f, 0.0f, 0.0f);

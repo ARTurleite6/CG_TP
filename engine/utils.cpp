@@ -136,4 +136,14 @@ Vertex &Vertex::operator+=(const Vertex &v) noexcept {
   return *this;
 }
 
+
+Vertex Vertex::fromSpherical(float radius, float alpha, float beta) {
+  return utils::Vertex {
+    radius * std::sin(alpha) * std::cos(beta),
+    radius * std::sin(beta),
+    radius * std::cos(alpha) * std::cos(beta),
+    1.0f
+  };
+}
+
 }; // namespace utils

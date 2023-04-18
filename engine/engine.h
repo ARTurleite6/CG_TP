@@ -3,8 +3,8 @@
 #include "camera.h"
 #include "group.h"
 #include "model.h"
-#include <tinyxml2.h>
 #include "renderer.h"
+#include <tinyxml2.h>
 
 class Engine {
 public:
@@ -18,9 +18,7 @@ public:
 
   void run(int argc, char *argv[]) const;
 
-  inline const camera_engine::Camera &getCamera() const noexcept {
-    return *this->camera;
-  }
+  inline void placeCamera() const noexcept { this->camera->place(); }
 
   inline void draw() noexcept {
     for (const auto &group : this->groups) {
@@ -43,6 +41,10 @@ public:
 
   inline void setCameraTracking(int tracking) {
     this->camera->setTrackingMode(tracking);
+  }
+
+  inline void setCameraPerspective(float ratio) const noexcept {
+    this->camera->setPerspective(ratio);
   }
 
 private:
@@ -68,6 +70,7 @@ void processKeyUp(unsigned char key, int x, int y);
 void passiveMouseFunc(int x, int y);
 void mouseFunc(int button, int state, int x, int y);
 void motionFunc(int x, int y);
+void passiveMotionFunc(int x, int y);
 
 static Engine *engine = nullptr;
 

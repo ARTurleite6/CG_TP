@@ -1,13 +1,16 @@
 #include "camera.h"
+#include <GL/glu.h>
 #include <cmath>
 #include <stdexcept>
 
 namespace camera_engine {
 
 Camera::Camera(utils::Vertex position, utils::Vertex lookAt, utils::Vertex up,
-               Pov projection)
+               Pov projection, std::uint32_t window_width,
+               std::uint32_t window_height)
     : position(position), initialLookAt(lookAt), up(up), projection(projection),
-      currentLookAt(lookAt) {
+      currentLookAt(lookAt), window_width(window_width),
+      window_height(window_height) {
   this->alpha = std::atan2(position.x, position.y);
   this->alpha = this->alpha * (180 / std::numbers::pi_v<float>);
   this->beta = std::atan2(position.y, position.x);
@@ -29,9 +32,7 @@ Camera::Camera(utils::Vertex position, utils::Vertex lookAt, utils::Vertex up,
   auto alphaR = this->alpha * (std::numbers::pi_v<float> / 180.0f);
   auto betaR = this->beta * (std::numbers::pi_v<float> / 180.0f);
 
-  return utils::Vertex{this->radius * std::sin(alphaR) * std::cos(betaR),
-                       this->radius * std::sin(betaR),
-                       this->radius * std::cos(alphaR) * std::cos(betaR), 1.0f};
+  return utils::Vertex::fromSpherical(this->radius, alphaR, betaR);
 }
 
 void Camera::handleInput(
@@ -134,35 +135,36 @@ void Camera::updateNewPosition(float dx) noexcept {
 
 void Camera::handleMouseMotion(int x, int y) noexcept {
 
-  if (tracking == 0)
+  if (tracking == 0 && this->currentMode == CameraMode::Explorer)
     return;
 
-  int deltaX = (x - this->initialMouseX);
-  int deltaY = (y - this->initialMouseY);
+  int deltaX = (this->initialMouseX - x);
+  int deltaY = (this->initialMouseY - y);
 
   std::cout << "deltaX = " << deltaX << ", deltaY = " << deltaY << '\n';
 
-  float alphaAux = this->alpha + static_cast<float>(deltaX);
-  float betaAux = this->beta + static_cast<float>(deltaY);
+  float sensivity = (this->currentMode == CameraMode::FPS) ? 0.001f : 1.0f;
+
+  float alphaAux = this->alpha + static_cast<float>(deltaX) * sensivity;
+  float betaAux = this->beta + static_cast<float>(deltaY) * sensivity;
 
   if (betaAux > 85.0f) {
     betaAux = 85.0f;
+  } else if(betaAux < -85.0f) {
+    betaAux = -85.0f;
   }
 
   this->alpha = alphaAux;
   this->beta = betaAux;
 
-  this->setMousePosition(x, y);
+  if(this->currentMode == CameraMode::Explorer)
+    this->setMousePosition(x, y);
+  else {
+    auto position = this->getPosition();
 
-  if (this->currentMode == CameraMode::FPS) {
-    this->currentLookAt = {
-        this->position.x +
-            this->radius * std::sin(this->alpha) * std::cos(this->beta),
-        this->position.y + this->radius * std::sin(this->beta),
-        this->position.z +
-            this->radius * std::cos(this->alpha) * std::cos(this->beta),
-        1.0f};
+    this->currentLookAt = position + utils::Vertex::fromSpherical(this->radius, this->alpha, this->beta);
   }
+
 } // namespace camera_engine
 
 [[nodiscard]] utils::Vertex Camera::getLookAt() const noexcept {
@@ -175,14 +177,36 @@ void Camera::handleMouseMotion(int x, int y) noexcept {
 
 void Camera::toggleMode() noexcept {
   if (this->currentMode == CameraMode::Explorer) {
+    glutSetCursor(GLUT_CURSOR_NONE);
     this->currentLookAt = this->initialLookAt;
     this->position = this->getPolarCoordinates();
     this->currentMode = CameraMode::FPS;
   } else {
+    glutSetCursor(GLUT_CURSOR_LEFT_ARROW);
     this->currentMode = CameraMode::Explorer;
   }
   this->beta = -this->beta;
   this->alpha = -this->alpha;
+}
+
+void Camera::place() noexcept {
+
+  if (this->currentMode == CameraMode::FPS) {
+    glutWarpPointer(static_cast<int>(this->window_width / 2),
+                    static_cast<int>(this->window_height / 2));
+    this->setMousePosition(static_cast<int>(this->window_width / 2),
+                    static_cast<int>(this->window_height / 2));
+  }
+  auto lookAt = this->getLookAt();
+  auto position = this->getPosition();
+  glLoadIdentity();
+  gluLookAt(position.x, position.y, position.z, lookAt.x, lookAt.y, lookAt.z,
+            up.x, up.y, up.z);
+}
+
+void Camera::setPerspective(float ratio) const noexcept {
+  gluPerspective(this->projection.fov, ratio, this->projection.near,
+                 this->projection.far);
 }
 
 } // namespace camera_engine

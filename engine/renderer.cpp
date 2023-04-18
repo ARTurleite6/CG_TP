@@ -27,11 +27,10 @@ void Renderer::draw(const std::string &file) {
   }
 
   auto [vbo, vertices] = this->cache[file];
-  std::cout << "vbo = " << vbo << '\n';
 
   glEnableClientState(GL_VERTEX_ARRAY);
   glBindBuffer(GL_ARRAY_BUFFER, vbo);
-  glVertexPointer(3, GL_FLOAT, 0, 0);
+  glVertexPointer(3, GL_FLOAT, 0, nullptr);
   glDrawArrays(GL_TRIANGLES, 0, static_cast<int>(vertices.size() / 3));
   glDisableClientState(GL_VERTEX_ARRAY);
 }
@@ -63,8 +62,6 @@ void Renderer::parse(const std::string &file) {
     cacheEntry.vertices.push_back(verticesFloat[1]);
     cacheEntry.vertices.push_back(verticesFloat[2]);
   }
-
-  std::cout << "tam = " << cacheEntry.vertices.size() << '\n';
 
   glGenBuffers(1, &cacheEntry.vbo);
   glBindBuffer(GL_ARRAY_BUFFER, cacheEntry.vbo);

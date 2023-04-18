@@ -1,5 +1,6 @@
 #ifndef CAMERA_H
 #define CAMERA_H
+#include "include.h"
 #include "utils.h"
 #include <cmath>
 #include <limits>
@@ -16,30 +17,21 @@ class Camera {
 public:
   Camera() = default;
   Camera(utils::Vertex position, utils::Vertex lookAt, utils::Vertex up,
-         Pov projection);
+         Pov projection, std::uint32_t window_width,
+         std::uint32_t window_height);
   Camera(Camera &&) = default;
   Camera(const Camera &) = default;
   Camera &operator=(Camera &&) = default;
   Camera &operator=(const Camera &) = default;
   ~Camera() = default;
 
-  [[nodiscard]] utils::Vertex getPolarCoordinates() const noexcept;
-
-  [[nodiscard]] inline camera_engine::Pov getProjection() const noexcept {
-    return projection;
-  }
+  void place() noexcept;
 
   void
   handleInput(const std::array<bool, std::numeric_limits<unsigned char>::max()>
                   &keyboard) noexcept;
 
   void handleMouseMotion(int x, int y) noexcept;
-
-  [[nodiscard]] utils::Vertex getPosition() const noexcept;
-
-  [[nodiscard]] utils::Vertex getLookAt() const noexcept;
-
-  [[nodiscard]] inline utils::Vertex getUp() const noexcept { return up; }
 
   inline void setTrackingMode(int tracking) { this->tracking = tracking; }
 
@@ -48,13 +40,28 @@ public:
     this->initialMouseY = y;
   }
 
+  void setPerspective(float ratio) const noexcept;
+
 private:
+
   void updateNewPosition(float dx) noexcept;
+
+  [[nodiscard]] utils::Vertex getPosition() const noexcept;
+
+  [[nodiscard]] utils::Vertex getLookAt() const noexcept;
+
+  [[nodiscard]] inline utils::Vertex getUp() const noexcept { return up; }
 
   void moveRight(float dx);
   void moveUp(float dx);
   void moveLeft(float dx);
   void moveDown(float dx);
+
+  [[nodiscard]] utils::Vertex getPolarCoordinates() const noexcept;
+
+  [[nodiscard]] inline camera_engine::Pov getProjection() const noexcept {
+    return projection;
+  }
 
   void toggleMode() noexcept;
 
@@ -70,6 +77,8 @@ private:
   Pov projection{0, 0, 0};
 
   int initialMouseX{0}, initialMouseY{0};
+
+  std::uint32_t window_width{800}, window_height{600};
 
   int tracking{0};
 };

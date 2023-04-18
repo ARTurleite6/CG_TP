@@ -18,6 +18,9 @@ struct Vertex {
   Vertex operator-(const Vertex &) const noexcept;
   Vertex &operator*(float constant) noexcept;
   Vertex &operator+=(const Vertex &) noexcept;
+
+  static Vertex fromSpherical(float radius, float alpha, float beta);
+
   [[nodiscard]] Vertex crossProduct(const Vertex &) const noexcept;
   ~Vertex() = default;
   void normalize() noexcept;
