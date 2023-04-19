@@ -20,9 +20,9 @@ public:
 
   inline void placeCamera() const noexcept { this->camera->place(); }
 
-  inline void draw() noexcept {
+  inline void draw(int elapsedTime) noexcept {
     for (const auto &group : this->groups) {
-      group.draw(this->renderer);
+      group.draw(this->renderer, elapsedTime);
     }
   }
 

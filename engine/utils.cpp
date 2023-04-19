@@ -136,14 +136,41 @@ Vertex &Vertex::operator+=(const Vertex &v) noexcept {
   return *this;
 }
 
-
 Vertex Vertex::fromSpherical(float radius, float alpha, float beta) {
-  return utils::Vertex {
-    radius * std::sin(alpha) * std::cos(beta),
-    radius * std::sin(beta),
-    radius * std::cos(alpha) * std::cos(beta),
-    1.0f
-  };
+  return utils::Vertex{radius * std::sin(alpha) * std::cos(beta),
+                       radius * std::sin(beta),
+                       radius * std::cos(alpha) * std::cos(beta), 1.0f};
+}
+
+Matrix::Matrix(std::array<std::array<float, 4>, 4> matrix) {
+  for (int i = 0; i < 4; ++i) {
+    for (int j = 0; j < 4; ++j) {
+      this->m[i][j] = matrix[i][j];
+    }
+  }
+}
+
+Vertex Matrix::operator*(const Vertex &vertex) {
+  utils::Vertex result;
+
+  result.x = this->m[0][0] * vertex.x + this->m[0][1] * vertex.y +
+             this->m[0][2] * vertex.z + this->m[0][3] * vertex.w;
+
+  result.y = this->m[1][0] * vertex.x + this->m[1][1] * vertex.y +
+             this->m[1][2] * vertex.z + this->m[1][3] * vertex.w;
+
+  result.z = this->m[2][0] * vertex.x + this->m[2][1] * vertex.y +
+             this->m[2][2] * vertex.z + this->m[2][3] * vertex.w;
+
+  result.w = this->m[3][0] * vertex.x + this->m[3][1] * vertex.y +
+             this->m[3][2] * vertex.z + this->m[3][3] * vertex.w;
+
+  return result;
+}
+
+float Vertex::operator*(const Vertex &vertex) const noexcept {
+  return this->x * vertex.x + this->y * vertex.y + this->z * vertex.z +
+         this->w * vertex.w;
 }
 
 }; // namespace utils

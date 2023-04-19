@@ -2,16 +2,19 @@
 #define TRANSFORM_H
 #include <tinyxml2.h>
 
+enum class TypeTransformation {
+  Translate,
+  Rotate,
+  Scale,
+};
+
 namespace transformations {
 class Transform {
 public:
-  Transform() = default;
-  Transform(Transform &&) = default;
-  Transform(const Transform &) = default;
-  Transform &operator=(Transform &&) = default;
-  Transform &operator=(const Transform &) = default;
   virtual ~Transform() = default;
-  virtual void apply() const noexcept = 0;
+  virtual void apply(int elapsedTime) noexcept = 0;
+
+  [[nodiscard]] virtual TypeTransformation getType() const noexcept = 0;
 };
 
 std::unique_ptr<Transform>

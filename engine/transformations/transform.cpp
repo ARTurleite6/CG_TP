@@ -14,11 +14,9 @@ create_transform(const tinyxml2::XMLElement *transform) {
   transform->QueryFloatAttribute("z", &z);
 
   if (name == "translate") {
-    return std::make_unique<Translation>(x, y, z);
+    return std::make_unique<Translation>(transform);
   } else if (name == "rotate") {
-    float angle = 0.0f;
-    transform->QueryFloatAttribute("angle", &angle);
-    return std::make_unique<Rotation>(angle, x, y, z);
+    return std::make_unique<Rotation>(transform);
   } else if (name == "scale") {
     return std::make_unique<Scale>(x, y, z);
   }

@@ -153,6 +153,9 @@ void reshape(int width, int height) {
 }
 
 void display() {
+
+  int elapsedTime = glutGet(GLUT_ELAPSED_TIME);
+
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
   if (engine == nullptr) {
     std::cout << "Error: engine is null" << '\n';
@@ -176,7 +179,7 @@ void display() {
   glVertex3f(0.0f, 0.0f, -100.0f);
   glEnd();
 
-  engine->draw();
+  engine->draw(elapsedTime);
   glutSwapBuffers();
 }
 

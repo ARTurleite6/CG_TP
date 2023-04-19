@@ -14,7 +14,11 @@ class Scale : public Transform {
 public:
   Scale(float, float, float);
   ~Scale() override = default;
-  void apply() const noexcept override;
+  void apply(int elapsedTime) noexcept override;
+
+  [[nodiscard]] TypeTransformation getType() const noexcept override {
+    return TypeTransformation::Scale;
+  }
 
 private:
   float x{0}, y{0}, z{0};

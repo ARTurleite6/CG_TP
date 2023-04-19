@@ -1,5 +1,6 @@
 #include "group.h"
 #include "transformations/transform.h"
+#include "transformations/translation.h"
 
 Group::Group(tinyxml2::XMLElement *group) {
 
@@ -10,10 +11,12 @@ Group::Group(tinyxml2::XMLElement *group) {
 
 void Group::load_models(tinyxml2::XMLElement *group) noexcept {
   tinyxml2::XMLElement *models = group->FirstChildElement("models");
-  auto model = models->FirstChildElement("model");
-  while (model) {
-    this->models.emplace_back(model->Attribute("file"));
-    model = model->NextSiblingElement("model");
+  if (models != nullptr) {
+    auto model = models->FirstChildElement("model");
+    while (model) {
+      this->models.emplace_back(model->Attribute("file"));
+      model = model->NextSiblingElement("model");
+    }
   }
 }
 
@@ -46,27 +49,37 @@ void Group::load_children(tinyxml2::XMLElement *group) noexcept {
   }
 }
 
-void Group::draw(Renderer &renderer) const noexcept {
+void Group::draw(Renderer &renderer, int elapsedTime) const noexcept {
   glPushMatrix();
-  this->apply_transformations();
+  this->apply_transformations(elapsedTime);
   glColor3f(1.0f, 1.0f, 1.0f);
-  //glBegin(GL_TRIANGLES);
+  // glBegin(GL_TRIANGLES);
   for (const auto &model : this->models) {
     model.draw(renderer);
   }
-  //glEnd();
-  this->draw_children(renderer);
+  // glEnd();
+  this->draw_children(renderer, elapsedTime);
   glPopMatrix();
 }
 
-void Group::draw_children(Renderer &renderer) const noexcept {
+void Group::draw_children(Renderer &renderer, int elapsedTime) const noexcept {
   for (const auto &child : this->children) {
-    child.draw(renderer);
+    child.draw(renderer, elapsedTime);
   }
 }
 
-void Group::apply_transformations() const noexcept {
+void Group::apply_transformations(int elapsedTime) const noexcept {
   for (const auto &transformation : this->transformations) {
-    transformation->apply();
+    // const auto translation =
+    //     dynamic_cast<transformations::Translation *>(transformation.get());
+    // if (translation != nullptr) {
+    //   translation->drawLine();
+    // }
+    if (transformation->getType() == TypeTransformation::Translate) {
+      const auto translation =
+          static_cast<transformations::Translation *>(transformation.get());
+      translation->drawLine();
+    }
+    transformation->apply(elapsedTime);
   }
 }
