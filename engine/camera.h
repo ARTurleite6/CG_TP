@@ -1,11 +1,13 @@
 #ifndef CAMERA_H
 #define CAMERA_H
 #include "include.h"
-#include "utils.h"
+#include "my_math.h"
 #include <cmath>
 #include <limits>
 
 namespace camera_engine {
+
+using namespace maths;
 
 enum class CameraMode { FPS, Explorer };
 
@@ -16,7 +18,7 @@ struct Pov {
 class Camera {
 public:
   Camera() = default;
-  Camera(utils::Vertex position, utils::Vertex lookAt, utils::Vertex up,
+  Camera(Vertex position, Vertex lookAt, Vertex up,
          Pov projection, std::uint32_t window_width,
          std::uint32_t window_height);
   Camera(Camera &&) = default;
@@ -46,18 +48,18 @@ private:
 
   void updateNewPosition(float dx) noexcept;
 
-  [[nodiscard]] utils::Vertex getPosition() const noexcept;
+  [[nodiscard]] Vertex getPosition() const noexcept;
 
-  [[nodiscard]] utils::Vertex getLookAt() const noexcept;
+  [[nodiscard]] Vertex getLookAt() const noexcept;
 
-  [[nodiscard]] inline utils::Vertex getUp() const noexcept { return up; }
+  [[nodiscard]] inline Vertex getUp() const noexcept { return up; }
 
   void moveRight(float dx);
   void moveUp(float dx);
   void moveLeft(float dx);
   void moveDown(float dx);
 
-  [[nodiscard]] utils::Vertex getPolarCoordinates() const noexcept;
+  [[nodiscard]] Vertex getPolarCoordinates() const noexcept;
 
   [[nodiscard]] inline camera_engine::Pov getProjection() const noexcept {
     return projection;
@@ -70,10 +72,10 @@ private:
   float beta{0.0f};
   float radius{0.0f};
   bool doubleSpeed{false};
-  utils::Vertex position{0, 0, 0, 1.0f};
-  utils::Vertex initialLookAt{0, 0, 0, 1.0f};
-  utils::Vertex currentLookAt{0, 0, 0, 1.0f};
-  utils::Vertex up{0, 0, 0, 0.0f};
+  Vertex position{0, 0, 0, 1.0f};
+  Vertex initialLookAt{0, 0, 0, 1.0f};
+  Vertex currentLookAt{0, 0, 0, 1.0f};
+  Vertex up{0, 0, 0, 0.0f};
   Pov projection{0, 0, 0};
 
   int initialMouseX{0}, initialMouseY{0};

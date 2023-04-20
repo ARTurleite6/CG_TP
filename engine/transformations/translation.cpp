@@ -23,7 +23,7 @@ Translation::Translation(const tinyxml2::XMLElement *transform) {
 
     auto point = transform->FirstChildElement("point");
     while (point != nullptr) {
-      utils::Vertex v{0.0f, 0.0f, 0.0f, 1.0f};
+      maths::Vertex v{0.0f, 0.0f, 0.0f, 1.0f};
       point->QueryAttribute("x", &v.x);
       point->QueryAttribute("y", &v.y);
       point->QueryAttribute("z", &v.z);
@@ -47,7 +47,7 @@ float Translation::getLocalT(float globalT) const noexcept {
   return t;
 }
 
-std::array<utils::Vertex, 4>
+std::array<maths::Vertex, 4>
 Translation::getSegment(float globalT) const noexcept {
 
   float t = globalT * static_cast<float>(this->points.size());
@@ -63,7 +63,7 @@ Translation::getSegment(float globalT) const noexcept {
   indices[2] = (indices[1] + 1) % number_points;
   indices[3] = (indices[2] + 1) % number_points;
 
-  return std::array<utils::Vertex, 4>{
+  return std::array<maths::Vertex, 4>{
       this->points[indices[0]],
       this->points[indices[1]],
       this->points[indices[2]],
@@ -71,8 +71,8 @@ Translation::getSegment(float globalT) const noexcept {
   };
 }
 
-utils::Vertex Translation::getPositionCurve(float globalT) const noexcept {
-  utils::Matrix matrix{std::array<std::array<float, 4>, 4>{
+maths::Vertex Translation::getPositionCurve(float globalT) const noexcept {
+  maths::Matrix matrix{std::array<std::array<float, 4>, 4>{
       std::array<float, 4>{-0.5f, 1.5f, -1.5f, 0.5f},
       std::array<float, 4>{1.0f, -2.5f, 2.0f, -0.5f},
       std::array<float, 4>{-0.5f, 0.0f, 0.5f, 0.0f},
@@ -81,19 +81,19 @@ utils::Vertex Translation::getPositionCurve(float globalT) const noexcept {
 
   auto t = this->getLocalT(globalT);
 
-  utils::Vertex tV{static_cast<float>(std::pow(t, 3)),
+  maths::Vertex tV{static_cast<float>(std::pow(t, 3)),
                    static_cast<float>(std::pow(t, 2)), t, 1.0f};
 
   const auto segment = this->getSegment(globalT);
   std::array<std::array<float, 3>, 4> points{};
   std::transform(segment.cbegin(), segment.cend(), points.begin(),
-                 [](const utils::Vertex &v) {
+                 [](const maths::Vertex &v) {
                    return std::array<float, 3>{v.x, v.y, v.z};
                  });
 
   std::array<float, 3> array_result{};
   for (int i = 0; i < 3; ++i) {
-    utils::Vertex p{
+    maths::Vertex p{
         points[0][i],
         points[1][i],
         points[2][i],
@@ -106,7 +106,7 @@ utils::Vertex Translation::getPositionCurve(float globalT) const noexcept {
     array_result[i] = value;
   }
 
-  return utils::Vertex{array_result[0], array_result[1], array_result[2],
+  return maths::Vertex{array_result[0], array_result[1], array_result[2],
                        array_result[3]};
 }
 
@@ -132,7 +132,7 @@ void Translation::drawLine() const noexcept {
 }
 
 void Translation::apply(int elapsedTime) noexcept {
-  utils::Vertex position = {this->x, this->y, this->z, 1.0f};
+  maths::Vertex position = {this->x, this->y, this->z, 1.0f};
   float seconds = static_cast<float>(elapsedTime) / 1000.0f;
   if (this->curve) {
     position = this->getPositionCurve(seconds / this->time);

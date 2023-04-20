@@ -1,8 +1,8 @@
 #ifndef TRIANGLE_H
 #define TRIANGLE_H
-#include "../input/utils.h"
+#include "my_math.h"
 
-using namespace utils;
+using namespace maths;
 
 struct Triangle {
   std::array<Vertex, 3> vertices;

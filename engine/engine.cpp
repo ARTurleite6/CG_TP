@@ -1,6 +1,5 @@
 #include "engine.h"
 #include "camera.h"
-#include "utils.h"
 
 Engine::Engine(std::string_view xml_file)
     : xml_file(xml_file), doc(), window_width(800), window_height(800),
@@ -53,7 +52,7 @@ Engine::Engine(std::string_view xml_file)
 }
 
 void Engine::loadCamera(tinyxml2::XMLElement *camera) {
-  utils::Vertex position;
+  maths::Vertex position;
   auto position_xml = camera->FirstChildElement("position");
   if (position_xml == nullptr) {
     std::cout << "Error: position element not found" << '\n';
@@ -67,7 +66,7 @@ void Engine::loadCamera(tinyxml2::XMLElement *camera) {
     std::cout << "Error: lookAt element not found" << '\n';
     return;
   }
-  utils::Vertex lookAtCoordinates;
+  maths::Vertex lookAtCoordinates;
   lookAt->QueryAttribute("x", &lookAtCoordinates.x);
   lookAt->QueryAttribute("y", &lookAtCoordinates.y);
   lookAt->QueryAttribute("z", &lookAtCoordinates.z);
@@ -77,7 +76,7 @@ void Engine::loadCamera(tinyxml2::XMLElement *camera) {
     std::cout << "Error: up element not found" << '\n';
     return;
   }
-  utils::Vertex upCoordinates;
+  maths::Vertex upCoordinates;
   up->QueryAttribute("x", &upCoordinates.x);
   up->QueryAttribute("y", &upCoordinates.y);
   up->QueryAttribute("z", &upCoordinates.z);

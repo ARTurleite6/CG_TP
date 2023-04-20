@@ -37,7 +37,7 @@ Plane::Plane(const std::vector<float> &args)
   }
 
   float translate = dimension / 2.0f;
-  Matrix m = utils::translate(Matrix(1.0f),
+  Matrix m = maths::translate(Matrix(1.0f),
                               Vertex{-translate, 0.0f, -translate, 0.0f});
   for (auto &triangle : this->triangles) {
     for (auto &vertice : triangle.vertices) {

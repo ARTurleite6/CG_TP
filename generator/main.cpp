@@ -1,5 +1,5 @@
 #include "input/input.h"
-#include "input/utils.h"
+#include "my_math.h"
 
 int main(int argc, char *argv[]) {
 

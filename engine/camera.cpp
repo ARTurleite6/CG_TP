@@ -5,7 +5,7 @@
 
 namespace camera_engine {
 
-Camera::Camera(utils::Vertex position, utils::Vertex lookAt, utils::Vertex up,
+Camera::Camera(Vertex position, Vertex lookAt, Vertex up,
                Pov projection, std::uint32_t window_width,
                std::uint32_t window_height)
     : position(position), initialLookAt(lookAt), up(up), projection(projection),
@@ -20,7 +20,7 @@ Camera::Camera(utils::Vertex position, utils::Vertex lookAt, utils::Vertex up,
                                               std::pow(position.z, 2)));
 }
 
-[[nodiscard]] utils::Vertex Camera::getPosition() const noexcept {
+[[nodiscard]] Vertex Camera::getPosition() const noexcept {
   if (this->currentMode == CameraMode::Explorer) {
     return this->getPolarCoordinates();
   } else {
@@ -28,11 +28,11 @@ Camera::Camera(utils::Vertex position, utils::Vertex lookAt, utils::Vertex up,
   }
 }
 
-[[nodiscard]] utils::Vertex Camera::getPolarCoordinates() const noexcept {
+[[nodiscard]] Vertex Camera::getPolarCoordinates() const noexcept {
   auto alphaR = this->alpha * (std::numbers::pi_v<float> / 180.0f);
   auto betaR = this->beta * (std::numbers::pi_v<float> / 180.0f);
 
-  return utils::Vertex::fromSpherical(this->radius, alphaR, betaR);
+  return Vertex::fromSpherical(this->radius, alphaR, betaR);
 }
 
 void Camera::handleInput(
@@ -162,12 +162,12 @@ void Camera::handleMouseMotion(int x, int y) noexcept {
   else {
     auto position = this->getPosition();
 
-    this->currentLookAt = position + utils::Vertex::fromSpherical(this->radius, this->alpha, this->beta);
+    this->currentLookAt = position + Vertex::fromSpherical(this->radius, this->alpha, this->beta);
   }
 
 } // namespace camera_engine
 
-[[nodiscard]] utils::Vertex Camera::getLookAt() const noexcept {
+[[nodiscard]] Vertex Camera::getLookAt() const noexcept {
   if (this->currentMode == CameraMode::Explorer)
     return this->initialLookAt;
   else {

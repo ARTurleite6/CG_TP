@@ -1,6 +1,6 @@
-#include "utils.h"
+#include "my_math.h"
 
-namespace utils {
+namespace maths {
 Vertex::Vertex(float x, float y, float z, float w) : x(x), y(y), z(z), w(w) {}
 
 Matrix::Matrix(float x) noexcept
@@ -137,7 +137,7 @@ Vertex &Vertex::operator+=(const Vertex &v) noexcept {
 }
 
 Vertex Vertex::fromSpherical(float radius, float alpha, float beta) {
-  return utils::Vertex{radius * std::sin(alpha) * std::cos(beta),
+  return maths::Vertex{radius * std::sin(alpha) * std::cos(beta),
                        radius * std::sin(beta),
                        radius * std::cos(alpha) * std::cos(beta), 1.0f};
 }
@@ -151,7 +151,7 @@ Matrix::Matrix(std::array<std::array<float, 4>, 4> matrix) {
 }
 
 Vertex Matrix::operator*(const Vertex &vertex) {
-  utils::Vertex result;
+  maths::Vertex result;
 
   result.x = this->m[0][0] * vertex.x + this->m[0][1] * vertex.y +
              this->m[0][2] * vertex.z + this->m[0][3] * vertex.w;

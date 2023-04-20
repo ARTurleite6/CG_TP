@@ -6,7 +6,7 @@
 #include <GL/glut.h>
 #endif
 
-#include "../utils.h"
+#include "my_math.h"
 
 #include "transform.h"
 
@@ -25,9 +25,9 @@ public:
   }
 
 private:
-  [[nodiscard]] utils::Vertex getPositionCurve(float globalT) const noexcept;
+  [[nodiscard]] maths::Vertex getPositionCurve(float globalT) const noexcept;
 
-  [[nodiscard]] std::array<utils::Vertex, 4>
+  [[nodiscard]] std::array<maths::Vertex, 4>
   getSegment(float globalT) const noexcept;
 
   [[nodiscard]] float getLocalT(float globalT) const noexcept;
@@ -37,8 +37,8 @@ private:
   bool curve{false};
   float time{0.0f};
   bool align{false};
-  std::vector<utils::Vertex> points;
-  utils::Vertex prevY{0.0f, 1.0f, 0.0f, 0.0f};
+  std::vector<maths::Vertex> points;
+  maths::Vertex prevY{0.0f, 1.0f, 0.0f, 0.0f};
 };
 
 }; // namespace transformations

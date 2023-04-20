@@ -4,6 +4,7 @@ project(CG_TP CXX)
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 set(CMAKE_CXX_STANDARD 20)
 
+add_subdirectory(my_math)
 add_subdirectory(generator)
 add_subdirectory(engine)
 
@@ -20,7 +21,7 @@ find_package(GLUT REQUIRED)
 
 find_package(OpenGL REQUIRED)
 
-include_directories(${OpenGL_INCLUDE_DIRS})
+include_directories(${OpenGL_INCLUDE_DIRS} ${PROJECT_SOURCE_DIR}/my_math)
 link_directories(${OpenGL_LIBRARY_DIRS})
 add_definitions(${OpenGL_DEFINITIONS})
 
@@ -34,7 +35,11 @@ if(NOT APPLE)
     link_libraries(${GLEW_LIBRARIES})
 endif(NOT APPLE)
 
-target_link_libraries(engine GLUT::GLUT tinyxml2::tinyxml2 ${GLEW_LIBRARIES})
+target_precompile_headers(my_math PRIVATE include/pch.h)
+target_link_libraries(engine GLUT::GLUT tinyxml2::tinyxml2 ${GLEW_LIBRARIES} my_math)
+target_link_libraries(generator my_math)
+target_include_directories(generator PRIVATE ${PROJECT_SOURCE_DIR}/my_math)
+target_include_directories(engine PRIVATE ${PROJECT_SOURCE_DIR}/my_math)
 target_precompile_headers(engine PRIVATE include/pch.h)
 target_precompile_headers(generator PRIVATE include/pch.h)
 
@@ -51,7 +56,7 @@ if(WIN32)
 
 	include_directories(${TOOLKITS_FOLDER}/glut )
 	target_link_libraries(engine ${OPENGL_LIBRARIES}
-										  ${TOOLKITS_FOLDER}/glut/glut32.lib)
+										  ${TOOLKITS_FOLDER}/glut/glut32.lib my_math)
 
 	if (EXISTS "${TOOLKITS_FOLDER}/glut/glut32.dll" )
 		file(COPY ${TOOLKITS_FOLDER}/glut/glut32.dll DESTINATION ${CMAKE_BINARY_DIR})
@@ -67,7 +72,7 @@ if(WIN32)
 	link_directories(${GLUT_LIBRARY_DIRS})
 	add_definitions(${GLUT_DEFINITIONS})
 	
-	target_link_libraries(engine ${OPENGL_LIBRARIES} ${GLUT_LIBRARIES} )
+	target_link_libraries(engine ${OPENGL_LIBRARIES} ${GLUT_LIBRARIES} my_math)
 	if(NOT GLUT_FOUND)
 	   message(ERROR ": GLUT not found!")
 	endif(NOT GLUT_FOUND)

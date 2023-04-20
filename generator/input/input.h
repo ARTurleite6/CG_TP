@@ -8,11 +8,11 @@
 #include "../figures/cone.h"
 #include "../figures/figure.h"
 #include "../figures/torus.h"
-#include "utils.h"
+#include "my_math.h"
 
 namespace input {
 
-using namespace utils;
+using namespace maths;
 
 enum class Figures {
   Sphere = 3,
