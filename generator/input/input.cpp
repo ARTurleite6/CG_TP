@@ -15,7 +15,10 @@ Figures fromString(std::string_view str) {
     return Figures::Torus;
   } else if (str == "pyramid") {
     return Figures::Pyramid;
-  } else {
+  }  else if(str == "bezzier") {
+    return Figures::Bezzier;
+  }
+  else {
     throw std::invalid_argument("Invalid figure");
   }
 }
@@ -25,12 +28,15 @@ Input::Input(int argc, char *argv[]) {
     throw std::invalid_argument("Not enough arguments");
   }
 
+  int begin = 2;
   this->figure = fromString(argv[1]);
+  if(this->figure == Figures::Bezzier) {
+    this->inputFile = argv[2];
+    begin = 3;
+  }
   this->outFile = argv[argc - 1];
 
-  Figures fig = fromString(argv[1]);
-
-  for (int i = 2; i < argc - 1; ++i) {
+  for (int i = begin; i < argc - 1; ++i) {
     dimensions.push_back(std::stof(argv[i]));
   }
 }
@@ -128,6 +134,12 @@ std::unique_ptr<Figure> Input::getFigure() const noexcept {
         std::vector<float>{static_cast<float>(this->dimensions[0]), // height
                            static_cast<float>(this->dimensions[1]), // slices
                            });
+  }
+  case Figures::Bezzier: {
+    std::cout << "Making a bezzier surface...\n";
+    return std::make_unique<Bezzier>(
+      this->inputFile, this->dimensions[0]
+    );
   }
   default:
     std::cerr << "Unknown figure\n";

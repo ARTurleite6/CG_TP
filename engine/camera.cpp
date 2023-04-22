@@ -1,7 +1,5 @@
 #include "camera.h"
 #include <GL/glu.h>
-#include <cmath>
-#include <stdexcept>
 
 namespace camera_engine {
 

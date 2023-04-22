@@ -4,7 +4,6 @@
 #include "group.h"
 #include "model.h"
 #include "renderer.h"
-#include <tinyxml2.h>
 
 class Engine {
 public:

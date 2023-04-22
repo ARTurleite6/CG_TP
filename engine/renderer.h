@@ -1,7 +1,6 @@
 #ifndef RENDERER_H
 #define RENDERER_H
 #include "my_math.h"
-#include <unordered_map>
 #include "include.h"
 
 struct CacheEntry {

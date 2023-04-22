@@ -173,4 +173,46 @@ float Vertex::operator*(const Vertex &vertex) const noexcept {
          this->w * vertex.w;
 }
 
-}; // namespace utils
+[[nodiscard]] Matrix Matrix::transpose() const noexcept {
+  Matrix new_matrix;
+
+  for (int i = 0; i < 4; ++i) {
+    for (int j = 0; j < 4; ++j) {
+      new_matrix.m[i][j] = this->m[j][i];
+    }
+  }
+
+  return new_matrix;
+}
+
+std::array<std::array<Vertex, 4>, 4> Matrix::patchMatrix(const std::array<std::array<Vertex, 4>, 4> &mP) {
+  Matrix m{std::array<std::array<float, 4>, 4>{
+      std::array<float, 4>{-1.0f, +3.0f, -3.0f, +1.0f},
+      std::array<float, 4>{+3.0f, -6.0f, +3.0f, +0.0f},
+      std::array<float, 4>{-3.0f, +3.0f, +0.0f, +0.0f},
+      std::array<float, 4>{+1.0f, +0.0f, +0.0f, +0.0f}}};
+
+
+  auto temp = Matrix::gen_multiply_matrix<float, Vertex, Vertex, 4, 4, 4>(m.m, mP);
+  auto transpose = m.transpose();
+  std::cout << "size = " << transpose.m[0].size();
+    for(const auto &arr : temp) {
+        for(const auto value : arr) {
+            std::cout << "x = " <<  value.x << ',';
+            std::cout << "y = " <<  value.y << ',';
+            std::cout << "z = " <<  value.z << ',';
+        }
+        std::cout << '\n';
+    }
+  return Matrix::gen_multiply_matrix<Vertex, float, Vertex, 4, 4, 4>(temp, transpose.m);
+}
+
+Vertex operator*(float x, const Vertex &vertex) {
+  return { vertex.x * x, vertex.y * x, vertex.z * x, vertex.w * x };
+}
+
+Vertex Vertex::operator*(float constant) const noexcept {
+  return constant * *this;
+}
+
+}; // namespace maths

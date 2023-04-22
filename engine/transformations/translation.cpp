@@ -120,8 +120,6 @@ void Translation::drawLine() const noexcept {
     while (t < 1.0f) {
       auto position = this->getPositionCurve(t);
 
-      std::cout << "position = " << position.x << "\n";
-
       glVertex3f(position.x, position.y, position.z);
 
       t += 1.0f / TESS;

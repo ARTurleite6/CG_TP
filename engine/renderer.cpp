@@ -1,25 +1,6 @@
 #include "renderer.h"
 #include "camera.h"
-#include <fstream>
-#include <stdexcept>
-
-template <std::uint32_t N>
-std::array<std::string_view, N> split(std::string_view str, char delimiter) {
-  std::array<std::string_view, N> arr;
-
-  std::size_t pos = 0;
-  std::size_t start = 0;
-  std::size_t i = 0;
-  while (i < N && (pos = str.find(delimiter, start)) != std::string::npos) {
-    arr[i] = str.substr(start, pos - start);
-    i++;
-    start = pos + 1;
-  }
-  if (start != std::string::npos && i < N)
-    arr[i++] = str.substr(start, pos);
-
-  return arr;
-}
+#include "io.h"
 
 void Renderer::draw(const std::string &file) {
   if (!this->cache.contains(file)) {
@@ -51,7 +32,7 @@ void Renderer::parse(const std::string &file) {
 
   while (std::getline(file_stream, buffer)) {
 
-    std::array<std::string_view, 3> vertices = split<3>(buffer, ' ');
+    std::array<std::string_view, 3> vertices = split_N<3>(buffer, " ");
     std::array<float, 3> verticesFloat{};
     std::transform(vertices.cbegin(), vertices.cend(), verticesFloat.begin(),
                    [](const std::string_view value) {

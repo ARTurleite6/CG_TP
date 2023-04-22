@@ -2,8 +2,6 @@
 #define CAMERA_H
 #include "include.h"
 #include "my_math.h"
-#include <cmath>
-#include <limits>
 
 namespace camera_engine {
 

@@ -4,7 +4,6 @@
 #include "model.h"
 #include "renderer.h"
 #include "transformations/transform.h"
-#include <tinyxml2.h>
 
 class Transform;
 

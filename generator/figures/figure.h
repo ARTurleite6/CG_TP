@@ -4,11 +4,11 @@
 
 class Figure {
 public:
-    Figure() = default;
+  Figure() = default;
   explicit Figure(const std::vector<float> &args);
   virtual ~Figure() = default;
 
-  void storeVertices(std::string_view outFile) const noexcept;
+  virtual void storeVertices(std::string_view outFile) const noexcept;
   void computeOperation(const Matrix &m) noexcept;
 
   std::vector<Triangle> triangles;

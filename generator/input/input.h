@@ -8,6 +8,7 @@
 #include "../figures/cone.h"
 #include "../figures/figure.h"
 #include "../figures/torus.h"
+#include "../figures/bezzier.h"
 #include "my_math.h"
 
 namespace input {
@@ -21,6 +22,7 @@ enum class Figures {
   Cone = 4,
   Torus = 5,
   Pyramid = 6,
+  Bezzier = 7,
 };
 
 Figures fromString(std::string_view str);
@@ -47,6 +49,7 @@ public:
 private:
   Figures figure;
   std::vector<float> dimensions;
+  std::string inputFile;
   std::string outFile;
 
   std::vector<Triangle> triangles;

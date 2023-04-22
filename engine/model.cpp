@@ -1,22 +1,5 @@
 #include "model.h"
-
-template <std::uint32_t N>
-std::array<std::string_view, N> split(std::string_view str, char delimiter) {
-  std::array<std::string_view, N> arr;
-
-  std::size_t pos = 0;
-  std::size_t start = 0;
-  std::size_t i = 0;
-  while (i < N && (pos = str.find(delimiter, start)) != std::string::npos) {
-    arr[i] = str.substr(start, pos - start);
-    i++;
-    start = pos + 1;
-  }
-  if (start != std::string::npos && i < N)
-    arr[i++] = str.substr(start, pos);
-
-  return arr;
-}
+#include "io.h"
 
 Model::Model(std::string_view filename) : filename(filename) {
   std::ifstream file;
@@ -28,11 +11,13 @@ Model::Model(std::string_view filename) : filename(filename) {
 
   std::string buffer;
   while (std::getline(file, buffer)) {
-    std::array<std::string_view, 3> arr = split<3>(buffer, ' ');
+    std::array<std::string_view, 3> arr = split_N<3>(buffer, " ");
 
-    this->vertices.emplace_back(std::stof(std::string(arr[0])),
+    Coordinates c { std::stof(std::string(arr[0])),
                                 std::stof(std::string(arr[1])),
-                                std::stof(std::string(arr[2])));
+                                std::stof(std::string(arr[2]))};
+
+    this->vertices.push_back(c);
   }
 }
 
