@@ -2,6 +2,7 @@
 #define PLANE_H
 #include "Triangle.h"
 #include "figure.h"
+#include "my_math.h"
 
 class Plane : public Figure {
 public:

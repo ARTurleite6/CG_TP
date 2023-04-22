@@ -72,12 +72,12 @@ Translation::getSegment(float globalT) const noexcept {
 }
 
 maths::Vertex Translation::getPositionCurve(float globalT) const noexcept {
-  maths::Matrix matrix{std::array<std::array<float, 4>, 4>{
-      std::array<float, 4>{-0.5f, 1.5f, -1.5f, 0.5f},
-      std::array<float, 4>{1.0f, -2.5f, 2.0f, -0.5f},
-      std::array<float, 4>{-0.5f, 0.0f, 0.5f, 0.0f},
-      std::array<float, 4>{0.0f, 1.0f, 0.0f, 0.0f},
-  }};
+  maths::Matrix matrix{
+      -0.5f, 1.5f, -1.5f, 0.5f,
+      1.0f, -2.5f, 2.0f, -0.5f,
+      -0.5f, 0.0f, 0.5f, 0.0f,
+      0.0f, 1.0f, 0.0f, 0.0f,
+  };
 
   auto t = this->getLocalT(globalT);
 

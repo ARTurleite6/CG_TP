@@ -3,7 +3,7 @@
 
 #include "figure.h"
 #include "my_math.h"
-#include "matrix.h"
+#include "my_math.h"
 #include "io.h"
 class Bezzier: public Figure {
     
@@ -15,7 +15,7 @@ class Bezzier: public Figure {
 
     
     private:
-    static maths::Vertex getPoint(const matrix::Matrix<Vertex, 4, 4> &mA, float u, float v);
+    static maths::Vertex getPoint(const maths::Matrix<Vertex, 4, 4> &mA, float u, float v);
 
       [[nodiscard]] std::vector<maths::Vertex>
       calculatePoints() const noexcept;

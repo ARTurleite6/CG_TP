@@ -57,14 +57,14 @@ Bezzier::Bezzier(const std::string &filepath, float tesselation): tesselation(te
 
 }
 
-maths::Vertex Bezzier::getPoint(const matrix::Matrix<maths::Vertex, 4, 4> &mA, float u, float v) {
+maths::Vertex Bezzier::getPoint(const maths::Matrix<maths::Vertex, 4, 4> &mA, float u, float v) {
     using namespace maths;
 
-    matrix::Matrix<float, 1, 4> uVertex {
+    Matrix<float, 1, 4> uVertex {
         u * u * u, u * u, u, 1.0f
     };
 
-    matrix::Matrix<float, 4, 1> vVertex {
+    Matrix<float, 4, 1> vVertex {
         v * v * v,
         v * v,
         v,
@@ -83,7 +83,7 @@ std::vector<maths::Vertex> Bezzier::calculatePoints() const noexcept {
     int iTesselation = static_cast<int>(this->tesselation);
     for(const auto &patch : this->patchesIndices) {
 
-        auto pointsMatrix = matrix::Matrix<maths::Vertex, 4, 4>{
+        auto pointsMatrix = Matrix<maths::Vertex, 4, 4>{
                 this->vertices[patch[0]], this->vertices[patch[1]],
                 this->vertices[patch[2]], this->vertices[patch[3]],
                 this->vertices[patch[4]], this->vertices[patch[5]],
