@@ -109,13 +109,8 @@ Vertex Vertex::operator+(const Vertex &m) const noexcept {
   };
 }
 
-Vertex &Vertex::operator*(float constant) noexcept {
-  this->x *= constant;
-  this->y *= constant;
-  this->z *= constant;
-  this->w *= constant;
-
-  return *this;
+Vertex operator*(const Vertex &v, float constant) noexcept {
+  return { v.x * constant, v.y * constant, v.z * constant, v.w * constant };
 }
 
 [[nodiscard]] Vertex Vertex::crossProduct(const Vertex &v) const noexcept {
@@ -209,10 +204,6 @@ std::array<std::array<Vertex, 4>, 4> Matrix::patchMatrix(const std::array<std::a
 
 Vertex operator*(float x, const Vertex &vertex) {
   return { vertex.x * x, vertex.y * x, vertex.z * x, vertex.w * x };
-}
-
-Vertex Vertex::operator*(float constant) const noexcept {
-  return constant * *this;
 }
 
 }; // namespace maths

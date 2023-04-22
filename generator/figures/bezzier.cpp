@@ -57,22 +57,20 @@ Bezzier::Bezzier(const std::string &filepath, float tesselation): tesselation(te
 
 }
 
-maths::Vertex Bezzier::getPoint(const std::array<std::array<Vertex, 4>, 4> &mA, float u, float v) {
+maths::Vertex Bezzier::getPoint(const matrix::Matrix<maths::Vertex, 4, 4> &mA, float u, float v) {
     using namespace maths;
-    std::array<std::array<float, 4>, 1> uVertex {
-        {u * u * u, u * u, u, 1.0f},
+
+    matrix::Matrix<float, 1, 4> uVertex {
+        u * u * u, u * u, u, 1.0f
     };
 
-    std::array<std::array<float, 1>, 4> vVertex {
-        std::array<float, 1>{v * v * v},
-        std::array<float, 1>{v * v},
-        std::array<float, 1>{v},
-        std::array<float, 1>{1.0f},
+    matrix::Matrix<float, 4, 1> vVertex {
+        v * v * v,
+        v * v,
+        v,
+        1.0f,
     };
-
-    auto temp = Matrix::gen_multiply_matrix<float, Vertex, Vertex, 1, 4, 4>(uVertex, mA);
-
-    return Matrix::gen_multiply_matrix<Vertex, float, Vertex, 1, 4, 1>(temp, vVertex)[0][0];
+    return (uVertex * mA * vVertex)[0][0];
 }
 
 std::vector<maths::Vertex> Bezzier::calculatePoints() const noexcept {
@@ -85,22 +83,19 @@ std::vector<maths::Vertex> Bezzier::calculatePoints() const noexcept {
     int iTesselation = static_cast<int>(this->tesselation);
     for(const auto &patch : this->patchesIndices) {
 
-        std::array<std::array<Vertex, 4>, 4> pointsMatrix{
-            std::array<maths::Vertex, 4>{
+        auto pointsMatrix = matrix::Matrix<maths::Vertex, 4, 4>{
                 this->vertices[patch[0]], this->vertices[patch[1]],
-                this->vertices[patch[2]], this->vertices[patch[3]]},
-            std::array<maths::Vertex, 4>{
+                this->vertices[patch[2]], this->vertices[patch[3]],
                 this->vertices[patch[4]], this->vertices[patch[5]],
-                this->vertices[patch[6]], this->vertices[patch[7]]},
-            std::array<maths::Vertex, 4>{
+                this->vertices[patch[6]], this->vertices[patch[7]],
                 this->vertices[patch[8]], this->vertices[patch[9]],
-                this->vertices[patch[10]], this->vertices[patch[11]]},
-            std::array<maths::Vertex, 4>{
+                this->vertices[patch[10]], this->vertices[patch[11]],
                 this->vertices[patch[12]], this->vertices[patch[13]],
-                this->vertices[patch[14]], this->vertices[patch[15]]},
+                this->vertices[patch[14]], this->vertices[patch[15]],
         };
 
-        auto mA = Matrix::patchMatrix(pointsMatrix);
+
+        auto mA = pointsMatrix.patchBezzier();
 
         for(int uI = 0; uI < iTesselation; ++uI) {
 

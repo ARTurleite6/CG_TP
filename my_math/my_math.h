@@ -16,10 +16,9 @@ struct Vertex {
   Vertex &operator=(Vertex &&) = default;
   Vertex &operator=(const Vertex &) = default;
   Vertex &operator*(const Matrix &m) noexcept;
-  Vertex operator*(float constant) const noexcept;
   Vertex operator+(const Vertex &m) const noexcept;
   Vertex operator-(const Vertex &) const noexcept;
-  Vertex &operator*(float constant) noexcept;
+  friend Vertex operator*(const Vertex &v, float constant) noexcept;
   Vertex &operator+=(const Vertex &) noexcept;
   float operator*(const Vertex &) const noexcept;
 
