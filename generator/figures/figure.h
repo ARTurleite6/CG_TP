@@ -12,7 +12,8 @@ public:
   virtual void storeVertices(std::string_view outFile) const noexcept;
   void computeOperation(const maths::Matrix<float, 4, 4> &m) noexcept;
 
-  std::vector<Triangle> triangles;
+  std::vector<maths::Vertex> vertices;
+  std::vector<maths::Vertex> normals;
 };
 
 #endif // FIGURE_H

@@ -10,12 +10,11 @@ Pyramid::Pyramid(const std::vector<float> &args)
     float next_angle = step * static_cast<float>(i + 1);
     float middle_height = height / 2;
 
-    Triangle t1{std::array<Vertex, 3>{
-        Vertex{0.0f, middle_height, 0.0f, 1.0f},
-        Vertex{std::sin(angle), middle_height, std::cos(angle), 1.0f},
-        Vertex{std::sin(next_angle), middle_height, std::cos(next_angle), 1.0f},
-    }};
-    this->triangles.push_back(t1);
+    this->vertices.emplace_back(0.0f, middle_height, 0.0f, 1.0f);
+    this->vertices.emplace_back(std::sin(angle), middle_height, std::cos(angle),
+                                1.0f);
+    this->vertices.emplace_back(std::sin(next_angle), middle_height,
+                                std::cos(next_angle), 1.0f);
   }
   // base
   for (int i = 0; i < slices; ++i) {
@@ -23,13 +22,11 @@ Pyramid::Pyramid(const std::vector<float> &args)
     float next_angle = step * static_cast<float>(i + 1);
     float middle_height = height / 2;
 
-    Triangle t1{std::array<Vertex, 3>{
-        Vertex{0.0f, -middle_height, 0.0f, 1.0f},
-        Vertex{-std::sin(angle), -middle_height, std::cos(angle), 1.0f},
-        Vertex{-std::sin(next_angle), -middle_height, std::cos(next_angle),
-               1.0f},
-    }};
-    this->triangles.push_back(t1);
+    this->vertices.emplace_back(0.0f, -middle_height, 0.0f, 1.0f);
+    this->vertices.emplace_back(-std::sin(angle), -middle_height,
+                                std::cos(angle), 1.0f);
+    this->vertices.emplace_back(-std::sin(next_angle), -middle_height,
+                                std::cos(next_angle), 1.0f);
   }
 
   // sides
@@ -39,19 +36,18 @@ Pyramid::Pyramid(const std::vector<float> &args)
     float next_angle = step * static_cast<float>(i + 1);
     float middle_height = height / 2;
 
-    Triangle t1{std::array<Vertex, 3>{
-        Vertex { std::sin(angle), middle_height, std::cos(angle), 1.0f },
-        Vertex { std::sin(angle), -middle_height, std::cos(angle), 1.0f },
-        Vertex { std::sin(next_angle), -middle_height, std::cos(next_angle), 1.0f },
-    }};
+    this->vertices.emplace_back(std::sin(angle), middle_height, std::cos(angle),
+                                1.0f);
+    this->vertices.emplace_back(std::sin(angle), -middle_height,
+                                std::cos(angle), 1.0f);
+    this->vertices.emplace_back(std::sin(next_angle), -middle_height,
+                                std::cos(next_angle), 1.0f);
 
-    Triangle t2{std::array<Vertex, 3>{
-        Vertex { std::sin(angle), middle_height, std::cos(angle), 1.0f },
-        Vertex { std::sin(next_angle), -middle_height, std::cos(next_angle), 1.0f },
-        Vertex { std::sin(next_angle), middle_height, std::cos(next_angle), 1.0f },
-    }};
-
-    this->triangles.push_back(t1);
-    this->triangles.push_back(t2);
+    this->vertices.emplace_back(std::sin(angle), middle_height, std::cos(angle),
+                                1.0f);
+    this->vertices.emplace_back(std::sin(next_angle), -middle_height,
+                                std::cos(next_angle), 1.0f);
+    this->vertices.emplace_back(std::sin(next_angle), middle_height,
+                                std::cos(next_angle), 1.0f);
   }
 }

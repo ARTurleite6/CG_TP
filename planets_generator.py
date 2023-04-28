@@ -37,7 +37,7 @@ class Ring(Dom):
         return group
 
     def generate_coords_file(self):
-        run(args=["build/generator/generator", "torus", str(self.raio_interno), str(self.raio_externo), "100", "2", "solar_system_elements/" + self.file_name + ".3d"], text=True)
+        run(args=["./build/bin/generator", "torus", str(self.raio_interno), str(self.raio_externo), "100", "2", "solar_system_elements/" + self.file_name + ".3d"], text=True)
 
 class SolarSystemElement(Dom):
     def __init__(self, name: str, ring: Ring | None = None, scale = 1.0, distance = 0.0):
@@ -56,7 +56,7 @@ class SolarSystemElement(Dom):
             self.ring.generate_coords_file()
         for star in self.stars:
             star.generate_coords_file()
-        run(args=["build/generator/generator", "sphere", "1", "100", "100", "solar_system_elements/" + self.file_name], text=True)
+        run(args=["./build/bin/generator", "sphere", "1", "100", "100", "solar_system_elements/" + self.file_name], text=True)
 
     def get_dom_element(self, root_xml: minidom.Document, angle_rotation = 0) -> minidom.Element:
             group = root_xml.createElement("group")

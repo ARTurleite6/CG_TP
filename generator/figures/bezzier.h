@@ -2,26 +2,24 @@
 #define BEZZIER_H
 
 #include "figure.h"
-#include "my_math.h"
-#include "my_math.h"
 #include "io.h"
-class Bezzier: public Figure {
-    
-    public:
+#include "my_math.h"
+class Bezzier : public Figure {
 
-    Bezzier(const std::string &filepath, float tesselation);
-    
-    void storeVertices(std::string_view outFile) const noexcept override;
+public:
+  Bezzier(const std::string &filepath, float tesselation);
 
-    
-    private:
-    static maths::Vertex getPoint(const maths::Matrix<Vertex, 4, 4> &mA, float u, float v);
+  void storeVertices(std::string_view outFile) const noexcept override;
 
-      [[nodiscard]] std::vector<maths::Vertex>
-      calculatePoints() const noexcept;
-      float tesselation{0.0f};
-      std::vector<std::array<int, 16>> patchesIndices{};
-      std::vector<maths::Vertex> vertices{};
-      };
+private:
+  static std::pair<maths::Vertex, maths::Vertex>
+  getPoint(const maths::Matrix<Vertex, 4, 4> &mA, float u, float v);
+
+  [[nodiscard]] std::pair<std::vector<maths::Vertex>,
+                          std::vector<maths::Vertex>>
+  calculatePoints() const noexcept;
+  float tesselation{0.0f};
+  std::vector<std::array<int, 16>> patchesIndices{};
+};
 
 #endif // BEZZIER_H

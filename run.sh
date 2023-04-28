@@ -1,3 +1,3 @@
 #! /usr/bin/bash
 
-build/engine/engine $1
+build/bin/engine $1

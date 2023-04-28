@@ -10,16 +10,18 @@ void Figure::storeVertices(std::string_view outFile) const noexcept {
     std::cerr << "Error opening file: " << outFile << '\n';
   }
 
-  for (const auto &t : triangles) {
-    for (const auto &v : t.vertices) {
-      file << v.x << " " << v.y << " " << v.z << "\n";
-    }
+  auto point = 0;
+  for (const auto &v : this->vertices) {
+    auto normal = this->normals[point++];
+    file << v.x << ' ' << v.y << ' ' << v.z << ' ' << normal.x << ' '
+         << normal.y << ' ' << normal.z << '\n';
   }
 }
 
 void Figure::computeOperation(const Matrix<float, 4, 4> &m) noexcept {
-  for (auto &triangle : this->triangles)
-    for (auto &v : triangle.vertices) {
-      v *= m;
-    }
+  auto point = 0;
+  for (auto &v : this->vertices) {
+    v = m * v;
+    this->normals[point] = m * this->normals[point++];
+  }
 }

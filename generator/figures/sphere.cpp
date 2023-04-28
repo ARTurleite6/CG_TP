@@ -25,50 +25,59 @@ Sphere::Sphere(const std::vector<float> &args)
         this->radius * std::sin(y_step * static_cast<float>(i + 1));
     for (int j = 0; j < slices_n; ++j) {
 
-      Triangle t1{std::array<Vertex, 3>{
-          Vertex{next_radius_line * std::sin(xz_step * static_cast<float>(j)),
-                 this->radius * std::cos(y_step * static_cast<float>(i + 1)),
-                 next_radius_line * std::cos(xz_step * static_cast<float>(j)),
-                 1.0f},
-          Vertex{
-              current_radius_line * std::sin(xz_step * static_cast<float>(j)),
-              this->radius * std::cos(y_step * static_cast<float>(i)),
-              current_radius_line * std::cos(xz_step * static_cast<float>(j)),
-              1.0f},
-          Vertex{current_radius_line *
-                     std::sin(xz_step * static_cast<float>(j + 1)),
-                 this->radius * std::cos(y_step * static_cast<float>(i)),
-                 current_radius_line *
-                     std::cos(xz_step * static_cast<float>(j + 1)),
-                 1.0f}}};
+      this->vertices.emplace_back(
+          next_radius_line * std::sin(xz_step * static_cast<float>(j)),
+          this->radius * std::cos(y_step * static_cast<float>(i + 1)),
+          next_radius_line * std::cos(xz_step * static_cast<float>(j)), 1.0f);
+      this->normals.emplace_back(std::sin(xz_step * static_cast<float>(j)),
+                                 std::cos(y_step * static_cast<float>(i + 1)),
+                                 std::cos(xz_step * static_cast<float>(j)),
+                                 0.0f);
+      this->vertices.emplace_back(
+          current_radius_line * std::sin(xz_step * static_cast<float>(j)),
+          this->radius * std::cos(y_step * static_cast<float>(i)),
+          current_radius_line * std::cos(xz_step * static_cast<float>(j)),
+          1.0f);
+      this->normals.emplace_back(std::sin(xz_step * static_cast<float>(j)),
+                                 std::cos(y_step * static_cast<float>(i)),
+                                 std::cos(xz_step * static_cast<float>(j)),
+                                 0.0f);
+      this->vertices.emplace_back(
+          current_radius_line * std::sin(xz_step * static_cast<float>(j + 1)),
+          this->radius * std::cos(y_step * static_cast<float>(i)),
+          current_radius_line * std::cos(xz_step * static_cast<float>(j + 1)),
+          1.0f);
+      this->normals.emplace_back(std::sin(xz_step * static_cast<float>(j + 1)),
+                                 std::cos(y_step * static_cast<float>(i)),
+                                 std::cos(xz_step * static_cast<float>(j + 1)),
+                                 0.0f);
 
-      this->triangles.emplace_back(t1);
-
-      Triangle t2{
-
-          std::array<Vertex, 3>{
-              Vertex{next_radius_line *
-                         std::sin(xz_step * static_cast<float>(j + 1)),
-                     this->radius *
-                         std::cos(y_step * static_cast<float>(i + 1)),
-                     next_radius_line *
-                         std::cos(xz_step * static_cast<float>(j + 1)),
-                     1.0f},
-              Vertex{
-                  next_radius_line * std::sin(xz_step * static_cast<float>(j)),
-                  this->radius * std::cos(y_step * static_cast<float>(i + 1)),
-                  next_radius_line * std::cos(xz_step * static_cast<float>(j)),
-                  1.0f},
-              Vertex{current_radius_line *
-                         std::sin(xz_step * static_cast<float>(j + 1)),
-                     this->radius * std::cos(y_step * static_cast<float>(i)),
-                     current_radius_line *
-                         std::cos(xz_step * static_cast<float>(j + 1)),
-                     1.0f}}
-
-      };
-
-      this->triangles.emplace_back(t2);
+      this->vertices.emplace_back(
+          next_radius_line * std::sin(xz_step * static_cast<float>(j + 1)),
+          this->radius * std::cos(y_step * static_cast<float>(i + 1)),
+          next_radius_line * std::cos(xz_step * static_cast<float>(j + 1)),
+          1.0f);
+      this->normals.emplace_back(std::sin(xz_step * static_cast<float>(j + 1)),
+                                 std::cos(y_step * static_cast<float>(i + 1)),
+                                 std::cos(xz_step * static_cast<float>(j + 1)),
+                                 0.0f);
+      this->vertices.emplace_back(
+          next_radius_line * std::sin(xz_step * static_cast<float>(j)),
+          this->radius * std::cos(y_step * static_cast<float>(i + 1)),
+          next_radius_line * std::cos(xz_step * static_cast<float>(j)), 1.0f);
+      this->normals.emplace_back(std::sin(xz_step * static_cast<float>(j)),
+                                 std::cos(y_step * static_cast<float>(i + 1)),
+                                 std::cos(xz_step * static_cast<float>(j)),
+                                 0.0f);
+      this->vertices.emplace_back(
+          current_radius_line * std::sin(xz_step * static_cast<float>(j + 1)),
+          std::cos(y_step * static_cast<float>(i)),
+          current_radius_line * std::cos(xz_step * static_cast<float>(j + 1)),
+          1.0f);
+      this->normals.emplace_back(std::sin(xz_step * static_cast<float>(j + 1)),
+                                 std::cos(y_step * static_cast<float>(i)),
+                                 std::cos(xz_step * static_cast<float>(j + 1)),
+                                 0.0f);
     }
   }
 }

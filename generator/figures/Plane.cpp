@@ -13,35 +13,34 @@ Plane::Plane(const std::vector<float> &args)
   for (int i = 0; i < N; ++i) {
     for (int j = 0; j < N; ++j) {
 
-      Triangle t{{
-          Vertex{step * static_cast<float>(i), 0.0f,
-                 step * static_cast<float>(j), 1.0f},
-          Vertex{step * static_cast<float>(i), 0.0f,
-                 step * static_cast<float>(j + 1), 1.0f},
-          Vertex{step * static_cast<float>(i + 1), 0.0f,
-                 step * static_cast<float>(j), 1.0f},
-      }};
+      this->vertices.emplace_back(step * static_cast<float>(i), 0.0f,
+                                  step * static_cast<float>(j), 1.0f);
+      this->vertices.emplace_back(step * static_cast<float>(i), 0.0f,
+                                  step * static_cast<float>(j + 1), 1.0f);
+      this->vertices.emplace_back(step * static_cast<float>(i + 1), 0.0f,
+                                  step * static_cast<float>(j), 1.0f);
 
-      this->triangles.push_back(t);
+      for (int i = 0; i < 3; ++i) {
+        this->normals.emplace_back(0.0f, 1.0f, 0.0f, 0.0f);
+      }
 
-      Triangle t2{{
-          Vertex{step * static_cast<float>(i), 0.0f,
-                 step * static_cast<float>(j + 1), 1.0f},
-          Vertex{step * static_cast<float>(i + 1), 0.0f,
-                 step * static_cast<float>(j + 1), 1.0f},
-          Vertex{step * static_cast<float>(i + 1), 0.0f,
-                 step * static_cast<float>(j), 1.0f},
-      }};
-      this->triangles.push_back(t2);
+      this->vertices.emplace_back(step * static_cast<float>(i), 0.0f,
+                                  step * static_cast<float>(j + 1), 1.0f);
+      this->vertices.emplace_back(step * static_cast<float>(i + 1), 0.0f,
+                                  step * static_cast<float>(j + 1), 1.0f);
+      this->vertices.emplace_back(step * static_cast<float>(i + 1), 0.0f,
+                                  step * static_cast<float>(j), 1.0f);
+
+      for (int i = 0; i < 3; ++i) {
+        this->normals.emplace_back(0.0f, 1.0f, 0.0f, 0.0f);
+      }
     }
   }
 
   float translate = dimension / 2.0f;
   auto m = maths::translate(maths::Matrix(1.0f),
-                              Vertex{-translate, 0.0f, -translate, 0.0f});
-  for (auto &triangle : this->triangles) {
-    for (auto &vertice : triangle.vertices) {
-      vertice = vertice * m;
-    }
+                            Vertex{-translate, 0.0f, -translate, 0.0f});
+  for (auto &vertice : this->vertices) {
+    vertice = vertice * m;
   }
 }

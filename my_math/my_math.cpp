@@ -10,7 +10,6 @@ void Vertex::operator*=(const Matrix<float, 4, 4> &m) noexcept {
   this->y = m[1][0] * v.x + m[1][1] * v.y + m[1][2] * v.z + m[1][3] * v.w,
   this->z = m[2][0] * v.x + m[2][1] * v.y + m[2][2] * v.z + m[2][3] * v.w,
   this->w = m[3][0] * v.x + m[3][1] * v.y + m[3][2] * v.z + m[3][3] * v.w;
-
 }
 
 Vertex &Vertex::operator*(const Matrix<float, 4, 4> &m) noexcept {
@@ -50,7 +49,7 @@ Vertex Vertex::operator+(const Vertex &m) const noexcept {
 }
 
 Vertex operator*(const Vertex &v, float constant) noexcept {
-  return { v.x * constant, v.y * constant, v.z * constant, v.w * constant };
+  return {v.x * constant, v.y * constant, v.z * constant, v.w * constant};
 }
 
 [[nodiscard]] Vertex Vertex::crossProduct(const Vertex &v) const noexcept {
@@ -83,10 +82,11 @@ float Vertex::operator*(const Vertex &vertex) const noexcept {
 }
 
 Vertex operator*(float x, const Vertex &vertex) {
-  return { vertex.x * x, vertex.y * x, vertex.z * x, vertex.w * x };
+  return {vertex.x * x, vertex.y * x, vertex.z * x, vertex.w * x};
 }
 
-template <> Matrix<Vertex, 4, 4> Matrix<Vertex, 4, 4>::patchBezzier() const noexcept {
+template <>
+Matrix<Vertex, 4, 4> Matrix<Vertex, 4, 4>::patchBezzier() const noexcept {
   auto m = Matrix<float, 4, 4>{-1.0f, +3.0f, -3.0f, +1.0f, +3.0f, -6.0f,
                                +3.0f, +0.0f, -3.0f, +3.0f, +0.0f, +0.0f,
                                +1.0f, +0.0f, +0.0f, +0.0f};
@@ -97,7 +97,8 @@ template <> Matrix<Vertex, 4, 4> Matrix<Vertex, 4, 4>::patchBezzier() const noex
   return m * *this * transpose;
 }
 
-Matrix<float, 4, 4> translate(const Matrix<float, 4, 4> &m, const maths::Vertex &v) noexcept {
+Matrix<float, 4, 4> translate(const Matrix<float, 4, 4> &m,
+                              const maths::Vertex &v) noexcept {
   Matrix result = m;
 
   result[0][3] = v.x;
@@ -107,7 +108,8 @@ Matrix<float, 4, 4> translate(const Matrix<float, 4, 4> &m, const maths::Vertex 
   return result;
 }
 
-Matrix<float, 4, 4> scale(const Matrix<float, 4, 4> &m, const maths::Vertex &v) noexcept {
+Matrix<float, 4, 4> scale(const Matrix<float, 4, 4> &m,
+                          const maths::Vertex &v) noexcept {
   Matrix result = m;
 
   result[0][0] = v.x;
@@ -117,37 +119,44 @@ Matrix<float, 4, 4> scale(const Matrix<float, 4, 4> &m, const maths::Vertex &v) 
   return result;
 }
 
-Matrix<float, 4, 4> rotate(const Matrix<float, 4, 4> &m, const maths::Vertex &v, float angle) noexcept {
+Matrix<float, 4, 4> rotate(const Matrix<float, 4, 4> &m, const maths::Vertex &v,
+                           float angle) noexcept {
 
-  Matrix result = m;
+  const auto radians_angle = angle * (std::numbers::pi_v<float> / 180.0f);
+
+  Matrix result = Matrix(1.0f);
 
   if (v.x != 0.0f) {
-    result[1][1] = std::cos(angle);
-    result[1][2] = -std::sin(angle);
-    result[2][1] = std::sin(angle);
-    result[2][2] = std::cos(angle);
+    result[1][1] = std::cos(radians_angle);
+    result[1][2] = -std::sin(radians_angle);
+    result[2][1] = std::sin(radians_angle);
+    result[2][2] = std::cos(radians_angle);
   } else if (v.y != 0.0f) {
-    result[0][0] = std::cos(angle);
-    result[0][2] = std::sin(angle);
-    result[2][0] = -std::sin(angle);
-    result[2][2] = std::cos(angle);
+    result[0][0] = std::cos(radians_angle);
+    result[0][2] = std::sin(radians_angle);
+    result[2][0] = -std::sin(radians_angle);
+    result[2][2] = std::cos(radians_angle);
   } else if (v.z != 0.0f) {
-    result[0][0] = std::cos(angle);
-    result[0][1] = -std::sin(angle);
-    result[1][0] = std::sin(angle);
-    result[1][1] = std::cos(angle);
+    result[0][0] = std::cos(radians_angle);
+    result[0][1] = -std::sin(radians_angle);
+    result[1][0] = std::sin(radians_angle);
+    result[1][1] = std::cos(radians_angle);
   }
 
-  return result;
+  return m * result;
 }
 
-template<>
+template <>
 Vertex Matrix<float, 4, 4>::operator*(const Vertex &v) const noexcept {
-  return Vertex {
-    this->m[0][0] * v.x + this->m[0][1] * v.y + this->m[0][2] * v.z + this->m[0][3] * v.w,
-    this->m[1][0] * v.x + this->m[1][1] * v.y + this->m[1][2] * v.z + this->m[1][3] * v.w,
-    this->m[2][0] * v.x + this->m[2][1] * v.y + this->m[2][2] * v.z + this->m[2][3] * v.w,
-    this->m[3][0] * v.x + this->m[3][1] * v.y + this->m[3][2] * v.z + this->m[3][3] * v.w,
+  return Vertex{
+      this->m[0][0] * v.x + this->m[0][1] * v.y + this->m[0][2] * v.z +
+          this->m[0][3] * v.w,
+      this->m[1][0] * v.x + this->m[1][1] * v.y + this->m[1][2] * v.z +
+          this->m[1][3] * v.w,
+      this->m[2][0] * v.x + this->m[2][1] * v.y + this->m[2][2] * v.z +
+          this->m[2][3] * v.w,
+      this->m[3][0] * v.x + this->m[3][1] * v.y + this->m[3][2] * v.z +
+          this->m[3][3] * v.w,
   };
 }
 
