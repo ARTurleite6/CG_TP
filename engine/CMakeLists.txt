@@ -9,4 +9,6 @@ add_executable(engine
     transformations/rotation.cpp
     transformations/scale.cpp
     renderer.cpp
+    pointlight.cpp
+    color.cpp
     )

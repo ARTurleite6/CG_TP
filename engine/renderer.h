@@ -4,8 +4,9 @@
 #include "include.h"
 
 struct CacheEntry {
-  unsigned int vbo;
+  unsigned int vbo[2];
   std::vector<float> vertices;
+  std::vector<float> normals;
 };
 
 // singleton class

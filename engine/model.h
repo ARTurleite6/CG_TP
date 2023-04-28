@@ -1,9 +1,11 @@
 #ifndef MODEL_H
 #define MODEL_H
 
+#include "color.h"
 #include "include.h"
 #include "my_math.h"
 #include "renderer.h"
+#include <tinyxml2.h>
 
 class Model {
 
@@ -14,7 +16,7 @@ private:
 
 public:
   Model() = default;
-  explicit Model(std::string_view filename);
+  explicit Model(tinyxml2::XMLElement *element);
   Model(Model &&) = default;
   Model(const Model &) = default;
   Model &operator=(Model &&) = default;
@@ -30,6 +32,7 @@ private:
   std::string filename;
   std::vector<maths::Vertex> vertices;
   std::vector<maths::Vertex> normals;
+  Color color;
 };
 
 #endif

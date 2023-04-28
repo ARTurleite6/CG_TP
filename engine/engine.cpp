@@ -1,5 +1,6 @@
 #include "engine.h"
 #include "camera.h"
+#include "pointlight.h"
 
 Engine::Engine(std::string_view xml_file)
     : xml_file(xml_file), doc(), window_width(800), window_height(800),
@@ -48,6 +49,16 @@ Engine::Engine(std::string_view xml_file)
   if (this->groups.empty()) {
     std::cerr << "No group found to draw\n";
     throw std::runtime_error("No group found to draw\n");
+  }
+
+  auto lights = world->FirstChildElement("lights");
+  if (lights != nullptr)
+    this->loadLights(lights);
+}
+
+void Engine::placeLights() const {
+  for (const auto &light : this->lights) {
+    light->place();
   }
 }
 
@@ -120,7 +131,8 @@ void Engine::run(int argc, char *argv[]) const {
 
   glEnable(GL_DEPTH_TEST);
   glEnable(GL_CULL_FACE);
-  glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+  glEnable(GL_LIGHTING);
+  glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
   glutMainLoop();
 }
@@ -160,6 +172,7 @@ void display() {
     std::cout << "Error: engine is null" << '\n';
     return;
   }
+  engine->placeLights();
   engine->placeCamera();
 
   engine->handleInput();
@@ -217,4 +230,16 @@ void Engine::unregisterKey(unsigned char key) {
   if (static_cast<int>(key) > std::numeric_limits<unsigned char>::max())
     throw std::invalid_argument("keycode not valid");
   this->keyboard[key] = false;
+}
+
+void Engine::loadLights(tinyxml2::XMLElement *lights) {
+  auto light = lights->FirstChildElement("light");
+  std::uint32_t index = 0;
+  for (auto light = lights->FirstChildElement("light"); light != nullptr;
+       light = light->NextSiblingElement("light")) {
+
+    std::string_view type = light->Attribute("type");
+    if (type == "point")
+      this->lights.push_back(std::make_unique<PointLight>(light, index++));
+  }
 }

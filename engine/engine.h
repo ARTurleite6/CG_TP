@@ -2,6 +2,7 @@
 #define ENGINE_H
 #include "camera.h"
 #include "group.h"
+#include "light.h"
 #include "model.h"
 #include "renderer.h"
 
@@ -16,6 +17,8 @@ public:
   ~Engine() = default;
 
   void run(int argc, char *argv[]) const;
+
+  void placeLights() const;
 
   inline void placeCamera() const noexcept { this->camera->place(); }
 
@@ -49,11 +52,14 @@ public:
 private:
   void loadCamera(tinyxml2::XMLElement *camera);
 
+  void loadLights(tinyxml2::XMLElement *lights);
+
   tinyxml2::XMLDocument doc;
 
   std::uint32_t window_width{}, window_height{};
   std::unique_ptr<camera_engine::Camera> camera;
   std::vector<Group> groups;
+  std::vector<std::unique_ptr<Light>> lights;
   std::string xml_file;
 
   Renderer renderer;

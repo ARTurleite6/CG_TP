@@ -14,7 +14,7 @@ void Group::load_models(tinyxml2::XMLElement *group) noexcept {
   if (models != nullptr) {
     auto model = models->FirstChildElement("model");
     while (model) {
-      this->models.emplace_back(model->Attribute("file"));
+      this->models.emplace_back(model);
       model = model->NextSiblingElement("model");
     }
   }

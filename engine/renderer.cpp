@@ -7,13 +7,21 @@ void Renderer::draw(const std::string &file) {
     this->parse(file);
   }
 
-  auto [vbo, vertices] = this->cache[file];
+  auto [vbo, vertices, normals] = this->cache[file];
 
   glEnableClientState(GL_VERTEX_ARRAY);
-  glBindBuffer(GL_ARRAY_BUFFER, vbo);
+  glEnableClientState(GL_NORMAL_ARRAY);
+
+  glBindBuffer(GL_ARRAY_BUFFER, vbo[0]);
   glVertexPointer(3, GL_FLOAT, 0, nullptr);
   glDrawArrays(GL_TRIANGLES, 0, static_cast<int>(vertices.size() / 3));
+
+  glBindBuffer(GL_ARRAY_BUFFER, vbo[1]);
+  glNormalPointer(GL_FLOAT, 0, nullptr);
+  glDrawArrays(GL_TRIANGLES, 0, static_cast<int>(vertices.size() / 3));
+
   glDisableClientState(GL_VERTEX_ARRAY);
+  glDisableClientState(GL_NORMAL_ARRAY);
 }
 
 void Renderer::parse(const std::string &file) {
@@ -32,8 +40,8 @@ void Renderer::parse(const std::string &file) {
 
   while (std::getline(file_stream, buffer)) {
 
-    std::array<std::string_view, 3> vertices = split_N<3>(buffer, " ");
-    std::array<float, 3> verticesFloat{};
+    std::array<std::string_view, 6> vertices = split_N<6>(buffer, " ");
+    std::array<float, 6> verticesFloat{};
     std::transform(vertices.cbegin(), vertices.cend(), verticesFloat.begin(),
                    [](const std::string_view value) {
                      return std::stof(std::string(value));
@@ -42,13 +50,22 @@ void Renderer::parse(const std::string &file) {
     cacheEntry.vertices.push_back(verticesFloat[0]);
     cacheEntry.vertices.push_back(verticesFloat[1]);
     cacheEntry.vertices.push_back(verticesFloat[2]);
+
+    cacheEntry.normals.push_back(verticesFloat[3]);
+    cacheEntry.normals.push_back(verticesFloat[4]);
+    cacheEntry.normals.push_back(verticesFloat[5]);
   }
 
-  glGenBuffers(1, &cacheEntry.vbo);
-  glBindBuffer(GL_ARRAY_BUFFER, cacheEntry.vbo);
+  glGenBuffers(1, cacheEntry.vbo);
+  glBindBuffer(GL_ARRAY_BUFFER, cacheEntry.vbo[0]);
   glBufferData(GL_ARRAY_BUFFER,
                static_cast<long>(sizeof(float) * cacheEntry.vertices.size()),
                cacheEntry.vertices.data(), GL_STATIC_DRAW);
+
+  glBindBuffer(GL_ARRAY_BUFFER, cacheEntry.vbo[1]);
+  glBufferData(GL_ARRAY_BUFFER,
+               static_cast<long>(sizeof(float) * cacheEntry.normals.size()),
+               cacheEntry.normals.data(), GL_STATIC_DRAW);
 
   glBindBuffer(GL_ARRAY_BUFFER, 0);
 
