@@ -1,6 +1,6 @@
 #ifndef DIRECTIONLIGHT_H
 #define DIRECTIONLIGHT_H
-#include "include.h"
+#include "../include.h"
 #include "light.h"
 #include "my_math.h"
 #include <tinyxml2.h>

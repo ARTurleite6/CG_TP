@@ -1,6 +1,6 @@
 #ifndef LIGHT_H
 #define LIGHT_H
-#include "include.h"
+#include "../include.h"
 
 class Light {
 public:

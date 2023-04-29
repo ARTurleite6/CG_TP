@@ -16,7 +16,13 @@ FetchContent_Declare(
     GIT_TAG 9.0.0
     )
 
-FetchContent_MakeAvailable(tiny_xml)
+FetchContent_Declare(
+    fmt
+    GIT_REPOSITORY https://github.com/fmtlib/fmt.git
+    GIT_TAG 9.1.0
+    )
+
+FetchContent_MakeAvailable(tiny_xml fmt)
 
 find_package(GLUT REQUIRED)
 
@@ -37,7 +43,7 @@ if(NOT APPLE)
 endif(NOT APPLE)
 
 target_precompile_headers(my_math PRIVATE include/pch.h)
-target_link_libraries(engine GLUT::GLUT tinyxml2::tinyxml2 ${GLEW_LIBRARIES} my_math)
+target_link_libraries(engine GLUT::GLUT tinyxml2::tinyxml2 ${GLEW_LIBRARIES} my_math fmt::fmt)
 target_link_libraries(generator my_math)
 target_include_directories(generator PRIVATE ${PROJECT_SOURCE_DIR}/my_math)
 target_include_directories(engine PRIVATE ${PROJECT_SOURCE_DIR}/my_math)
@@ -57,7 +63,7 @@ if(WIN32)
 
 	include_directories(${TOOLKITS_FOLDER}/glut )
 	target_link_libraries(engine ${OPENGL_LIBRARIES}
-										  ${TOOLKITS_FOLDER}/glut/glut32.lib my_math)
+										  ${TOOLKITS_FOLDER}/glut/glut32.lib my_math fmt::fmt)
 
 	if (EXISTS "${TOOLKITS_FOLDER}/glut/glut32.dll" )
 		file(COPY ${TOOLKITS_FOLDER}/glut/glut32.dll DESTINATION ${CMAKE_BINARY_DIR})
@@ -73,7 +79,7 @@ if(WIN32)
 	link_directories(${GLUT_LIBRARY_DIRS})
 	add_definitions(${GLUT_DEFINITIONS})
 	
-	target_link_libraries(engine ${OPENGL_LIBRARIES} ${GLUT_LIBRARIES} my_math)
+	target_link_libraries(engine ${OPENGL_LIBRARIES} ${GLUT_LIBRARIES} my_math fmt::fmt)
 	if(NOT GLUT_FOUND)
 	   message(ERROR ": GLUT not found!")
 	endif(NOT GLUT_FOUND)

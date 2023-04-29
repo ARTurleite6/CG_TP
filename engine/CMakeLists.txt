@@ -9,8 +9,10 @@ add_executable(engine
     transformations/rotation.cpp
     transformations/scale.cpp
     renderer.cpp
-    pointlight.cpp
     color.cpp
-    directionallight.cpp
-    light.cpp
+    parsing.cpp
+    lights/pointlight.cpp
+    lights/directionallight.cpp
+    lights/light.cpp
+    lights/spotlight.cpp
     )

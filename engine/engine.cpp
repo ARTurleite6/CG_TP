@@ -1,5 +1,8 @@
 #include "engine.h"
 #include "camera.h"
+#include "parse_errors/xml_parse_error.h"
+#include "parsing.h"
+#include "tinyxml2.h"
 
 Engine::Engine(std::string_view xml_file)
     : xml_file(xml_file), doc(), window_width(800), window_height(800),
@@ -11,31 +14,24 @@ Engine::Engine(std::string_view xml_file)
     key = false;
   }
 
-  if (doc.Error()) {
-    std::cout << "Error: " << doc.ErrorStr() << '\n';
-    return;
-  }
+  if (doc.Error())
+    throw errors::XMLParseError(doc.ErrorStr());
 
   auto world = doc.FirstChildElement("world");
-  if (world == nullptr) {
-    std::cout << "Error: world element not found" << '\n';
-    return;
-  }
+  if (world == nullptr)
+    throw errors::XMLParseError("Error: world element not found");
 
   auto window = world->FirstChildElement("window");
-  if (window == nullptr) {
-    std::cout << "Error: window element not found" << '\n';
-    return;
-  }
-  window->QueryUnsignedAttribute("width", &this->window_width);
-  window->QueryUnsignedAttribute("height", &this->window_height);
+  if (window == nullptr)
+    throw errors::XMLParseError("Error: window element not found");
+
+  this->window_width = queryUnsignedAttr(window, "width");
+  this->window_height = queryUnsignedAttr(window, "height");
 
   auto camera = world->FirstChildElement("camera");
 
-  if (camera == nullptr) {
-    std::cout << "Error: camera element not found" << '\n';
-    return;
-  }
+  if (camera == nullptr)
+    throw errors::XMLParseError("Error: camera element not found");
 
   this->loadCamera(camera);
 
@@ -43,11 +39,6 @@ Engine::Engine(std::string_view xml_file)
   while (group != nullptr) {
     this->groups.emplace_back(group);
     group = group->NextSiblingElement("group");
-  }
-
-  if (this->groups.empty()) {
-    std::cerr << "No group found to draw\n";
-    throw std::runtime_error("No group found to draw\n");
   }
 
   auto lights = world->FirstChildElement("lights");
@@ -64,22 +55,21 @@ void Engine::placeLights() const {
 void Engine::loadCamera(tinyxml2::XMLElement *camera) {
   maths::Vertex position;
   auto position_xml = camera->FirstChildElement("position");
-  if (position_xml == nullptr) {
-    std::cout << "Error: position element not found" << '\n';
-    return;
-  }
-  position_xml->QueryAttribute("x", &position.x);
-  position_xml->QueryAttribute("y", &position.y);
-  position_xml->QueryAttribute("z", &position.z);
+  if (position_xml == nullptr)
+    throw errors::XMLParseError("Error: position element not found");
+  position.x = queryFloatAttr(position_xml, "x");
+  position.y = queryFloatAttr(position_xml, "y");
+  position.z = queryFloatAttr(position_xml, "z");
+
   auto lookAt = camera->FirstChildElement("lookAt");
   if (lookAt == nullptr) {
     std::cout << "Error: lookAt element not found" << '\n';
     return;
   }
   maths::Vertex lookAtCoordinates;
-  lookAt->QueryAttribute("x", &lookAtCoordinates.x);
-  lookAt->QueryAttribute("y", &lookAtCoordinates.y);
-  lookAt->QueryAttribute("z", &lookAtCoordinates.z);
+  lookAtCoordinates.x = queryFloatAttr(lookAt, "x");
+  lookAtCoordinates.y = queryFloatAttr(lookAt, "y");
+  lookAtCoordinates.z = queryFloatAttr(lookAt, "z");
 
   auto up = camera->FirstChildElement("up");
   if (up == nullptr) {
@@ -87,9 +77,10 @@ void Engine::loadCamera(tinyxml2::XMLElement *camera) {
     return;
   }
   maths::Vertex upCoordinates;
-  up->QueryAttribute("x", &upCoordinates.x);
-  up->QueryAttribute("y", &upCoordinates.y);
-  up->QueryAttribute("z", &upCoordinates.z);
+
+  upCoordinates.x = queryFloatAttr(up, "x");
+  upCoordinates.y = queryFloatAttr(up, "y");
+  upCoordinates.z = queryFloatAttr(up, "z");
 
   auto projection = camera->FirstChildElement("projection");
   if (projection == nullptr) {
@@ -97,9 +88,11 @@ void Engine::loadCamera(tinyxml2::XMLElement *camera) {
     return;
   }
   camera_engine::Pov pov;
-  projection->QueryAttribute("fov", &pov.fov);
-  projection->QueryAttribute("near", &pov.near);
-  projection->QueryAttribute("far", &pov.far);
+
+  pov.fov = queryFloatAttr(projection, "fov");
+  pov.near = queryFloatAttr(projection, "near");
+  pov.far = queryFloatAttr(projection, "far");
+
   this->camera = std::make_unique<camera_engine::Camera>(
       position, lookAtCoordinates, upCoordinates, pov, this->window_width,
       this->window_height);
@@ -235,6 +228,11 @@ void Engine::loadLights(tinyxml2::XMLElement *lights) {
     else if (type == "directional")
       this->lights.push_back(
           std::make_unique<DirectionalLight>(light, index++));
+    else if (type == "spotlight")
+      this->lights.push_back(std::make_unique<SpotLight>(light, index++));
+    else
+      throw errors::XMLParseError(
+          fmt::format("Error, {} type of light no supported", type));
   }
 }
 

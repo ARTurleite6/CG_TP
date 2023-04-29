@@ -1,11 +1,13 @@
 #ifndef ENGINE_H
 #define ENGINE_H
 #include "camera.h"
-#include "directionallight.h"
 #include "group.h"
-#include "light.h"
+#include "parse_errors/xml_parse_error.h"
+#include "lights/directionallight.h"
+#include "lights/light.h"
+#include "lights/pointlight.h"
+#include "lights/spotlight.h"
 #include "model.h"
-#include "pointlight.h"
 #include "renderer.h"
 
 class Engine {
