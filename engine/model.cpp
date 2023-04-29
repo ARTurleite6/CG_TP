@@ -30,5 +30,6 @@ void Model::loadPoints(std::ifstream &file) noexcept {
 }
 
 void Model::draw(Renderer &renderer) const noexcept {
+  this->setupMaterial();
   renderer.draw(this->filename);
 }

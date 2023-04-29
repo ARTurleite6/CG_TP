@@ -85,6 +85,10 @@ Vertex operator*(float x, const Vertex &vertex) {
   return {vertex.x * x, vertex.y * x, vertex.z * x, vertex.w * x};
 }
 
+std::ostream &operator<<(std::ostream &oos, const Vertex &v) {
+  return oos << "Vertex ( x = " << v.x << ", y = " << v.y << ", z = " << v.z << ", w = " << v.w << ");";
+}
+
 template <>
 Matrix<Vertex, 4, 4> Matrix<Vertex, 4, 4>::patchBezzier() const noexcept {
   auto m = Matrix<float, 4, 4>{-1.0f, +3.0f, -3.0f, +1.0f, +3.0f, -6.0f,

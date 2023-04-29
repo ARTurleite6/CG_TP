@@ -11,7 +11,6 @@ PointLight::PointLight(tinyxml2::XMLElement *element, std::uint32_t index)
   this->enable();
   float dark[4] = {0.2f, 0.2f, 0.2f, 1.0f};
   float white[4] = {1.0f, 1.0f, 1.0f, 1.0f};
-  float black[4] = {0.0f, 0.0f, 0.0f, 0.0f};
 
   glLightfv(GL_LIGHT0 + index, GL_AMBIENT, dark);
   glLightfv(GL_LIGHT0 + index, GL_DIFFUSE, white);
@@ -20,7 +19,7 @@ PointLight::PointLight(tinyxml2::XMLElement *element, std::uint32_t index)
 
 void PointLight::place() const {
   std::array<float, 4> pos{this->position.x, this->position.y, this->position.z,
-                           this->position.w};
+                           1.0f};
 
   glLightfv(GL_LIGHT0 + index, GL_POSITION, pos.data());
 }

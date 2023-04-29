@@ -27,6 +27,7 @@ public:
 
 private:
   void loadPoints(std::ifstream &file) noexcept;
+  inline void setupMaterial() const noexcept { this->color.setup(); }
 
 private:
   std::string filename;

@@ -22,6 +22,7 @@ struct Vertex {
   friend Vertex operator*(const Vertex &v, float constant) noexcept;
   Vertex &operator+=(const Vertex &) noexcept;
   float operator*(const Vertex &) const noexcept;
+  friend std::ostream &operator<<(std::ostream &oos, const Vertex &v);
 
   static Vertex fromSpherical(float radius, float alpha, float beta);
 
@@ -33,6 +34,7 @@ struct Vertex {
 };
 
 Vertex operator*(float x, const Vertex &vertex);
+std::ostream &operator<<(std::ostream &oos, const Vertex &v);
 
 
 // struct Matrix {

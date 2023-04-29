@@ -14,10 +14,10 @@ void Renderer::draw(const std::string &file) {
 
   glBindBuffer(GL_ARRAY_BUFFER, vbo[0]);
   glVertexPointer(3, GL_FLOAT, 0, nullptr);
-  glDrawArrays(GL_TRIANGLES, 0, static_cast<int>(vertices.size() / 3));
 
   glBindBuffer(GL_ARRAY_BUFFER, vbo[1]);
   glNormalPointer(GL_FLOAT, 0, nullptr);
+
   glDrawArrays(GL_TRIANGLES, 0, static_cast<int>(vertices.size() / 3));
 
   glDisableClientState(GL_VERTEX_ARRAY);
