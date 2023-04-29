@@ -1,9 +1,11 @@
 #ifndef ENGINE_H
 #define ENGINE_H
 #include "camera.h"
+#include "directionallight.h"
 #include "group.h"
 #include "light.h"
 #include "model.h"
+#include "pointlight.h"
 #include "renderer.h"
 
 class Engine {
@@ -53,6 +55,7 @@ private:
   void loadCamera(tinyxml2::XMLElement *camera);
 
   void loadLights(tinyxml2::XMLElement *lights);
+  void configureLights() const noexcept;
 
   tinyxml2::XMLDocument doc;
 

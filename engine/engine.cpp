@@ -1,6 +1,5 @@
 #include "engine.h"
 #include "camera.h"
-#include "pointlight.h"
 
 Engine::Engine(std::string_view xml_file)
     : xml_file(xml_file), doc(), window_width(800), window_height(800),
@@ -134,6 +133,11 @@ void Engine::run(int argc, char *argv[]) const {
   glEnable(GL_LIGHTING);
   glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
+  this->configureLights();
+
+  glEnableClientState(GL_VERTEX_ARRAY);
+  glEnableClientState(GL_NORMAL_ARRAY);
+
   glutMainLoop();
 }
 
@@ -172,24 +176,11 @@ void display() {
     std::cout << "Error: engine is null" << '\n';
     return;
   }
+  glLoadIdentity();
   engine->placeLights();
   engine->placeCamera();
 
   engine->handleInput();
-
-  glBegin(GL_LINES);
-  glColor3f(1.0f, 0.0f, 0.0f);
-  glVertex3f(100.0f, 0.0f, 0.0f);
-  glVertex3f(-100.0f, 0.0f, 0.0f);
-
-  glColor3f(0.0f, 1.0f, 0.0f);
-  glVertex3f(0.0f, 100.0f, 0.0f);
-  glVertex3f(0.0f, -100.0f, 0.0f);
-
-  glColor3f(0.0f, 0.0f, 1.0f);
-  glVertex3f(0.0f, 0.0f, 100.0f);
-  glVertex3f(0.0f, 0.0f, -100.0f);
-  glEnd();
 
   engine->draw(elapsedTime);
   glutSwapBuffers();
@@ -241,5 +232,16 @@ void Engine::loadLights(tinyxml2::XMLElement *lights) {
     std::string_view type = light->Attribute("type");
     if (type == "point")
       this->lights.push_back(std::make_unique<PointLight>(light, index++));
+    else if (type == "directional")
+      this->lights.push_back(
+          std::make_unique<DirectionalLight>(light, index++));
   }
+}
+
+void Engine::configureLights() const noexcept {
+  for (const auto &light : this->lights) {
+    light->configureColor();
+  }
+  float black[4] = {0.0f, 0.0f, 0.0f, 0.0f};
+  glLightModelfv(GL_LIGHT_MODEL_AMBIENT, black);
 }

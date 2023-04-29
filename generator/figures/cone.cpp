@@ -12,12 +12,20 @@ Cone::Cone(const std::vector<float> &data)
   for (int i = 0; i < slices_n; ++i) {
 
     this->vertices.emplace_back(0.0f, 0.0f, 0.0f, 1.0f);
+    this->normals.emplace_back(0.0f, 1.0f, 0.0f, 0.0f);
     this->vertices.emplace_back(
         radius * std::sin(xz_angle * static_cast<float>(i)), 0.0f,
         radius * std::cos(xz_angle * static_cast<float>(i)), 1.0f);
+    this->normals.emplace_back(std::sin(xz_angle * static_cast<float>(i)), 0.0f,
+                               std::cos(xz_angle * static_cast<float>(i)),
+                               0.0f);
     this->vertices.emplace_back(
         radius * std::sin(xz_angle * static_cast<float>(i - 1)), 0.0f,
         radius * std::cos(xz_angle * static_cast<float>(i - 1)), 1.0f);
+
+    this->normals.emplace_back(
+        std::sin(xz_angle * static_cast<float>(i - 1)), 0.0f,
+        std::cos(xz_angle * static_cast<float>(i - 1)), 0.0f);
   }
 
   int stack_n = static_cast<int>(stacks);
@@ -35,27 +43,51 @@ Cone::Cone(const std::vector<float> &data)
           current_radius * std::sin(xz_angle * static_cast<float>(j)),
           current_height,
           current_radius * std::cos(xz_angle * static_cast<float>(j)), 1.0f);
+
+      this->normals.emplace_back(std::sin(xz_angle * static_cast<float>(j)), 0,
+                                 std::cos(xz_angle * static_cast<float>(j)),
+                                 0.0f);
+
       this->vertices.emplace_back(
           next_radius * std::sin(xz_angle * static_cast<float>(j)), next_height,
           next_radius * std::cos(xz_angle * static_cast<float>(j)), 1.0f);
+      this->normals.emplace_back(std::sin(xz_angle * static_cast<float>(j)), 0,
+                                 std::cos(xz_angle * static_cast<float>(j)),
+                                 1.0f);
+
       this->vertices.emplace_back(
           next_radius * std::sin(xz_angle * static_cast<float>(1 + j)),
           next_height,
           next_radius * std::cos(xz_angle * static_cast<float>(1 + j)), 1.0f);
 
+      this->normals.emplace_back(
+          std::sin(xz_angle * static_cast<float>(1 + j)), 0.0f,
+          std::cos(xz_angle * static_cast<float>(1 + j)), 0.0f);
+
       this->vertices.emplace_back(
           current_radius * std::sin(xz_angle * static_cast<float>(j)),
           current_height,
           current_radius * std::cos(xz_angle * static_cast<float>(j)), 1.0f);
+      this->normals.emplace_back(
+          std::sin(xz_angle * static_cast<float>(j)), 0.0f,
+          std::cos(xz_angle * static_cast<float>(j)), 0.0f);
+
       this->vertices.emplace_back(
           next_radius * std::sin(xz_angle * static_cast<float>(1 + j)),
           next_height,
           next_radius * std::cos(xz_angle * static_cast<float>(1 + j)), 1.0f);
+      this->normals.emplace_back(
+          std::sin(xz_angle * static_cast<float>(1 + j)), 0.0f,
+          std::cos(xz_angle * static_cast<float>(1 + j)), 0.0f);
+
       this->vertices.emplace_back(
           current_radius * std::sin(xz_angle * static_cast<float>(j + 1)),
           current_height,
           current_radius * std::cos(xz_angle * static_cast<float>(j + 1)),
           1.0f);
+      this->normals.emplace_back(
+          std::sin(xz_angle * static_cast<float>(j + 1)), 0.0f,
+          std::cos(xz_angle * static_cast<float>(j + 1)), 0.0f);
     }
   }
 }

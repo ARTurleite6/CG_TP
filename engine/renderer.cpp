@@ -9,9 +9,6 @@ void Renderer::draw(const std::string &file) {
 
   auto [vbo, vertices, normals] = this->cache[file];
 
-  glEnableClientState(GL_VERTEX_ARRAY);
-  glEnableClientState(GL_NORMAL_ARRAY);
-
   glBindBuffer(GL_ARRAY_BUFFER, vbo[0]);
   glVertexPointer(3, GL_FLOAT, 0, nullptr);
 
@@ -19,9 +16,6 @@ void Renderer::draw(const std::string &file) {
   glNormalPointer(GL_FLOAT, 0, nullptr);
 
   glDrawArrays(GL_TRIANGLES, 0, static_cast<int>(vertices.size() / 3));
-
-  glDisableClientState(GL_VERTEX_ARRAY);
-  glDisableClientState(GL_NORMAL_ARRAY);
 }
 
 void Renderer::parse(const std::string &file) {
@@ -56,7 +50,7 @@ void Renderer::parse(const std::string &file) {
     cacheEntry.normals.push_back(verticesFloat[5]);
   }
 
-  glGenBuffers(1, cacheEntry.vbo);
+  glGenBuffers(2, cacheEntry.vbo);
   glBindBuffer(GL_ARRAY_BUFFER, cacheEntry.vbo[0]);
   glBufferData(GL_ARRAY_BUFFER,
                static_cast<long>(sizeof(float) * cacheEntry.vertices.size()),

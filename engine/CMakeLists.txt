@@ -11,4 +11,6 @@ add_executable(engine
     renderer.cpp
     pointlight.cpp
     color.cpp
+    directionallight.cpp
+    light.cpp
     )

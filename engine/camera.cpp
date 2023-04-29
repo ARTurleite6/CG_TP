@@ -197,7 +197,6 @@ void Camera::place() noexcept {
   }
   auto lookAt = this->getLookAt();
   auto position = this->getPosition();
-  glLoadIdentity();
   gluLookAt(position.x, position.y, position.z, lookAt.x, lookAt.y, lookAt.z,
             up.x, up.y, up.z);
 }

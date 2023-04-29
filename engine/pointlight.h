@@ -12,12 +12,9 @@ public:
   ~PointLight() override = default;
 
   void place() const override;
-  inline void enable() const override { glEnable(GL_LIGHT0 + this->index); }
-  inline void disable() const override { glDisable(GL_LIGHT0 + this->index); }
 
 private:
   maths::Vertex position;
-  std::uint32_t index{0};
 };
 
 #endif // POINTLIGHT_H

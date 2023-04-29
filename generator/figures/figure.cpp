@@ -22,6 +22,5 @@ void Figure::computeOperation(const Matrix<float, 4, 4> &m) noexcept {
   auto point = 0;
   for (auto &v : this->vertices) {
     v = m * v;
-    this->normals[point] = m * this->normals[point++];
   }
 }
