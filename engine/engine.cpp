@@ -123,7 +123,6 @@ void Engine::run(int argc, char *argv[]) const {
 
   glEnable(GL_DEPTH_TEST);
   glEnable(GL_CULL_FACE);
-  glEnable(GL_LIGHTING);
   glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
   this->configureLights();
@@ -237,6 +236,9 @@ void Engine::loadLights(tinyxml2::XMLElement *lights) {
 }
 
 void Engine::configureLights() const noexcept {
+  if (this->lights.empty())
+    return;
+  glEnable(GL_LIGHTING);
   for (const auto &light : this->lights) {
     light->configureColor();
   }
