@@ -4,13 +4,16 @@
 #include <functional>
 #include <tinyxml2.h>
 
-int queryIntegerAttr(tinyxml2::XMLElement *element,
-                            std::string_view name);
+int queryIntegerAttr(const tinyxml2::XMLElement *element,
+                     std::string_view name);
 
-float queryFloatAttr(tinyxml2::XMLElement *element,
-                            std::string_view name);
+float queryFloatAttr(const tinyxml2::XMLElement *element,
+                     std::string_view name);
 
-std::uint32_t queryUnsignedAttr(tinyxml2::XMLElement *element,
-                                       std::string_view name);
+std::uint32_t queryUnsignedAttr(const tinyxml2::XMLElement *element,
+                                std::string_view name);
+
+bool queryBooleanAttr(const tinyxml2::XMLElement *element,
+                      std::string_view name);
 
 #endif // PARSING_H

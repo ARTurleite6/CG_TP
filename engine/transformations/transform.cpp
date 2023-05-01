@@ -1,7 +1,8 @@
 #include "transform.h"
+#include "FixedTranslation.h"
+#include "TimedTranslation.h"
 #include "rotation.h"
 #include "scale.h"
-#include "translation.h"
 
 namespace transformations {
 
@@ -14,7 +15,11 @@ create_transform(const tinyxml2::XMLElement *transform) {
   transform->QueryFloatAttribute("z", &z);
 
   if (name == "translate") {
-    return std::make_unique<Translation>(transform);
+    const auto time = transform->Attribute("time");
+    if (time != nullptr)
+      return std::make_unique<TimedTranslation>(transform);
+    else
+      return std::make_unique<FixedTranslation>(transform);
   } else if (name == "rotate") {
     return std::make_unique<Rotation>(transform);
   } else if (name == "scale") {

@@ -1,17 +1,12 @@
 #ifndef ROTATION_H
 #define ROTATION_H
+#include "../include.h"
 #include "tinyxml2.h"
-#ifdef __APPLE__
-#include <GLUT/glut.h>
-#else
-#include <GL/glut.h>
-#endif
 
 #include "transform.h"
 namespace transformations {
 class Rotation : public Transform {
 public:
-  Rotation(float, float, float, float);
   explicit Rotation(const tinyxml2::XMLElement *rotation);
   ~Rotation() override = default;
   void apply(int elapsedTime) noexcept override;

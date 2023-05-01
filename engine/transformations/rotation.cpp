@@ -3,9 +3,6 @@
 
 namespace transformations {
 
-Rotation::Rotation(float angle, float x, float y, float z)
-    : angle{angle}, x{x}, y{y}, z{z} {}
-
 Rotation::Rotation(const tinyxml2::XMLElement *rotation) {
   const auto time = rotation->FindAttribute("time");
   if (time != nullptr) {

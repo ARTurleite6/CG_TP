@@ -3,7 +3,8 @@
 #include <tinyxml2.h>
 
 enum class TypeTransformation {
-  Translate,
+  TimedTranslate,
+  FixedTranslate,
   Rotate,
   Scale,
 };

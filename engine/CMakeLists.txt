@@ -5,7 +5,8 @@ add_executable(engine
     model.cpp
     group.cpp
     transformations/transform.cpp
-    transformations/translation.cpp
+    transformations/FixedTranslation.cpp
+    transformations/TimedTranslation.cpp
     transformations/rotation.cpp
     transformations/scale.cpp
     renderer.cpp

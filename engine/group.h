@@ -4,6 +4,8 @@
 #include "model.h"
 #include "renderer.h"
 #include "transformations/transform.h"
+#include "transformations/transform.h"
+#include "transformations/TimedTranslation.h"
 
 class Transform;
 

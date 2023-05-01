@@ -1,6 +1,4 @@
 #include "group.h"
-#include "transformations/transform.h"
-#include "transformations/translation.h"
 
 Group::Group(tinyxml2::XMLElement *group) {
 
@@ -70,15 +68,12 @@ void Group::draw_children(Renderer &renderer, int elapsedTime) const noexcept {
 
 void Group::apply_transformations(int elapsedTime) const noexcept {
   for (const auto &transformation : this->transformations) {
-    // const auto translation =
-    //     dynamic_cast<transformations::Translation *>(transformation.get());
-    // if (translation != nullptr) {
-    //   translation->drawLine();
-    // }
-    if (transformation->getType() == TypeTransformation::Translate) {
+    if (transformation->getType() == TypeTransformation::TimedTranslate) {
       const auto translation =
-          static_cast<transformations::Translation *>(transformation.get());
-      translation->drawLine();
+          dynamic_cast<transformations::TimedTranslation *>(
+              transformation.get());
+      if (translation != nullptr)
+        translation->drawLine();
     }
     transformation->apply(elapsedTime);
   }

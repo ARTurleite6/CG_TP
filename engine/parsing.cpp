@@ -1,6 +1,18 @@
 #include "parsing.h"
 
-int queryIntegerAttr(tinyxml2::XMLElement *element, std::string_view name) {
+bool queryBooleanAttr(const tinyxml2::XMLElement *element,
+                      std::string_view name) {
+  bool result{false};
+  if (element->QueryBoolAttribute(name.data(), &result) !=
+      tinyxml2::XML_SUCCESS) {
+    throw errors::XMLParseError(fmt::format("Expected element {} on element {}",
+                                            name, element->Name()));
+  }
+  return result;
+}
+
+int queryIntegerAttr(const tinyxml2::XMLElement *element,
+                     std::string_view name) {
   int result{0};
   if (element->QueryIntAttribute(name.data(), &result) !=
       tinyxml2::XML_SUCCESS) {
@@ -11,7 +23,8 @@ int queryIntegerAttr(tinyxml2::XMLElement *element, std::string_view name) {
   return result;
 }
 
-float queryFloatAttr(tinyxml2::XMLElement *element, std::string_view name) {
+float queryFloatAttr(const tinyxml2::XMLElement *element,
+                     std::string_view name) {
   float result{0};
   if (element->QueryFloatAttribute(name.data(), &result) !=
       tinyxml2::XML_SUCCESS) {
@@ -22,7 +35,8 @@ float queryFloatAttr(tinyxml2::XMLElement *element, std::string_view name) {
   return result;
 }
 
-std::uint32_t queryUnsignedAttr(tinyxml2::XMLElement *element, std::string_view name) {
+std::uint32_t queryUnsignedAttr(const tinyxml2::XMLElement *element,
+                                std::string_view name) {
   std::uint32_t result{0};
   if (element->QueryUnsignedAttribute(name.data(), &result) !=
       tinyxml2::XML_SUCCESS) {
