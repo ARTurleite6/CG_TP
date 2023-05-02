@@ -1,4 +1,5 @@
 #include "TimedTranslation.h"
+#include "my_math.h"
 
 #define TESS 100.0f
 
@@ -22,13 +23,13 @@ TimedTranslation::TimedTranslation(const tinyxml2::XMLElement *translation)
   }
 }
 
-void TimedTranslation::drawLine() const noexcept {
+void TimedTranslation::drawLine() noexcept {
   auto t = 0.0f;
 
   glBegin(GL_LINE_LOOP);
 
   while (t < 1.0f) {
-    auto position = this->getPositionCurve(t);
+    auto position = this->getPositionCurve(t, true);
 
     glVertex3f(position.x, position.y, position.z);
 
@@ -44,10 +45,18 @@ void TimedTranslation::apply(int elapsedTime) noexcept {
   auto position = this->getPositionCurve(seconds / this->time);
 
   glTranslatef(position.x, position.y, position.z);
+
+  if (this->aligned) {
+    auto rotationMatrix = this->getRotationMatrix(seconds / this->time);
+    rotationMatrix.transpose();
+
+    float *matrixRot = &rotationMatrix[0][0];
+    glMultMatrixf(matrixRot);
+  }
 }
 
 [[nodiscard]] maths::Vertex
-TimedTranslation::getPositionCurve(float globalT) const noexcept {
+TimedTranslation::getPositionCurve(float globalT, bool drawing) noexcept {
   maths::Matrix matrix{
       -0.5f, 1.5f, -1.5f, 0.5f, 1.0f, -2.5f, 2.0f, -0.5f,
       -0.5f, 0.0f, 0.5f,  0.0f, 0.0f, 1.0f,  0.0f, 0.0f,
@@ -55,33 +64,28 @@ TimedTranslation::getPositionCurve(float globalT) const noexcept {
 
   auto t = this->getLocalT(globalT);
 
-  maths::Vertex tV{static_cast<float>(std::pow(t, 3)),
-                   static_cast<float>(std::pow(t, 2)), t, 1.0f};
+  maths::Matrix<float, 1, 4> tV{static_cast<float>(std::pow(t, 3)),
+                                static_cast<float>(std::pow(t, 2)), t, 1.0f};
+
+  maths::Matrix<float, 1, 4> tDV{3 * static_cast<float>(std::pow(t, 2)), 2 * t,
+                                 1.0f, 0.0f};
 
   const auto segment = this->getSegment(globalT);
-  std::array<std::array<float, 3>, 4> points{};
-  std::transform(segment.cbegin(), segment.cend(), points.begin(),
-                 [](const maths::Vertex &v) {
-                   return std::array<float, 3>{v.x, v.y, v.z};
-                 });
+  maths::Matrix<maths::Vertex, 4, 1> points{
+      segment[0],
+      segment[1],
+      segment[2],
+      segment[3],
+  };
 
-  std::array<float, 3> array_result{};
-  for (int i = 0; i < 3; ++i) {
-    maths::Vertex p{
-        points[0][i],
-        points[1][i],
-        points[2][i],
-        points[3][i],
-    };
+  auto a = matrix * points;
 
-    auto a = matrix * p;
+  if (!drawing)
+    this->current_derivative = (tDV * a)[0][0];
 
-    auto value = tV * a;
-    array_result[i] = value;
-  }
+  auto point = (tV * a)[0][0];
 
-  return maths::Vertex{array_result[0], array_result[1], array_result[2],
-                       array_result[3]};
+  return point;
 }
 
 [[nodiscard]] std::array<maths::Vertex, 4>
@@ -114,6 +118,24 @@ TimedTranslation::getSegment(float globalT) const noexcept {
   t = t - static_cast<float>(index);
 
   return t;
+}
+
+[[nodiscard]] maths::Matrix<float, 4, 4>
+TimedTranslation::getRotationMatrix(float globalT) noexcept {
+
+  auto x = this->current_derivative;
+  x.normalize();
+
+  auto z = x.crossProduct(this->lastY);
+  z.normalize();
+
+  auto y = z.crossProduct(x);
+  y.normalize();
+
+  lastY = y;
+
+  return maths::Matrix{x.x, y.x, z.x, 0.0f, x.y,  y.y,  z.y,  0.0f,
+                       x.z, y.z, z.z, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f};
 }
 
 } // namespace transformations

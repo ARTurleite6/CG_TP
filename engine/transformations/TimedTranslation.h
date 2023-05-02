@@ -16,11 +16,12 @@ public:
   explicit TimedTranslation(const tinyxml2::XMLElement *translation);
   ~TimedTranslation() override = default;
 
-  void drawLine() const noexcept;
+  void drawLine() noexcept;
   void apply(int elapsedTime) noexcept override;
 
 private:
-  [[nodiscard]] maths::Vertex getPositionCurve(float globalT) const noexcept;
+  [[nodiscard]] maths::Vertex getPositionCurve(float globalT,
+                                               bool drawing = false) noexcept;
 
   [[nodiscard]] std::array<maths::Vertex, 4>
   getSegment(float globalT) const noexcept;
@@ -31,9 +32,14 @@ private:
     return TypeTransformation::TimedTranslate;
   }
 
+  [[nodiscard]] maths::Matrix<float, 4, 4>
+  getRotationMatrix(float globalT) noexcept;
+
 private:
   float time{0};
   bool aligned{false};
+  maths::Vertex lastY{0.0f, 1.0f, 0.0f, 0.0f};
+  maths::Vertex current_derivative{0.0f, 0.0f, 0.0f, 0.0f};
 
   std::vector<maths::Vertex> points;
 };
