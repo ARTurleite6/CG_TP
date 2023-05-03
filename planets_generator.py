@@ -16,6 +16,8 @@ from random import randint
 </world>
 """
 
+BASE_DISTANCE = 3
+
 class Dom():
     @abstractmethod
     def get_dom_element(self, root_xml: minidom.Document, angle_rotation = 0) -> minidom.Element:
@@ -176,23 +178,23 @@ class SolarSystem():
         #PLANETS = ["Mercury", "Venus", "Earth", "Mars", "Jupiter, Saturn", "Uranus", "Neptune"]
         SUN_SCALE = 3
         sun = SolarSystemElement(scale=SUN_SCALE, name="sphere")
-        mercury = SolarSystemElement(scale=0.04332129963, distance=3.6, name="sphere")
-        venus = SolarSystemElement(scale=0.10434782608, distance=6.7, name="sphere")
-        earth = SolarSystemElement(scale=0.11009174311, distance=9.3, name="sphere")
+        mercury = SolarSystemElement(scale=0.04332129963, distance=BASE_DISTANCE + 1, name="sphere")
+        venus = SolarSystemElement(scale=0.10434782608, distance=BASE_DISTANCE + 2, name="sphere")
+        earth = SolarSystemElement(scale=0.11009174311, distance=BASE_DISTANCE + 2.5, name="sphere")
         earth.add_star(SolarSystemElement(scale=0.25, distance=9.8, name="sphere"))
-        mars = SolarSystemElement(scale=0.05797101449, distance=14.2, name="sphere")
+        mars = SolarSystemElement(scale=0.05797101449, distance=4 + BASE_DISTANCE, name="sphere")
         mars.add_star(SolarSystemElement(scale=0.00308641975, distance=5.5176617942886566, name="sphere"))
         mars.add_star(SolarSystemElement(scale=0.00189933523, distance=7.8335344536757265, name="sphere"))
-        jupiter = SolarSystemElement(scale=1.09090909091, distance=48.4, name="sphere")
+        jupiter = SolarSystemElement(scale=1.09090909091, distance=BASE_DISTANCE + 13, name="sphere")
         jupiter.add_star(SolarSystemElement(scale=0.026055985467236916, distance=7.398371343153356, name="sphere"))
         jupiter.add_star(SolarSystemElement(scale=0.02232552817153238, distance=8.263971011265888, name="sphere"))
         jupiter.add_star(SolarSystemElement(scale=0.037636423452675545, distance=7.4420035672774105, name="sphere"))
         jupiter.add_star(SolarSystemElement(scale=0.03447669179385219, distance=8.734574273614136, name="sphere"))
-        saturn = SolarSystemElement(scale=1, distance=88.6, name="sphere", 
+        saturn = SolarSystemElement(scale=1, distance=BASE_DISTANCE + 24, name="sphere", 
                                     ring=Ring(raio_interno=3, raio_externo=0.75, name="ring-saturn"))
-        uranus = SolarSystemElement(scale=0.43795620438, distance=180.0, name="sphere", 
+        uranus = SolarSystemElement(scale=0.43795620438, distance=49 + BASE_DISTANCE, name="sphere", 
                                     ring=Ring(raio_interno=3, raio_externo=0.25, name="ring-uranus"))
-        neptune = SolarSystemElement(scale=0.43321299639, distance=SUN_SCALE * 280.0, name="sphere")
+        neptune = SolarSystemElement(scale=0.43321299639, distance=BASE_DISTANCE + 76, name="sphere")
         neptune.add_star(SolarSystemElement(scale=0.054877949882410196, distance=8.387304877916142, name="sphere"))
         neptune.add_star(SolarSystemElement(scale=0.006893196010055958, distance=8.44113655252599, name="sphere"))
 
