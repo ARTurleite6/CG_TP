@@ -10,19 +10,18 @@ def to_rgb(hex: str) -> tuple[int, int, int]:
 
 def get_comet_curve_points(slices: int) -> list[tuple[float, float, float]]:
     excentricidade = 0.967
-    semi_eixo_maior = 45.96
-    perielio = 1.51311397438
-    afelio = 90.6319121175
+    a = 44.691666667
     points = list()
     step = (2 * pi) / slices
 
-    b = sqrt(1 - pow(excentricidade, 2))
+    b = a * sqrt(1 - pow(excentricidade, 2))
 
     for i in range(slices):
         angle = step * i
-        r = semi_eixo_maior * (1 - pow(excentricidade, 2)) / (1 + excentricidade * cos(angle))
-        x = r * sin(angle)
-        z = r * cos(angle)
+        distance = (a * b) / sqrt(pow(b * cos(angle), 2) + pow(a * sin(angle), 2))
+        x = distance * cos(angle)
+        z = distance * sin(angle)
+        points.append((x, 0, z))
 
     return points
 
@@ -89,7 +88,7 @@ def create_light(root: minidom.Document) -> minidom.Element:
     lights.appendChild(light)
     return lights
 
-def create_color_element(root: minidom.Document, color_hex: str) -> minidom.Element:
+def create_color_element(root: minidom.Document, color_hex: str, sun = False) -> minidom.Element:
     color = root.createElement("color")
     diffuse = root.createElement("diffuse")
     
@@ -107,15 +106,15 @@ def create_color_element(root: minidom.Document, color_hex: str) -> minidom.Elem
 
     specular = root.createElement("specular")
 
-    specular.setAttribute("R", str(r))
-    specular.setAttribute("G", str(g))
-    specular.setAttribute("B", str(b))
+    specular.setAttribute("R", "0")
+    specular.setAttribute("G", "0")
+    specular.setAttribute("B", "0")
 
     emissive = root.createElement("emissive")
 
-    emissive.setAttribute("R", str(r))
-    emissive.setAttribute("G", str(g))
-    emissive.setAttribute("B", str(b))
+    emissive.setAttribute("R", str(r) if sun else "0")
+    emissive.setAttribute("G", str(g) if sun else "0")
+    emissive.setAttribute("B", str(b) if sun else "0")
 
     shininess = root.createElement("shininess")
     shininess.setAttribute("value", "128")
@@ -137,21 +136,69 @@ def create_sun(root: minidom.Document, parent: minidom.Element):
     scale.setAttribute("x", "3")
     scale.setAttribute("y", "3")
     scale.setAttribute("z", "3")
+
     transform.appendChild(scale)
 
     group.appendChild(transform)
     model = root.createElement("model")
     model.setAttribute("file", "solar_system_elements/sphere.3d")
 
-    model.appendChild(create_color_element(root, "#FDB813"))
+    model.appendChild(create_color_element(root=root, color_hex="#FDB813", sun=True))
 
     models.appendChild(model)
     group.appendChild(models)
     parent.appendChild(group)
 
+def create_comet(root: minidom.Document) -> minidom.Element:
+    group = root.createElement("group")
+    models = root.createElement("models")
+    model = root.createElement("model")
+    model.setAttribute("file", "solar_system_elements/teapot.3d")
+
+    transform = root.createElement("transform")
+    translate = root.createElement("translate")
+    translate.setAttribute("align", "True")
+    translate.setAttribute("time", "91.615")
+    
+    points = get_comet_curve_points(1000)
+    for point in points:
+        point_xml = root.createElement("point")
+        point_xml.setAttribute("x", str(point[0]))
+        point_xml.setAttribute("y", str(point[1]))
+        point_xml.setAttribute("z", str(point[2]))
+        translate.appendChild(point_xml)
+
+    scale = root.createElement("scale")
+    scale.setAttribute("x", "0.1")
+    scale.setAttribute("y", "0.1")
+    scale.setAttribute("z", "0.1")
+
+    rotate = root.createElement("rotate")
+    rotate.setAttribute("angle", "-162.3")
+    rotate.setAttribute("x", "1")
+    rotate.setAttribute("y", "0")
+    rotate.setAttribute("z", "0")
+    transform.appendChild(rotate)
+    transform.appendChild(translate)
+
+    rotate = root.createElement("rotate")
+    rotate.setAttribute("angle", "90.0")
+    rotate.setAttribute("x", "1")
+    rotate.setAttribute("y", "0")
+    rotate.setAttribute("z", "0")
+    transform.appendChild(rotate)
+
+    transform.appendChild(scale)
+    group.appendChild(transform)
+    model.appendChild(create_color_element(root, "#FF8337"))
+    models.appendChild(model)
+    group.appendChild(models)
+    return group
+
 def create_planets(root: minidom.Document, parent: minidom.Element, planets, satellites):
     BASE_DISTANCE = 3
     SIZE_FACTOR = 60000
+    parent.appendChild(create_comet(root))
     for planet in planets:
         group = root.createElement("group")        
         models = root.createElement("models")
@@ -159,10 +206,18 @@ def create_planets(root: minidom.Document, parent: minidom.Element, planets, sat
         parent.appendChild(group)
         model = root.createElement("model")
 
+        orbit = str(float(planet["orbit time (days)"]) / 20)
+
+        rotation = root.createElement("rotate")
+        rotation.setAttribute("angle", str(random.uniform(0, 360)))
+        rotation.setAttribute("x", "0")
+        rotation.setAttribute("y", "1")
+        rotation.setAttribute("z", "0")
+
         transform = root.createElement("transform")
         radius = float(planet["radius"]) / SIZE_FACTOR
         translate = root.createElement("translate")
-        translate.setAttribute("time", "20")
+        translate.setAttribute("time", orbit)
         translate.setAttribute("align", "False")
         distance = float(planet["relative distance"])
         points = get_curve_points(slices=int(10), distance=distance + BASE_DISTANCE)
@@ -176,6 +231,7 @@ def create_planets(root: minidom.Document, parent: minidom.Element, planets, sat
         scale.setAttribute("x", str(radius))
         scale.setAttribute("y", str(radius))
         scale.setAttribute("z", str(radius))
+        transform.appendChild(rotation)
         transform.appendChild(translate)
         transform.appendChild(scale)
 
@@ -193,7 +249,7 @@ def create_planets(root: minidom.Document, parent: minidom.Element, planets, sat
                 distance_sat = random.uniform(1.5 * radius, 2.5 * radius) / radius
                 translate_sat = root.createElement("translate")
                 translate_sat.setAttribute("align", "False")
-                translate_sat.setAttribute("time", "20")
+                translate_sat.setAttribute("time", str(float(orbit) / 2))
 
                 points = get_curve_points(slices=10, distance=distance_sat)
                 for point in points:
@@ -239,7 +295,7 @@ def main():
 
     run(args=["./build/bin/generator", "torus", "3", "0.75", "100", "2", "solar_system_elements/torus.3d"], text=True)
     run(args=["./build/bin/generator", "sphere", "1", "100", "100", "solar_system_elements/sphere.3d"], text=True)
-    run(args=["./build/bin/generator", "bezzier", "patches/teapot.patch", "10", "solar_system_elements/sphere.3d"], text=True)
+    run(args=["./build/bin/generator", "bezzier", "patches/teapot.patch", "10", "solar_system_elements/teapot.3d"], text=True)
 
 
     with open("data/planets.csv", "r") as file:
