@@ -13,7 +13,7 @@ class Group {
 public:
   explicit Group(tinyxml2::XMLElement *group);
 
-  void draw(Renderer &renderer, int elapsedTime) const noexcept;
+  void draw(Renderer &renderer, int elapsedTime, bool draw_lines = false) const noexcept;
 
 private:
   void push_transformation(
@@ -21,7 +21,7 @@ private:
   void load_models(tinyxml2::XMLElement *group) noexcept;
   void load_children(tinyxml2::XMLElement *group) noexcept;
   void load_transform(tinyxml2::XMLElement *group) noexcept;
-  void apply_transformations(int elapsedTime) const noexcept;
+  void apply_transformations(int elapsedTime, bool draw_lines = false) const noexcept;
   void draw_children(Renderer &renderer, int elapsedTime) const noexcept;
 
   std::vector<Model> models;

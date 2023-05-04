@@ -52,9 +52,6 @@ void Camera::handleInput(
     this->moveRight(speedToUse);
   if (keyboard['a'])
     this->moveLeft(speedToUse);
-
-  if (keyboard['m'])
-    this->toggleMode();
 }
 
 void Camera::moveUp(float dx) {

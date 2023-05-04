@@ -2,12 +2,12 @@
 #define ENGINE_H
 #include "camera.h"
 #include "group.h"
-#include "parse_errors/xml_parse_error.h"
 #include "lights/directionallight.h"
 #include "lights/light.h"
 #include "lights/pointlight.h"
 #include "lights/spotlight.h"
 #include "model.h"
+#include "parse_errors/xml_parse_error.h"
 #include "renderer.h"
 
 class Engine {
@@ -26,11 +26,10 @@ public:
 
   inline void placeCamera() const noexcept { this->camera->place(); }
 
-  inline void draw(int elapsedTime) noexcept {
-    for (const auto &group : this->groups) {
-      group.draw(this->renderer, elapsedTime);
-    }
-  }
+  void draw(int elapsedTime) noexcept;
+
+  inline void toggleLines() noexcept { this->draw_lines = this->draw_lines ? false : true; }
+  inline void toggleCameraMode() noexcept { this->camera->toggleMode(); }
 
   inline void handleMouseMotion(int x, int y) noexcept {
     this->camera->handleMouseMotion(x, y);
@@ -59,6 +58,7 @@ private:
   void loadLights(tinyxml2::XMLElement *lights);
   void configureLights() const noexcept;
 
+private:
   tinyxml2::XMLDocument doc;
 
   std::uint32_t window_width{}, window_height{};
@@ -66,6 +66,7 @@ private:
   std::vector<Group> groups;
   std::vector<std::unique_ptr<Light>> lights;
   std::string xml_file;
+  bool draw_lines{false};
 
   Renderer renderer;
 

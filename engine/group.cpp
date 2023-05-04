@@ -47,9 +47,10 @@ void Group::load_children(tinyxml2::XMLElement *group) noexcept {
   }
 }
 
-void Group::draw(Renderer &renderer, int elapsedTime) const noexcept {
+void Group::draw(Renderer &renderer, int elapsedTime,
+                 bool draw_lines) const noexcept {
   glPushMatrix();
-  this->apply_transformations(elapsedTime);
+  this->apply_transformations(elapsedTime, draw_lines);
   glColor3f(1.0f, 1.0f, 1.0f);
   // glBegin(GL_TRIANGLES);
   for (const auto &model : this->models) {
@@ -66,9 +67,12 @@ void Group::draw_children(Renderer &renderer, int elapsedTime) const noexcept {
   }
 }
 
-void Group::apply_transformations(int elapsedTime) const noexcept {
+void Group::apply_transformations(int elapsedTime,
+                                  bool draw_lines) const noexcept {
+    std::cout << "drawing lines group = " << draw_lines << '\n';
   for (const auto &transformation : this->transformations) {
-    if (transformation->getType() == TypeTransformation::TimedTranslate) {
+    if (draw_lines &&
+        transformation->getType() == TypeTransformation::TimedTranslate) {
       const auto translation =
           dynamic_cast<transformations::TimedTranslation *>(
               transformation.get());

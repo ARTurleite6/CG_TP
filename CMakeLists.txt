@@ -10,6 +10,7 @@ add_subdirectory(generator)
 add_subdirectory(engine)
 
 include(FetchContent)
+
 FetchContent_Declare(
     tiny_xml
     GIT_REPOSITORY https://github.com/leethomason/tinyxml2.git

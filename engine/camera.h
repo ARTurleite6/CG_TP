@@ -16,9 +16,8 @@ struct Pov {
 class Camera {
 public:
   Camera() = default;
-  Camera(Vertex position, Vertex lookAt, Vertex up,
-         Pov projection, std::uint32_t window_width,
-         std::uint32_t window_height);
+  Camera(Vertex position, Vertex lookAt, Vertex up, Pov projection,
+         std::uint32_t window_width, std::uint32_t window_height);
   Camera(Camera &&) = default;
   Camera(const Camera &) = default;
   Camera &operator=(Camera &&) = default;
@@ -42,8 +41,9 @@ public:
 
   void setPerspective(float ratio) const noexcept;
 
-private:
+  void toggleMode() noexcept;
 
+private:
   void updateNewPosition(float dx) noexcept;
 
   [[nodiscard]] Vertex getPosition() const noexcept;
@@ -62,8 +62,6 @@ private:
   [[nodiscard]] inline camera_engine::Pov getProjection() const noexcept {
     return projection;
   }
-
-  void toggleMode() noexcept;
 
   CameraMode currentMode{CameraMode::Explorer};
   float alpha{0.0f};

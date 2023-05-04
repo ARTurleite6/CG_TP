@@ -178,11 +178,23 @@ void display() {
   glutSwapBuffers();
 }
 
+void Engine::draw(int elapsedTime) noexcept {
+  for (const auto &group : this->groups) {
+    std::cout << "drawing lines engine = " << this->draw_lines << '\n';
+    group.draw(this->renderer, elapsedTime, this->draw_lines);
+  }
+}
+
 void processKeyDown(unsigned char key, int x, int y) {
   if (engine == nullptr) {
     std::cout << "Engine is null\n";
     return;
   }
+
+  if (key == 'l')
+    engine->toggleLines();
+  else if (key == 'm')
+    engine->toggleCameraMode();
 
   std::cout << "Pressed key: " << key << '\n';
 
