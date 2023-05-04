@@ -25,6 +25,48 @@ def get_comet_curve_points(slices: int) -> list[tuple[float, float, float]]:
 
     return points
 
+def get_point(root: minidom.Document, point_coords: tuple[float, float, float]) -> minidom.Element:
+    point = root.createElement("point")
+    point.setAttribute("x", str(point_coords[0]))
+    point.setAttribute("y", str(point_coords[1]))
+    point.setAttribute("z", str(point_coords[2]))
+    return point
+
+
+def generate_asteroids(root: minidom.Document, number_asteroids: int) -> minidom.Element:
+    ast_group = root.createElement("group")
+
+    for _ in range(number_asteroids):
+        group = root.createElement("group")
+        models = root.createElement("models")
+
+        transform = root.createElement("transform")
+        translate = root.createElement("translate")
+        scale = root.createElement("scale")
+        scale_factor = str(random.uniform(0.001, 0.01))
+        scale.setAttribute("x", scale_factor)
+        scale.setAttribute("y", scale_factor)
+        scale.setAttribute("z", scale_factor)
+        translate.setAttribute("align", "False")
+        orbita = (random.uniform(3.5, 6) * 365) / 40
+        translate.setAttribute("time", str(orbita))
+
+        for point in get_curve_points(100, random.uniform(8, 10) + 3):
+            translate.appendChild(get_point(root, point))
+
+        transform.appendChild(translate)
+        transform.appendChild(scale)
+
+        model = root.createElement("model")
+        model.setAttribute("file", "solar_system_elements/spherelowquality.3d")
+        models.appendChild(model)
+        group.appendChild(transform)
+        group.appendChild(models)
+
+        ast_group.appendChild(group)
+
+    return ast_group
+
 def get_curve_points(slices: int, distance: float) -> list[tuple[float, float, float]]:
     angle = (2 * pi) / slices
     points = list()
@@ -275,7 +317,7 @@ def create_planets(root: minidom.Document, parent: minidom.Element, planets, sat
                 scale_sat.setAttribute("z", str(radius_sat))
                 transform_sat.appendChild(scale_sat)
 
-                model.setAttribute("file", "solar_system_elements/sphere.3d")
+                model.setAttribute("file", "solar_system_elements/spherelowquality.3d")
                 model.appendChild(create_color_element(root, planet["color"]))
 
                 sat_group.appendChild(transform_sat)
@@ -295,6 +337,7 @@ def main():
 
     run(args=["./build/bin/generator", "torus", "3", "0.75", "100", "2", "solar_system_elements/torus.3d"], text=True)
     run(args=["./build/bin/generator", "sphere", "1", "100", "100", "solar_system_elements/sphere.3d"], text=True)
+    run(args=["./build/bin/generator", "sphere", "1", "10", "10", "solar_system_elements/spherelowquality.3d"], text=True)
     run(args=["./build/bin/generator", "bezzier", "patches/teapot.patch", "10", "solar_system_elements/teapot.3d"], text=True)
 
 
@@ -310,6 +353,7 @@ def main():
                 
             create_planets(root, world, planets, planets_satellites)
 
+    world.appendChild(generate_asteroids(root, 100))
     world.appendChild(create_light(root))
 
     with open("scenes/solar_system.xml", "w") as file:
