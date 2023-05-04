@@ -23,11 +23,20 @@ FetchContent_Declare(
     GIT_TAG 9.1.0
     )
 
-FetchContent_MakeAvailable(tiny_xml fmt)
+include(FetchContent)
+FetchContent_Declare(
+  cli11
+  GIT_REPOSITORY https://github.com/CLIUtils/CLI11
+  GIT_TAG        v2.2.0
+)
+
+FetchContent_MakeAvailable(tiny_xml fmt cli11)
 
 find_package(GLUT REQUIRED)
 
+
 find_package(OpenGL REQUIRED)
+
 
 include_directories(${OpenGL_INCLUDE_DIRS} ${PROJECT_SOURCE_DIR}/my_math)
 link_directories(${OpenGL_LIBRARY_DIRS})
@@ -45,7 +54,7 @@ endif(NOT APPLE)
 
 target_precompile_headers(my_math PRIVATE include/pch.h)
 target_link_libraries(engine GLUT::GLUT tinyxml2::tinyxml2 ${GLEW_LIBRARIES} my_math fmt::fmt)
-target_link_libraries(generator my_math)
+target_link_libraries(generator my_math CLI11::CLI11)
 target_include_directories(generator PRIVATE ${PROJECT_SOURCE_DIR}/my_math)
 target_include_directories(engine PRIVATE ${PROJECT_SOURCE_DIR}/my_math)
 target_precompile_headers(engine PRIVATE include/pch.h)

@@ -20,7 +20,7 @@ public:
   Engine &operator=(const Engine &) = delete;
   ~Engine() = default;
 
-  void run(int argc, char *argv[]) const;
+  void run(int argc, char *argv[]);
 
   void placeLights() const;
 
@@ -28,7 +28,9 @@ public:
 
   void draw(int elapsedTime) noexcept;
 
-  inline void toggleLines() noexcept { this->draw_lines = this->draw_lines ? false : true; }
+  inline void toggleLines() noexcept {
+    this->draw_lines = this->draw_lines ? false : true;
+  }
   inline void toggleCameraMode() noexcept { this->camera->toggleMode(); }
 
   inline void handleMouseMotion(int x, int y) noexcept {

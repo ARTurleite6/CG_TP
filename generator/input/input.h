@@ -47,6 +47,9 @@ public:
   [[nodiscard]] std::unique_ptr<Figure> getFigure() const noexcept;
 
 private:
+  int parse(int argc, char *argv[]);
+
+private:
   Figures figure;
   std::vector<float> dimensions;
   std::string inputFile;

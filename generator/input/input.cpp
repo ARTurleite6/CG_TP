@@ -1,6 +1,90 @@
 #include "input.h"
+#include "CLI/App.hpp"
+#include <string>
 
 namespace input {
+
+Input::Input(int argc, char *argv[]) { this->parse(argc, argv); }
+
+int Input::parse(int argc, char *argv[]) {
+
+  CLI::App app{"Generator"};
+
+  auto plane = app.add_subcommand("plane");
+  plane->add_option("length", "Length of the plane")->required();
+  plane->add_option("divisions", "Divisions of the plane")->required();
+  plane->add_option("output_file", "File to store the data of plane")
+      ->required();
+
+  auto box = app.add_subcommand("box");
+  box->add_option("length", "Length of the box")->required();
+  box->add_option("divisions", "Divisions of the box")->required();
+  box->add_option("output_file", "File to store the data of box")->required();
+
+  auto sphere = app.add_subcommand("sphere");
+  sphere->add_option("radius", "Radius of the sphere")->required();
+  sphere->add_option("slices", "Slices of the sphere")->required();
+  sphere->add_option("stacks", "Stacks of sphere")->required();
+  sphere->add_option("output_file", "File to store the data of sphere")
+      ->required();
+
+  auto cone = app.add_subcommand("cone");
+  cone->add_option("radius", "Radius of the cone")->required();
+  cone->add_option("height", "Height of the cone")->required();
+  cone->add_option("slices", "Slices of cone")->required();
+  cone->add_option("stacks", "Stacks of cone")->required();
+  cone->add_option("output_file", "File to store the data of cone")->required();
+
+  auto bezzier = app.add_subcommand("bezzier");
+  bezzier
+      ->add_option("patches_file",
+                   "File with bezzier patches and control points")
+      ->required();
+  bezzier->add_option("tesselation", "Tesselation to be used")->required();
+  bezzier
+      ->add_option("output_file", "File to store the data of bezzier surface")
+      ->required();
+
+  auto torus = app.add_subcommand("torus");
+  torus->add_option("major_radius", "Major radius of Torus")->required();
+  torus->add_option("minor_radius", "Minor radius of Torus")->required();
+  torus->add_option("slices", "Slices of Torus")->required();
+  torus->add_option("stacks", "Stacks of Torus")->required();
+  torus->add_option("output_file", "File to store the data of Torus surface")
+      ->required();
+
+  auto pyramid = app.add_subcommand("pyramid");
+  pyramid->add_option("height", "Height of Pyramid")->required();
+  pyramid->add_option("slices", "Slices of Pyramid")->required();
+  pyramid
+      ->add_option("output_file", "File to store the data of Pyramid surface")
+      ->required();
+
+  CLI11_PARSE(app, argc, argv);
+
+  auto subcommands = app.get_subcommands();
+
+  for (auto subcommand : subcommands) {
+    if (app.got_subcommand(subcommand)) {
+      this->figure = fromString(subcommand->get_name());
+      this->outFile = subcommand->get_option("output_file")->results().at(0);
+      for (auto option : subcommand->get_options()) {
+        auto option_name = option->get_name();
+        if (option_name != "patches_file" && option_name != "output_file") {
+          for (const auto &option_result : option->results()) {
+            this->dimensions.push_back(std::stof(option_result));
+          }
+        }
+      }
+      auto patch_file = subcommand->get_option_no_throw("patches_file");
+      if (patch_file)
+        this->inputFile = patch_file->results().at(0);
+      break;
+    }
+  }
+
+  return 0;
+}
 
 Figures fromString(std::string_view str) {
   if (str == "sphere") {
@@ -15,31 +99,30 @@ Figures fromString(std::string_view str) {
     return Figures::Torus;
   } else if (str == "pyramid") {
     return Figures::Pyramid;
-  }  else if(str == "bezzier") {
+  } else if (str == "bezzier") {
     return Figures::Bezzier;
-  }
-  else {
+  } else {
     throw std::invalid_argument("Invalid figure");
   }
 }
 
-Input::Input(int argc, char *argv[]) {
-  if (argc < 5) {
-    throw std::invalid_argument("Not enough arguments");
-  }
-
-  int begin = 2;
-  this->figure = fromString(argv[1]);
-  if(this->figure == Figures::Bezzier) {
-    this->inputFile = argv[2];
-    begin = 3;
-  }
-  this->outFile = argv[argc - 1];
-
-  for (int i = begin; i < argc - 1; ++i) {
-    dimensions.push_back(std::stof(argv[i]));
-  }
-}
+// Input::Input(int argc, char *argv[]) {
+//   if (argc < 5) {
+//     throw std::invalid_argument("Not enough arguments");
+//   }
+//
+//   int begin = 2;
+//   this->figure = fromString(argv[1]);
+//   if (this->figure == Figures::Bezzier) {
+//     this->inputFile = argv[2];
+//     begin = 3;
+//   }
+//   this->outFile = argv[argc - 1];
+//
+//   for (int i = begin; i < argc - 1; ++i) {
+//     dimensions.push_back(std::stof(argv[i]));
+//   }
+// }
 
 std::ostream &operator<<(std::ostream &os, const Input &input) {
   os << "Figure: " << static_cast<int>(input.figure) << std::endl;
@@ -74,7 +157,6 @@ std::ostream &operator<<(std::ostream &os, const Figures &fig) {
 }
 
 std::unique_ptr<Figure> Input::getFigure() const noexcept {
-  std::cout << "Deciding...\n";
   if (this->figure == Figures::Plane) {
     std::cout << "Entering plane...\n";
     return std::make_unique<Plane>(
@@ -130,19 +212,17 @@ std::unique_ptr<Figure> Input::getFigure() const noexcept {
   }
   case Figures::Pyramid: {
     std::cout << "Making a pyramid...\n";
-    return std::make_unique<Pyramid>(
-        std::vector<float>{static_cast<float>(this->dimensions[0]), // height
-                           static_cast<float>(this->dimensions[1]), // slices
-                           });
+    return std::make_unique<Pyramid>(std::vector<float>{
+        static_cast<float>(this->dimensions[0]), // height
+        static_cast<float>(this->dimensions[1]), // slices
+    });
   }
   case Figures::Bezzier: {
     std::cout << "Making a bezzier surface...\n";
-    return std::make_unique<Bezzier>(
-      this->inputFile, this->dimensions[0]
-    );
+    return std::make_unique<Bezzier>(this->inputFile, this->dimensions[0]);
   }
   default:
-    std::cerr << "Unknown figure\n";
+    return nullptr;
     break;
   }
   return nullptr;

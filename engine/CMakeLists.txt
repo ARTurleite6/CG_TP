@@ -16,4 +16,5 @@ add_executable(engine
     lights/directionallight.cpp
     lights/light.cpp
     lights/spotlight.cpp
+    ${imgui_sources}
     )

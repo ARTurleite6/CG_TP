@@ -10,9 +10,8 @@ Engine::Engine(std::string_view xml_file)
 
   this->doc.LoadFile(xml_file.data());
 
-  for (auto &key : this->keyboard) {
+  for (auto &key : this->keyboard)
     key = false;
-  }
 
   if (doc.Error())
     throw errors::XMLParseError(doc.ErrorStr());
@@ -47,9 +46,8 @@ Engine::Engine(std::string_view xml_file)
 }
 
 void Engine::placeLights() const {
-  for (const auto &light : this->lights) {
+  for (const auto &light : this->lights)
     light->place();
-  }
 }
 
 void Engine::loadCamera(tinyxml2::XMLElement *camera) {
@@ -98,7 +96,7 @@ void Engine::loadCamera(tinyxml2::XMLElement *camera) {
       this->window_height);
 }
 
-void Engine::run(int argc, char *argv[]) const {
+void Engine::run(int argc, char *argv[]) {
   engine = (Engine *)this;
   glutInit(&argc, argv);
   glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
@@ -129,13 +127,15 @@ void Engine::run(int argc, char *argv[]) const {
 
   glEnableClientState(GL_VERTEX_ARRAY);
   glEnableClientState(GL_NORMAL_ARRAY);
-
   glutMainLoop();
+
 }
 
 void passiveMouseFunc(int x, int y) { engine->handleMouseMotion(x, y); }
 
-void motionFunc(int x, int y) { engine->handleMouseMotion(x, y); }
+void motionFunc(int x, int y) { 
+    engine->handleMouseMotion(x, y); 
+}
 
 void mouseFunc(int button, int state, int x, int y) {
   if (button == GLUT_LEFT_BUTTON && state == GLUT_DOWN) {
@@ -146,6 +146,7 @@ void mouseFunc(int button, int state, int x, int y) {
     std::cout << "Tracking set to 0\n";
     engine->setCameraTracking(0);
   }
+
 }
 
 void reshape(int width, int height) {
@@ -160,7 +161,6 @@ void reshape(int width, int height) {
 }
 
 void display() {
-
   int elapsedTime = glutGet(GLUT_ELAPSED_TIME);
 
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -169,12 +169,14 @@ void display() {
     return;
   }
   glLoadIdentity();
+
   engine->placeLights();
   engine->placeCamera();
 
   engine->handleInput();
 
   engine->draw(elapsedTime);
+
   glutSwapBuffers();
 }
 

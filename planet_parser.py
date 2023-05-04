@@ -54,6 +54,13 @@ def generate_asteroids(root: minidom.Document, number_asteroids: int) -> minidom
         for point in get_curve_points(100, random.uniform(8, 10) + 3):
             translate.appendChild(get_point(root, point))
 
+        rotate = root.createElement("rotate")
+        rotate.setAttribute("angle", str(random.uniform(0, 360)))
+        rotate.setAttribute("x", "0")
+        rotate.setAttribute("y", "1")
+        rotate.setAttribute("z", "0")
+
+        transform.appendChild(rotate)
         transform.appendChild(translate)
         transform.appendChild(scale)
 
@@ -353,7 +360,7 @@ def main():
                 
             create_planets(root, world, planets, planets_satellites)
 
-    world.appendChild(generate_asteroids(root, 100))
+    world.appendChild(generate_asteroids(root, 1000))
     world.appendChild(create_light(root))
 
     with open("scenes/solar_system.xml", "w") as file:
