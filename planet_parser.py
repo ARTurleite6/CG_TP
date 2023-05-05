@@ -4,6 +4,17 @@ import random
 from subprocess import run
 from xml.dom import minidom
 
+ROTATION_FACTOR = 1000
+
+def create_axial_rotation(root: minidom.Document, angle: float):
+    rotation = root.createElement("rotate")
+    rotation.setAttribute("angle", str(angle))
+    rotation.setAttribute("x", "0")
+    rotation.setAttribute("y", "0")
+    rotation.setAttribute("z", "1")
+
+    return rotation
+
 def to_rgb(hex: str) -> tuple[int, int, int]:
     hex = hex.lstrip("#")
     return tuple(int(hex[i:i+2], 16) for i in (0, 2, 4))
@@ -51,7 +62,7 @@ def generate_asteroids(root: minidom.Document, number_asteroids: int) -> minidom
         orbita = (random.uniform(3.5, 6) * 365) / 40
         translate.setAttribute("time", str(orbita))
 
-        for point in get_curve_points(100, random.uniform(8, 10) + 3):
+        for point in get_curve_points(10, random.uniform(8, 10) + 3):
             translate.appendChild(get_point(root, point))
 
         rotate = root.createElement("rotate")
@@ -155,9 +166,9 @@ def create_color_element(root: minidom.Document, color_hex: str, sun = False) ->
 
     specular = root.createElement("specular")
 
-    specular.setAttribute("R", "0")
-    specular.setAttribute("G", "0")
-    specular.setAttribute("B", "0")
+    specular.setAttribute("R", "255")
+    specular.setAttribute("G", "255")
+    specular.setAttribute("B", "255")
 
     emissive = root.createElement("emissive")
 
@@ -177,8 +188,22 @@ def create_color_element(root: minidom.Document, color_hex: str, sun = False) ->
     return color
 
 def create_sun(root: minidom.Document, parent: minidom.Element):
+    rotation_period = 35236.8 / ROTATION_FACTOR
     group = root.createElement("group")
     models = root.createElement("models")
+
+    axial_rotation = root.createElement("rotate")
+    axial_rotation.setAttribute("angle", "-7.25")
+    axial_rotation.setAttribute("x", "0")
+    axial_rotation.setAttribute("y", "1")
+    axial_rotation.setAttribute("z", "0")
+
+
+    timed_rotation = root.createElement("rotate")
+    timed_rotation.setAttribute("time", str(rotation_period))
+    timed_rotation.setAttribute("x", "0")
+    timed_rotation.setAttribute("y", "1")
+    timed_rotation.setAttribute("z", "0")
 
     transform = root.createElement("transform")
     scale = root.createElement("scale")
@@ -186,6 +211,8 @@ def create_sun(root: minidom.Document, parent: minidom.Element):
     scale.setAttribute("y", "3")
     scale.setAttribute("z", "3")
 
+    transform.appendChild(axial_rotation)
+    transform.appendChild(timed_rotation)
     transform.appendChild(scale)
 
     group.appendChild(transform)
@@ -254,6 +281,7 @@ def create_planets(root: minidom.Document, parent: minidom.Element, planets, sat
         group.appendChild(models)
         parent.appendChild(group)
         model = root.createElement("model")
+        model.setAttribute("name", planet["planet"])
 
         orbit = str(float(planet["orbit time (days)"]) / 20)
 
@@ -269,7 +297,7 @@ def create_planets(root: minidom.Document, parent: minidom.Element, planets, sat
         translate.setAttribute("time", orbit)
         translate.setAttribute("align", "False")
         distance = float(planet["relative distance"])
-        points = get_curve_points(slices=int(10), distance=distance + BASE_DISTANCE)
+        points = get_curve_points(slices=10, distance=distance + BASE_DISTANCE)
         for point in points:
             point_xml = root.createElement("point")
             point_xml.setAttribute("x", str(point[0]))
@@ -280,8 +308,10 @@ def create_planets(root: minidom.Document, parent: minidom.Element, planets, sat
         scale.setAttribute("x", str(radius))
         scale.setAttribute("y", str(radius))
         scale.setAttribute("z", str(radius))
+
         transform.appendChild(rotation)
         transform.appendChild(translate)
+        transform.appendChild(create_axial_rotation(root, -float(planet["axial tilt"])))
         transform.appendChild(scale)
 
 
@@ -292,7 +322,7 @@ def create_planets(root: minidom.Document, parent: minidom.Element, planets, sat
         if planet["planet"] in satellites:
             for satellite in satellites[planet["planet"]]:
                 sat_group = root.createElement("group")
-                model = root.createElement("model")
+                sat_model = root.createElement("model")
 
                 transform_sat = root.createElement("transform")
                 distance_sat = random.uniform(1.5 * radius, 2.5 * radius) / radius
@@ -324,13 +354,13 @@ def create_planets(root: minidom.Document, parent: minidom.Element, planets, sat
                 scale_sat.setAttribute("z", str(radius_sat))
                 transform_sat.appendChild(scale_sat)
 
-                model.setAttribute("file", "solar_system_elements/spherelowquality.3d")
-                model.appendChild(create_color_element(root, planet["color"]))
+                sat_model.setAttribute("file", "solar_system_elements/spherelowquality.3d")
 
                 sat_group.appendChild(transform_sat)
-                sat_group.appendChild(model)
+                sat_group.appendChild(sat_model)
                 group.appendChild(sat_group)
 
+        model.appendChild(create_color_element(root, planet["color"]))
         models.appendChild(model)
 
 def main():
