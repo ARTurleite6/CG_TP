@@ -3,6 +3,11 @@
 namespace maths {
 Vertex::Vertex(float x, float y, float z, float w) : x(x), y(y), z(z), w(w) {}
 
+float Vertex::size() const noexcept {
+  return std::sqrt(this->x * this->x + this->y * this->y + this->z * this->z +
+                   this->w * this->w);
+}
+
 void Vertex::operator*=(const Matrix<float, 4, 4> &m) noexcept {
   const Vertex v = *this;
 
@@ -86,7 +91,8 @@ Vertex operator*(float x, const Vertex &vertex) {
 }
 
 std::ostream &operator<<(std::ostream &oos, const Vertex &v) {
-  return oos << "Vertex ( x = " << v.x << ", y = " << v.y << ", z = " << v.z << ", w = " << v.w << ");";
+  return oos << "Vertex ( x = " << v.x << ", y = " << v.y << ", z = " << v.z
+             << ", w = " << v.w << ");";
 }
 
 template <>

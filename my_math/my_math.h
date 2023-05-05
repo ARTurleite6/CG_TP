@@ -6,7 +6,8 @@
 
 namespace maths {
 
-template <class T = float, std::uint32_t L = 4, std::uint32_t C = 4> class Matrix;
+template <class T = float, std::uint32_t L = 4, std::uint32_t C = 4>
+class Matrix;
 
 struct Vertex {
   Vertex() = default;
@@ -29,13 +30,13 @@ struct Vertex {
   [[nodiscard]] Vertex crossProduct(const Vertex &) const noexcept;
   ~Vertex() = default;
   void normalize() noexcept;
+  [[nodiscard]] float size() const noexcept;
 
   float x{}, y{}, z{}, w{};
 };
 
 Vertex operator*(float x, const Vertex &vertex);
 std::ostream &operator<<(std::ostream &oos, const Vertex &v);
-
 
 // struct Matrix {
 //   Matrix() = default;
@@ -103,12 +104,11 @@ public:
 
     std::uint32_t i = 0;
 
-    for(const auto &value : values) {
+    for (const auto &value : values) {
       const auto line = i / C;
       this->m[line][i % C] = value;
       ++i;
     }
-
   }
 
   template <class Second, std::uint32_t CS>
@@ -170,15 +170,16 @@ private:
   std::array<std::array<T, C>, L> m{};
 };
 
-Matrix<float, 4, 4> translate(const Matrix<float, 4, 4> &m, const maths::Vertex &v) noexcept;
-Matrix<float, 4, 4> scale(const Matrix<float, 4, 4> &m, const maths::Vertex &v) noexcept;
-Matrix<float, 4, 4> rotate(const Matrix<float, 4, 4> &m, const maths::Vertex &v, float angle) noexcept;
+Matrix<float, 4, 4> translate(const Matrix<float, 4, 4> &m,
+                              const maths::Vertex &v) noexcept;
+Matrix<float, 4, 4> scale(const Matrix<float, 4, 4> &m,
+                          const maths::Vertex &v) noexcept;
+Matrix<float, 4, 4> rotate(const Matrix<float, 4, 4> &m, const maths::Vertex &v,
+                           float angle) noexcept;
 
-
-}; // namespace utils
+}; // namespace maths
 
 // template <> std::is_swappable_v<utils::Vertex>{
 // };
-
 
 #endif
