@@ -25,66 +25,66 @@ Sphere::Sphere(const std::vector<float> &args)
 
       this->vertices.emplace_back(
           this->radius * next_sin * std::sin(xz_step * static_cast<float>(j)),
-          this->radius * std::cos(y_step * static_cast<float>(i + 1)),
+          -this->radius * std::cos(y_step * static_cast<float>(i + 1)),
           this->radius * next_sin * std::cos(xz_step * static_cast<float>(j)),
           1.0f);
       this->normals.emplace_back(
           next_sin * std::sin(xz_step * static_cast<float>(j)),
-          std::cos(y_step * static_cast<float>(i + 1)),
+          -std::cos(y_step * static_cast<float>(i + 1)),
           next_sin * std::cos(xz_step * static_cast<float>(j)), 0.0f);
       this->vertices.emplace_back(this->radius * current_sin *
                                       std::sin(xz_step * static_cast<float>(j)),
-                                  this->radius *
+                                  -this->radius *
                                       std::cos(y_step * static_cast<float>(i)),
                                   this->radius * current_sin *
                                       std::cos(xz_step * static_cast<float>(j)),
                                   1.0f);
       this->normals.emplace_back(
           current_sin * std::sin(xz_step * static_cast<float>(j)),
-          std::cos(y_step * static_cast<float>(i)),
+          -std::cos(y_step * static_cast<float>(i)),
           current_sin * std::cos(xz_step * static_cast<float>(j)), 0.0f);
       this->vertices.emplace_back(
           this->radius * current_sin *
               std::sin(xz_step * static_cast<float>(j + 1)),
-          this->radius * std::cos(y_step * static_cast<float>(i)),
+          -this->radius * std::cos(y_step * static_cast<float>(i)),
           this->radius * current_sin *
               std::cos(xz_step * static_cast<float>(j + 1)),
           1.0f);
       this->normals.emplace_back(
           current_sin * std::sin(xz_step * static_cast<float>(j + 1)),
-          std::cos(y_step * static_cast<float>(i)),
+          -std::cos(y_step * static_cast<float>(i)),
           current_sin * std::cos(xz_step * static_cast<float>(j + 1)), 0.0f);
 
       this->vertices.emplace_back(
           this->radius * next_sin *
               std::sin(xz_step * static_cast<float>(j + 1)),
-          this->radius * std::cos(y_step * static_cast<float>(i + 1)),
+          -this->radius * std::cos(y_step * static_cast<float>(i + 1)),
           this->radius * next_sin *
               std::cos(xz_step * static_cast<float>(j + 1)),
           1.0f);
       this->normals.emplace_back(
           next_sin * std::sin(xz_step * static_cast<float>(j + 1)),
-          std::cos(y_step * static_cast<float>(i + 1)),
+          -std::cos(y_step * static_cast<float>(i + 1)),
           next_sin * std::cos(xz_step * static_cast<float>(j + 1)), 0.0f);
       this->vertices.emplace_back(
           this->radius * next_sin * std::sin(xz_step * static_cast<float>(j)),
-          this->radius * std::cos(y_step * static_cast<float>(i + 1)),
+          -this->radius * std::cos(y_step * static_cast<float>(i + 1)),
           this->radius * next_sin * std::cos(xz_step * static_cast<float>(j)),
           1.0f);
       this->normals.emplace_back(
           next_sin * std::sin(xz_step * static_cast<float>(j)),
-          std::cos(y_step * static_cast<float>(i + 1)),
+          -std::cos(y_step * static_cast<float>(i + 1)),
           next_sin * std::cos(xz_step * static_cast<float>(j)), 0.0f);
       this->vertices.emplace_back(
           this->radius * current_sin *
               std::sin(xz_step * static_cast<float>(j + 1)),
-          this->radius * std::cos(y_step * static_cast<float>(i)),
+          -this->radius * std::cos(y_step * static_cast<float>(i)),
           this->radius * current_sin *
               std::cos(xz_step * static_cast<float>(j + 1)),
           1.0f);
       this->normals.emplace_back(
           current_sin * std::sin(xz_step * static_cast<float>(j + 1)),
-          std::cos(y_step * static_cast<float>(i)),
+          -std::cos(y_step * static_cast<float>(i)),
           current_sin * std::cos(xz_step * static_cast<float>(j + 1)), 0.0f);
     }
   }

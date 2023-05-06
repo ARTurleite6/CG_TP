@@ -15,6 +15,17 @@ def create_axial_rotation(root: minidom.Document, angle: float):
 
     return rotation
 
+def create_ring_element(root: minidom.Document) -> minidom.Element:
+    group = root.createElement("group")
+    models = root.createElement("models")
+    model = root.createElement("model")
+    model.setAttribute("file", "solar_system_elements/torus.3d")
+
+    models.appendChild(model)
+    group.appendChild(models)
+
+    return group
+
 def to_rgb(hex: str) -> tuple[int, int, int]:
     hex = hex.lstrip("#")
     return tuple(int(hex[i:i+2], 16) for i in (0, 2, 4))
@@ -236,7 +247,7 @@ def create_comet(root: minidom.Document) -> minidom.Element:
     translate.setAttribute("align", "True")
     translate.setAttribute("time", "91.615")
     
-    points = get_comet_curve_points(1000)
+    points = get_comet_curve_points(100)
     for point in points:
         point_xml = root.createElement("point")
         point_xml.setAttribute("x", str(point[0]))
@@ -360,6 +371,10 @@ def create_planets(root: minidom.Document, parent: minidom.Element, planets, sat
                 sat_group.appendChild(sat_model)
                 group.appendChild(sat_group)
 
+        
+        if planet["has ring"] == "True":
+            group.appendChild(create_ring_element(root))
+    
         model.appendChild(create_color_element(root, planet["color"]))
         models.appendChild(model)
 
@@ -391,7 +406,7 @@ def main():
             create_planets(root, world, planets, planets_satellites)
 
     world.appendChild(generate_asteroids(root, 1000))
-    world.appendChild(create_light(root))
+    #world.appendChild(create_light(root))
 
     with open("scenes/solar_system.xml", "w") as file:
         file.write(root.toprettyxml(indent='\t'))
