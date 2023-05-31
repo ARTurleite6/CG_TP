@@ -2,16 +2,12 @@
 
 Plane::Plane(const std::vector<float> &args)
     : Figure(args), dimension(args[0]), divisions(args[1]) {
-  std::cout << "computePlane()\n";
-  std::cout << "args: " << dimension << ' ' << divisions << '\n';
 
   float step = dimension / divisions;
-  std::cout << "step = " << step << '\n';
 
   float texStep = 1.0f / divisions;
 
   int N = static_cast<int>(divisions);
-  std::cout << "N = " << N << '\n';
   for (int i = 0; i < N; ++i) {
     for (int j = 0; j < N; ++j) {
 

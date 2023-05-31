@@ -26,11 +26,17 @@ def create_axial_rotation(root: minidom.Document, angle: float):
 
     return rotation
 
+def create_texture(root: minidom.Document, file_tex: str) -> minidom.Element:
+    texture = root.createElement("texture")
+    texture.setAttribute("file", file_tex)
+    return texture
+
 def create_ring_element(root: minidom.Document) -> minidom.Element:
     group = root.createElement("group")
     models = root.createElement("models")
     model = root.createElement("model")
     model.setAttribute("file", "solar_system_elements/torus.3d")
+    model.appendChild(create_texture(root, "textures/8k_saturn_ring.png"))
 
     models.appendChild(model)
     group.appendChild(models)

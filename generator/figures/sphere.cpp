@@ -3,8 +3,6 @@
 Sphere::Sphere(const std::vector<float> &args)
     : Figure(args), radius(args[0]), slices(args[1]), stacks(args[2]) {
 
-  std::cout << "Sphere constructor called\n";
-
   float xz_step = 2.0f * std::numbers::pi_v<float> / slices;
   float y_step = std::numbers::pi_v<float> / stacks;
 
@@ -25,6 +23,7 @@ Sphere::Sphere(const std::vector<float> &args)
           -this->radius * std::cos(y_step * static_cast<float>(i + 1)),
           this->radius * next_sin * std::cos(xz_step * static_cast<float>(j)),
           1.0f);
+
       this->normals.emplace_back(
           next_sin * std::sin(xz_step * static_cast<float>(j)),
           -std::cos(y_step * static_cast<float>(i + 1)),
@@ -104,11 +103,5 @@ Sphere::Sphere(const std::vector<float> &args)
       this->texCoords.emplace_back(tex_step_x * static_cast<float>(j + 1),
                                    tex_step_y * (static_cast<float>(i)));
     }
-  }
-
-  for (auto &vertice : this->vertices) {
-    vertice =
-        vertice * maths::rotate(maths::Matrix(1.0f),
-                                maths::Vertex{0.0f, 0.0f, 1.0f, 0.0f}, 180.0f);
   }
 }

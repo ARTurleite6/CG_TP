@@ -1,7 +1,6 @@
 #include "VBO.h"
 
 VBO::VBO(const std::vector<float> &vertex) : vbo(0) {
-  std::cout << "constructing vbo\n";
   glGenBuffers(1, &this->vbo);
   this->bind();
   glBufferData(GL_ARRAY_BUFFER, static_cast<int>(sizeof(float) * vertex.size()),
@@ -15,6 +14,5 @@ VBO::VBO(VBO &&vbo) noexcept : vbo(vbo.vbo), vertex_count(vbo.vertex_count) {
 }
 
 VBO::~VBO() {
-  std::cout << "Destroyed VBO\n";
   glDeleteBuffers(1, &this->vbo);
 }

@@ -38,8 +38,6 @@ Color::Color(tinyxml2::XMLElement *element) {
     this->shininess = shininess->FloatAttribute("value", 0);
   }
 
-  std::cout << "Shininess = " << this->shininess << '\n';
-
   this->ambient.normalize();
   this->specular.normalize();
   this->diffuse.normalize();
@@ -50,18 +48,12 @@ void Color::setup() const noexcept {
 
   std::array<float, 4> arrParams{0.0f, 0.0f, 0.0f, 1.0f};
 
-  // std::cout << "Ambient = " << ambient.r << ", " << ambient.g << ", " <<
-  // ambient.b << '\n';
   arrParams = {this->ambient.r, this->ambient.g, this->ambient.b, 1.0f};
   glMaterialfv(GL_FRONT, GL_AMBIENT, arrParams.data());
 
-  // std::cout << "Diffuse = " << diffuse.r << ", " << diffuse.g << ", " <<
-  // diffuse.b << '\n';
   arrParams = {this->diffuse.r, this->diffuse.g, this->diffuse.b, 1.0f};
   glMaterialfv(GL_FRONT, GL_DIFFUSE, arrParams.data());
 
-  // std::cout << "Specular = " << specular.r << ", " << specular.g << ", " <<
-  // specular.b << '\n';
   arrParams = {this->specular.r, this->specular.g, this->specular.b, 1.0f};
   glMaterialfv(GL_FRONT, GL_SPECULAR, arrParams.data());
 

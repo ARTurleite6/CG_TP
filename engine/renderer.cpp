@@ -81,25 +81,6 @@ void Renderer::parse_vertex(const std::string &file) {
     texCoords.push_back(verticesFloat[7]);
   }
 
-  //  glGenBuffers(2, cacheEntry.vbo);
-  //  glBindBuffer(GL_ARRAY_BUFFER, cacheEntry.vbo[0]);
-  //  glBufferData(GL_ARRAY_BUFFER,
-  //               static_cast<long>(sizeof(float) *
-  //               cacheEntry.vertices.size()), cacheEntry.vertices.data(),
-  //               GL_STATIC_DRAW);
-
-  //  glBindBuffer(GL_ARRAY_BUFFER, cacheEntry.vbo[1]);
-  //  glBufferData(GL_ARRAY_BUFFER,
-  //               static_cast<long>(sizeof(float) * cacheEntry.normals.size()),
-  //               cacheEntry.normals.data(), GL_STATIC_DRAW);
-  //
-  //  glBindBuffer(GL_ARRAY_BUFFER, 0);
-  for(const auto &normal : normals)
-      std::cout << normal << '\n';
   this->cache_vertex.emplace(
       std::string(file), CacheEntry{VBO{vertex}, VBO{normals}, VBO{texCoords}});
-
-  // this->cache_vertex[file] =
-  //     CacheEntry{std::move(vertex), std::move(normals),
-  //     std::move(texCoords)};
 }

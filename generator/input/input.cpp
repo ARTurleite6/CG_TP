@@ -158,12 +158,10 @@ std::ostream &operator<<(std::ostream &os, const Figures &fig) {
 
 std::unique_ptr<Figure> Input::getFigure() const noexcept {
   if (this->figure == Figures::Plane) {
-    std::cout << "Entering plane...\n";
     return std::make_unique<Plane>(
         std::vector<float>{static_cast<float>(this->dimensions[0]),
                            static_cast<float>(this->dimensions[1])});
   } else if (this->figure == Figures::Box) {
-    std::cout << "Making a box...\n";
     return std::make_unique<Box>(
         std::vector<float>{static_cast<float>(this->dimensions[0]),
                            static_cast<float>(this->dimensions[1])});
@@ -171,7 +169,6 @@ std::unique_ptr<Figure> Input::getFigure() const noexcept {
 
   switch (this->figure) {
   case Figures::Plane: {
-    std::cout << "Entering plane...\n";
     return std::make_unique<Plane>(
         std::vector<float>{static_cast<float>(this->dimensions[0]),
                            static_cast<float>(this->dimensions[1])});
@@ -179,14 +176,12 @@ std::unique_ptr<Figure> Input::getFigure() const noexcept {
     break;
   }
   case Figures::Box: {
-    std::cout << "Making a box...\n";
     return std::make_unique<Box>(
         std::vector<float>{static_cast<float>(this->dimensions[0]),
                            static_cast<float>(this->dimensions[1])});
     break;
   }
   case Figures::Sphere: {
-    std::cout << "Making a sphere...\n";
     return std::make_unique<Sphere>(
         std::vector<float>{static_cast<float>(this->dimensions[0]),
                            static_cast<float>(this->dimensions[1]),
@@ -194,7 +189,6 @@ std::unique_ptr<Figure> Input::getFigure() const noexcept {
     break;
   }
   case Figures::Cone: {
-    std::cout << "Making a cone...\n";
     return std::make_unique<Cone>(
         std::vector<float>{static_cast<float>(this->dimensions[0]),
                            static_cast<float>(this->dimensions[1]),
@@ -203,7 +197,6 @@ std::unique_ptr<Figure> Input::getFigure() const noexcept {
     break;
   }
   case Figures::Torus: {
-    std::cout << "Making a torus...\n";
     return std::make_unique<Torus>(
         std::vector<float>{static_cast<float>(this->dimensions[0]),
                            static_cast<float>(this->dimensions[1]),
@@ -211,14 +204,12 @@ std::unique_ptr<Figure> Input::getFigure() const noexcept {
                            static_cast<float>(this->dimensions[3])});
   }
   case Figures::Pyramid: {
-    std::cout << "Making a pyramid...\n";
     return std::make_unique<Pyramid>(std::vector<float>{
         static_cast<float>(this->dimensions[0]), // height
         static_cast<float>(this->dimensions[1]), // slices
     });
   }
   case Figures::Bezzier: {
-    std::cout << "Making a bezzier surface...\n";
     return std::make_unique<Bezzier>(this->inputFile, this->dimensions[0]);
   }
   default:

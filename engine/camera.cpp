@@ -136,8 +136,6 @@ void Camera::handleMouseMotion(int x, int y) noexcept {
   int deltaX = (this->initialMouseX - x);
   int deltaY = (this->initialMouseY - y);
 
-  std::cout << "deltaX = " << deltaX << ", deltaY = " << deltaY << '\n';
-
   float sensivity = (this->currentMode == CameraMode::FPS) ? 0.001f : 1.0f;
 
   float alphaAux = this->alpha + static_cast<float>(deltaX) * sensivity;

@@ -197,8 +197,6 @@ void processKeyDown(unsigned char key, int x, int y) {
   else if (key == 'm')
     engine->toggleCameraMode();
 
-  std::cout << "Pressed key: " << key << '\n';
-
   engine->registerKey(key);
 }
 
@@ -209,8 +207,6 @@ void processKeyUp(unsigned char key, int x, int y) {
     std::cout << "Engine is null\n";
     return;
   }
-
-  std::cout << "Released key: " << key << '\n';
 
   engine->unregisterKey(key);
 }

@@ -12,8 +12,8 @@ void Figure::storeVertices(std::string_view outFile) const noexcept {
 
   auto point = 0;
   for (const auto &v : this->vertices) {
-    auto normal = this->normals[point];
-    auto texCoord = this->texCoords[point++];
+    auto &normal = this->normals[point];
+    auto &texCoord = this->texCoords[point++];
     file << v.x << ' ' << v.y << ' ' << v.z << ' ' << normal.x << ' '
          << normal.y << ' ' << normal.z << ' ' << texCoord << '\n';
   }
@@ -23,5 +23,9 @@ void Figure::computeOperation(const Matrix<float, 4, 4> &m) noexcept {
   auto point = 0;
   for (auto &v : this->vertices) {
     v = m * v;
+  }
+
+  for (auto &normal : this->normals) {
+    normal = m * normal;
   }
 }
