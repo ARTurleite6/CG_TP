@@ -69,7 +69,6 @@ void Group::draw_children(Renderer &renderer, int elapsedTime) const noexcept {
 
 void Group::apply_transformations(int elapsedTime,
                                   bool draw_lines) const noexcept {
-    std::cout << "drawing lines group = " << draw_lines << '\n';
   for (const auto &transformation : this->transformations) {
     if (draw_lines &&
         transformation->getType() == TypeTransformation::TimedTranslate) {

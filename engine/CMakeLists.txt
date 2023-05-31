@@ -17,4 +17,6 @@ add_executable(engine
     lights/light.cpp
     lights/spotlight.cpp
     ${imgui_sources}
+    GLAbstract/VBO.cpp
+    GLAbstract/texture.cpp
     )

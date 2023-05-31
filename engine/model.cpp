@@ -1,35 +1,27 @@
 #include "model.h"
-#include "io.h"
-#include "my_math.h"
-#include "tinyxml2.h"
 
-Model::Model(tinyxml2::XMLElement *element): filename(element->Attribute("file")), color(element->FirstChildElement("color")) {
-//  std::ifstream file;
-//  file.open(filename.data());
-//  if (!file.is_open()) {
-//    std::cerr << "Couldn't open " << filename << " successfully\n";
-//    return;
-//  }
-//
-//  this->loadPoints(file);
-}
+Model::Model(tinyxml2::XMLElement *element)
+    : filename(element->Attribute("file")),
+      color(element->FirstChildElement("color")) {
 
-void Model::loadPoints(std::ifstream &file) noexcept {
-  std::string buffer;
-  while (std::getline(file, buffer)) {
-    std::array<std::string_view, 6> arr = split_N<6>(buffer, " ");
-
-    this->vertices.emplace_back(std::stof(std::string(arr[0])),
-                                std::stof(std::string(arr[1])),
-                                std::stof(std::string(arr[2])), 1.0f);
-
-    this->normals.emplace_back(std::stof(std::string(arr[3])),
-                               std::stof(std::string(arr[4])),
-                               std::stof(std::string(arr[5])), 1.0f);
+  auto texture = element->FirstChildElement("texture");
+  if (texture) {
+    auto texture_attr = texture->FindAttribute("file");
+    if (!texture_attr)
+      throw errors::XMLParseError("Expected element Texture on element file");
+    this->texture_file = texture_attr->Value();
   }
+  //  std::ifstream file;
+  //  file.open(filename.data());
+  //  if (!file.is_open()) {
+  //    std::cerr << "Couldn't open " << filename << " successfully\n";
+  //    return;
+  //  }
+  //
+  //  this->loadPoints(file);
 }
 
 void Model::draw(Renderer &renderer) const noexcept {
   this->setupMaterial();
-  renderer.draw(this->filename);
+  renderer.draw(this->filename, this->texture_file);
 }

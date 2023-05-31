@@ -1,10 +1,21 @@
 import csv
-from math import pi, sin, cos, pow, sqrt
+import re
 import random
+import threading
 from subprocess import run
 from xml.dom import minidom
+from os import listdir
+from math import pi, sin, cos, pow, sqrt
 
 ROTATION_FACTOR = 1000
+
+def create_timed_rotation(root: minidom.Document, time: float):
+    rotation = root.createElement("rotate")
+    rotation.setAttribute("time", str(time))
+    rotation.setAttribute("x", "0")
+    rotation.setAttribute("y", "0")
+    rotation.setAttribute("z", "1")
+    return rotation
 
 def create_axial_rotation(root: minidom.Document, angle: float):
     rotation = root.createElement("rotate")
@@ -230,6 +241,10 @@ def create_sun(root: minidom.Document, parent: minidom.Element):
     model = root.createElement("model")
     model.setAttribute("file", "solar_system_elements/sphere.3d")
 
+    texture = root.createElement("texture")
+    texture.setAttribute("file", "textures/Sun.jpg")
+
+    model.appendChild(texture)
     model.appendChild(create_color_element(root=root, color_hex="#FDB813", sun=True))
 
     models.appendChild(model)
@@ -294,6 +309,10 @@ def create_planets(root: minidom.Document, parent: minidom.Element, planets, sat
         model = root.createElement("model")
         model.setAttribute("name", planet["planet"])
 
+        texture = root.createElement("texture")
+        name_planet = planet["planet"]
+        texture.setAttribute("file", f"textures/{name_planet}.jpg")
+
         orbit = str(float(planet["orbit time (days)"]) / 20)
 
         rotation = root.createElement("rotate")
@@ -323,6 +342,7 @@ def create_planets(root: minidom.Document, parent: minidom.Element, planets, sat
         transform.appendChild(rotation)
         transform.appendChild(translate)
         transform.appendChild(create_axial_rotation(root, -float(planet["axial tilt"])))
+        transform.appendChild(create_timed_rotation(root, float(planet["rotation time (minutes)"])))
         transform.appendChild(scale)
 
 
@@ -375,6 +395,7 @@ def create_planets(root: minidom.Document, parent: minidom.Element, planets, sat
         if planet["has ring"] == "True":
             group.appendChild(create_ring_element(root))
     
+        model.appendChild(texture)
         model.appendChild(create_color_element(root, planet["color"]))
         models.appendChild(model)
 
@@ -392,8 +413,9 @@ def main():
     run(args=["./build/bin/generator", "sphere", "1", "10", "10", "solar_system_elements/spherelowquality.3d"], text=True)
     run(args=["./build/bin/generator", "bezzier", "patches/teapot.patch", "10", "solar_system_elements/teapot.3d"], text=True)
 
-
+    names_planets = list()
     with open("data/planets.csv", "r") as file:
+
         with(open("data/satellites.csv", "r")) as file2:
             planets_satellites = dict()
             planets = csv.DictReader(file)
@@ -403,10 +425,14 @@ def main():
                     planets_satellites[satellit["planet"]] = list()
                 planets_satellites[satellit["planet"]].append(satellit)
                 
+            #for planet in planets:
+            #    name = planet["planet"]
+            #    names_planets.append(name)
+
             create_planets(root, world, planets, planets_satellites)
 
     world.appendChild(generate_asteroids(root, 1000))
-    #world.appendChild(create_light(root))
+    world.appendChild(create_light(root))
 
     with open("scenes/solar_system.xml", "w") as file:
         file.write(root.toprettyxml(indent='\t'))

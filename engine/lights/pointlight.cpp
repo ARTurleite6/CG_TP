@@ -1,7 +1,7 @@
 #include "pointlight.h"
 
-PointLight::PointLight(tinyxml2::XMLElement *element, std::uint32_t index)
-    : Light(index) {
+PointLight::PointLight(tinyxml2::XMLElement *element)
+    : Light() {
 
   this->position.x = element->FloatAttribute("posX", 0);
   this->position.y = element->FloatAttribute("posY", 0);

@@ -4,7 +4,10 @@
 
 class Light {
 public:
-  explicit Light(std::uint32_t index) : index(index) {}
+
+    static std::uint32_t getNextIndex();
+    
+  explicit Light(): index(Light::getNextIndex()) {}
   virtual ~Light() { glDisable(GL_LIGHT0 + this->index); }
 
   void configureColor() const noexcept;
@@ -18,6 +21,8 @@ public:
 
 private:
   std::uint32_t index;
+
+  static std::uint32_t current_index;
 };
 
 #endif // LIGHT_H

@@ -9,6 +9,21 @@ namespace maths {
 template <class T = float, std::uint32_t L = 4, std::uint32_t C = 4>
 class Matrix;
 
+class Vertex2D {
+
+public:
+  Vertex2D(float x, float y);
+  ~Vertex2D() = default;
+
+  friend std::ostream &operator<<(std::ostream &oos, const Vertex2D &vertex);
+
+  [[nodiscard]] inline float getX() const noexcept { return x; }
+  [[nodiscard]] inline float getY() const noexcept { return y; }
+
+private:
+  float x, y;
+};
+
 struct Vertex {
   Vertex() = default;
   Vertex(float x, float y, float z, float w);

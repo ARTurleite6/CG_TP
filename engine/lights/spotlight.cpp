@@ -1,7 +1,6 @@
 #include "spotlight.h"
 
-SpotLight::SpotLight(tinyxml2::XMLElement *element, std::uint32_t index)
-    : Light(index), cutoff(45) {
+SpotLight::SpotLight(tinyxml2::XMLElement *element) : Light(), cutoff(45) {
   element->QueryFloatAttribute("posX", &this->position.x);
   element->QueryFloatAttribute("posY", &this->position.y);
   element->QueryFloatAttribute("posZ", &this->position.z);

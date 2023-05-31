@@ -1,8 +1,6 @@
 #include "directionallight.h"
 
-DirectionalLight::DirectionalLight(tinyxml2::XMLElement *element,
-                                   std::uint32_t index)
-    : Light(index) {
+DirectionalLight::DirectionalLight(tinyxml2::XMLElement *element) : Light() {
   element->QueryFloatAttribute("dirX", &this->direction.x);
   element->QueryFloatAttribute("dirY", &this->direction.y);
   element->QueryFloatAttribute("dirZ", &this->direction.z);

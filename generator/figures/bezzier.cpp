@@ -15,8 +15,6 @@ Bezzier::Bezzier(const std::string &filepath, float tesselation)
     throw std::invalid_argument("File does not exist");
   }
 
-  std::cout << "entrei aqui\n";
-
   int number_patches = 0;
   file >> number_patches;
   file.ignore();
@@ -42,10 +40,6 @@ Bezzier::Bezzier(const std::string &filepath, float tesselation)
   for (int i = 0; i < number_vertices; ++i) {
     std::getline(file, buffer);
     std::array<std::string_view, 3> arr = split_N<3>(buffer, ", ");
-
-    for (const auto value : arr) {
-      std::cout << value << '\n';
-    }
 
     maths::Vertex coords{std::stof(std::string(arr[0])),
                          std::stof(std::string(arr[1])),
@@ -87,13 +81,15 @@ Bezzier::getPoint(const maths::Matrix<maths::Vertex, 4, 4> &mA, float u,
   return std::make_pair(point, normal_vector);
 }
 
-std::pair<std::vector<maths::Vertex>, std::vector<maths::Vertex>>
+std::tuple<std::vector<maths::Vertex>, std::vector<maths::Vertex>,
+           std::vector<maths::Vertex2D>>
 Bezzier::calculatePoints() const noexcept {
 
   using namespace maths;
 
   std::vector<Vertex> vertex;
   std::vector<Vertex> normals;
+  std::vector<Vertex2D> texCoords;
   vertex.reserve(this->patchesIndices.size() *
                  static_cast<unsigned long>(this->tesselation) *
                  static_cast<unsigned long>(this->tesselation));
@@ -127,36 +123,45 @@ Bezzier::calculatePoints() const noexcept {
         auto [point, normal_vector] = Bezzier::getPoint(mA, uValue, vValue);
         vertex.push_back(point);
         normals.push_back(normal_vector);
+        texCoords.emplace_back(uValue, vValue);
+
         auto [point2, normal_vector2] =
             Bezzier::getPoint(mA, uValue, vNextValue);
         vertex.push_back(point2);
         normals.push_back(normal_vector2);
+        texCoords.emplace_back(uValue, vNextValue);
+
         auto [point3, normal_vector3] =
             Bezzier::getPoint(mA, uNextValue, vNextValue);
         vertex.push_back(point3);
         normals.push_back(normal_vector3);
+        texCoords.emplace_back(uNextValue, vNextValue);
 
         auto [point4, normal_vector4] = Bezzier::getPoint(mA, uValue, vValue);
         vertex.push_back(point4);
         normals.push_back(normal_vector4);
+        texCoords.emplace_back(uValue, vValue);
+
         auto [point5, normal_vector5] =
             Bezzier::getPoint(mA, uNextValue, vNextValue);
         vertex.push_back(point5);
         normals.push_back(normal_vector5);
+        texCoords.emplace_back(uNextValue, vNextValue);
+
         auto [point6, normal_vector6] =
             Bezzier::getPoint(mA, uNextValue, vValue);
         vertex.push_back(point6);
         normals.push_back(normal_vector6);
+        texCoords.emplace_back(uNextValue, vValue);
       }
     }
   }
 
-  return std::make_pair(vertex, normals);
+  return std::make_tuple(vertex, normals, texCoords);
 }
 
 void Bezzier::storeVertices(std::string_view outFile) const noexcept {
-  auto [vertex, normals] = this->calculatePoints();
-  std::cout << "vertexCount = " << vertex.size() << ", normalsCount = " << normals.size() << '\n';
+  auto [vertex, normals, texCoords] = this->calculatePoints();
 
   std::ofstream file;
   file.open(outFile.data());
@@ -167,8 +172,9 @@ void Bezzier::storeVertices(std::string_view outFile) const noexcept {
 
   int iPoint = 0;
   for (const auto point : vertex) {
+    auto tex = texCoords[iPoint];
     auto normal = normals[iPoint++];
     file << point.x << ' ' << point.y << ' ' << point.z << ' ' << normal.x
-         << ' ' << normal.y << ' ' << normal.z << '\n';
+         << ' ' << normal.y << ' ' << normal.z << ' ' << tex << '\n';
   }
 }

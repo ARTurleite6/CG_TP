@@ -3,6 +3,7 @@
 #include "parse_errors/xml_parse_error.h"
 #include "parsing.h"
 #include "tinyxml2.h"
+#include <il.h>
 
 Engine::Engine(std::string_view xml_file)
     : xml_file(xml_file), doc(), window_width(800), window_height(800),
@@ -118,24 +119,24 @@ void Engine::run(int argc, char *argv[]) {
   glutPassiveMotionFunc(passiveMouseFunc);
 
   glewInit();
+  ilInit();
 
   glEnable(GL_DEPTH_TEST);
   glEnable(GL_CULL_FACE);
+  glEnable(GL_TEXTURE_2D);
   glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-
-  this->configureLights();
 
   glEnableClientState(GL_VERTEX_ARRAY);
   glEnableClientState(GL_NORMAL_ARRAY);
-  glutMainLoop();
+  glEnableClientState(GL_TEXTURE_COORD_ARRAY);
 
+  this->configureLights();
+  glutMainLoop();
 }
 
 void passiveMouseFunc(int x, int y) { engine->handleMouseMotion(x, y); }
 
-void motionFunc(int x, int y) { 
-    engine->handleMouseMotion(x, y); 
-}
+void motionFunc(int x, int y) { engine->handleMouseMotion(x, y); }
 
 void mouseFunc(int button, int state, int x, int y) {
   if (button == GLUT_LEFT_BUTTON && state == GLUT_DOWN) {
@@ -146,7 +147,6 @@ void mouseFunc(int button, int state, int x, int y) {
     std::cout << "Tracking set to 0\n";
     engine->setCameraTracking(0);
   }
-
 }
 
 void reshape(int width, int height) {
@@ -170,8 +170,8 @@ void display() {
   }
   glLoadIdentity();
 
-  engine->placeLights();
   engine->placeCamera();
+  engine->placeLights();
 
   engine->handleInput();
 
@@ -182,7 +182,6 @@ void display() {
 
 void Engine::draw(int elapsedTime) noexcept {
   for (const auto &group : this->groups) {
-    std::cout << "drawing lines engine = " << this->draw_lines << '\n';
     group.draw(this->renderer, elapsedTime, this->draw_lines);
   }
 }
@@ -231,18 +230,16 @@ void Engine::unregisterKey(unsigned char key) {
 
 void Engine::loadLights(tinyxml2::XMLElement *lights) {
   auto light = lights->FirstChildElement("light");
-  std::uint32_t index = 0;
   for (auto light = lights->FirstChildElement("light"); light != nullptr;
        light = light->NextSiblingElement("light")) {
 
     std::string_view type = light->Attribute("type");
     if (type == "point")
-      this->lights.push_back(std::make_unique<PointLight>(light, index++));
+      this->lights.push_back(std::make_unique<PointLight>(light));
     else if (type == "directional")
-      this->lights.push_back(
-          std::make_unique<DirectionalLight>(light, index++));
+      this->lights.push_back(std::make_unique<DirectionalLight>(light));
     else if (type == "spotlight")
-      this->lights.push_back(std::make_unique<SpotLight>(light, index++));
+      this->lights.push_back(std::make_unique<SpotLight>(light));
     else
       throw errors::XMLParseError(
           fmt::format("Error, {} type of light no supported", type));

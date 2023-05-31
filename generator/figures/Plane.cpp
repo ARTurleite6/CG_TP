@@ -8,6 +8,8 @@ Plane::Plane(const std::vector<float> &args)
   float step = dimension / divisions;
   std::cout << "step = " << step << '\n';
 
+  float texStep = 1.0f / divisions;
+
   int N = static_cast<int>(divisions);
   std::cout << "N = " << N << '\n';
   for (int i = 0; i < N; ++i) {
@@ -20,7 +22,7 @@ Plane::Plane(const std::vector<float> &args)
       this->vertices.emplace_back(step * static_cast<float>(i + 1), 0.0f,
                                   step * static_cast<float>(j), 1.0f);
 
-      for (int i = 0; i < 3; ++i) {
+      for (int k = 0; k < 3; ++k) {
         this->normals.emplace_back(0.0f, 1.0f, 0.0f, 0.0f);
       }
 
@@ -31,9 +33,27 @@ Plane::Plane(const std::vector<float> &args)
       this->vertices.emplace_back(step * static_cast<float>(i + 1), 0.0f,
                                   step * static_cast<float>(j), 1.0f);
 
-      for (int i = 0; i < 3; ++i) {
+      for (int k = 0; k < 3; ++k) {
         this->normals.emplace_back(0.0f, 1.0f, 0.0f, 0.0f);
       }
+
+      this->texCoords.emplace_back(texStep * static_cast<float>(i),
+                                   texStep * static_cast<float>(j));
+
+      this->texCoords.emplace_back(texStep * static_cast<float>(i),
+                                   texStep * static_cast<float>(j + 1));
+
+      this->texCoords.emplace_back(texStep * static_cast<float>(i + 1),
+                                   texStep * static_cast<float>(j));
+
+      this->texCoords.emplace_back(texStep * static_cast<float>(i),
+                                   texStep * static_cast<float>(j + 1));
+
+      this->texCoords.emplace_back(texStep * static_cast<float>(i + 1),
+                                   texStep * static_cast<float>(j + 1));
+
+      this->texCoords.emplace_back(texStep * static_cast<float>(i + 1),
+                                   texStep * static_cast<float>(j));
     }
   }
 

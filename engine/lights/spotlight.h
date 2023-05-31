@@ -8,7 +8,7 @@
 class SpotLight : public Light {
 
 public:
-  SpotLight(tinyxml2::XMLElement *element, std::uint32_t index);
+  explicit SpotLight(tinyxml2::XMLElement *element);
   ~SpotLight() override = default;
 
   void place() const override;

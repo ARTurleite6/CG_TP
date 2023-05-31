@@ -16,10 +16,19 @@ Torus::Torus(const std::vector<float> &args) {
     float cur_alpha = bigger_step * static_cast<float>(i);
     float next_alpha = bigger_step * static_cast<float>(i + 1);
 
+    float current_tex_i =
+        (1.0f / static_cast<float>(number_slices)) * static_cast<float>(i);
+    float next_tex_i =
+        (1.0f / static_cast<float>(number_slices)) * static_cast<float>(i + 1);
+
     for (int j = 0; j < number_stacks; ++j) {
 
       float cur_delta = smaller_step * static_cast<float>(j);
       float next_delta = smaller_step * static_cast<float>(j + 1);
+      float current_tex_j =
+          (1.0f / static_cast<float>(number_stacks)) * static_cast<float>(j);
+      float next_tex_j = (1.0f / static_cast<float>(number_stacks)) *
+                         static_cast<float>(j + 1);
 
       this->vertices.emplace_back(
           (raio_maior + std::cos(cur_alpha) * raio_menor) * std::sin(cur_delta),
@@ -30,6 +39,8 @@ Torus::Torus(const std::vector<float> &args) {
       this->normals.emplace_back(
           std::cos(cur_alpha) * std::sin(cur_delta), std::sin(cur_alpha),
           std::cos(cur_alpha) * std::cos(cur_delta), 0.0f);
+
+      this->texCoords.emplace_back(current_tex_i, current_tex_j);
 
       this->vertices.emplace_back(
           (raio_maior + std::cos(cur_alpha) * raio_menor) *
@@ -43,6 +54,8 @@ Torus::Torus(const std::vector<float> &args) {
           std::cos(cur_alpha) * std::sin(next_delta), std::sin(cur_alpha),
           std::cos(cur_alpha) * std::cos(next_delta), 0.0f);
 
+      this->texCoords.emplace_back(current_tex_i, next_tex_j);
+
       this->vertices.emplace_back(
           (raio_maior + std::cos(next_alpha) * raio_menor) *
               std::sin(next_delta),
@@ -55,6 +68,8 @@ Torus::Torus(const std::vector<float> &args) {
           std::cos(next_alpha) * std::sin(next_delta), std::sin(next_alpha),
           std::cos(next_alpha) * std::cos(next_delta), 0.0f);
 
+      this->texCoords.emplace_back(next_tex_i, next_tex_j);
+
       this->vertices.emplace_back(
           (raio_maior + std::cos(cur_alpha) * raio_menor) * std::sin(cur_delta),
           std::sin(cur_alpha) * raio_menor,
@@ -64,6 +79,8 @@ Torus::Torus(const std::vector<float> &args) {
       this->normals.emplace_back(
           std::cos(cur_alpha) * std::sin(cur_delta), std::sin(cur_alpha),
           std::cos(cur_alpha) * std::cos(cur_delta), 1.0f);
+
+      this->texCoords.emplace_back(current_tex_i, current_tex_j);
 
       this->vertices.emplace_back(
           (raio_maior + std::cos(next_alpha) * raio_menor) *
@@ -77,6 +94,8 @@ Torus::Torus(const std::vector<float> &args) {
           std::cos(next_alpha) * std::sin(next_delta), std::sin(next_alpha),
           std::cos(next_alpha) * std::cos(next_delta), 1.0f);
 
+      this->texCoords.emplace_back(next_tex_i, next_tex_j);
+
       this->vertices.emplace_back(
           (raio_maior + std::cos(next_alpha) * raio_menor) *
               std::sin(cur_delta),
@@ -88,6 +107,8 @@ Torus::Torus(const std::vector<float> &args) {
       this->normals.emplace_back(
           std::cos(next_alpha) * std::sin(cur_delta), std::sin(next_alpha),
           std::cos(next_alpha) * std::cos(cur_delta), 1.0f);
+
+      this->texCoords.emplace_back(next_tex_i, current_tex_j);
     }
   }
 }

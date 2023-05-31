@@ -12,9 +12,10 @@ void Figure::storeVertices(std::string_view outFile) const noexcept {
 
   auto point = 0;
   for (const auto &v : this->vertices) {
-    auto normal = this->normals[point++];
+    auto normal = this->normals[point];
+    auto texCoord = this->texCoords[point++];
     file << v.x << ' ' << v.y << ' ' << v.z << ' ' << normal.x << ' '
-         << normal.y << ' ' << normal.z << '\n';
+         << normal.y << ' ' << normal.z << ' ' << texCoord << '\n';
   }
 }
 

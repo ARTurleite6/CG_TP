@@ -14,6 +14,7 @@ public:
 
   std::vector<maths::Vertex> vertices;
   std::vector<maths::Vertex> normals;
+  std::vector<maths::Vertex2D> texCoords;
 };
 
 #endif // FIGURE_H

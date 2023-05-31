@@ -1,6 +1,13 @@
 #include "my_math.h"
 
 namespace maths {
+
+std::ostream &operator<<(std::ostream &oos, const Vertex2D &vertex) {
+  return oos << vertex.x << ' ' << vertex.y;
+}
+
+Vertex2D::Vertex2D(float x, float y) : x(x), y(y) {}
+
 Vertex::Vertex(float x, float y, float z, float w) : x(x), y(y), z(z), w(w) {}
 
 float Vertex::size() const noexcept {

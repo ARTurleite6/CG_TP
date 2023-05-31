@@ -15,8 +15,9 @@ private:
   static std::pair<maths::Vertex, maths::Vertex>
   getPoint(const maths::Matrix<Vertex, 4, 4> &mA, float u, float v);
 
-  [[nodiscard]] std::pair<std::vector<maths::Vertex>,
-                          std::vector<maths::Vertex>>
+  [[nodiscard]] std::tuple<std::vector<maths::Vertex>,
+                           std::vector<maths::Vertex>,
+                           std::vector<maths::Vertex2D>>
   calculatePoints() const noexcept;
   float tesselation{0.0f};
   std::vector<std::array<int, 16>> patchesIndices{};

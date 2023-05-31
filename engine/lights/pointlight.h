@@ -8,7 +8,7 @@
 class PointLight : public Light {
 
 public:
-  explicit PointLight(tinyxml2::XMLElement *element, std::uint32_t index = 0);
+  explicit PointLight(tinyxml2::XMLElement *element);
   ~PointLight() override = default;
 
   void place() const override;

@@ -7,7 +7,7 @@
 
 class DirectionalLight : public Light {
 public:
-  DirectionalLight(tinyxml2::XMLElement *element, std::uint32_t index);
+  explicit DirectionalLight(tinyxml2::XMLElement *element);
   ~DirectionalLight() override = default;
 
   void place() const override;
