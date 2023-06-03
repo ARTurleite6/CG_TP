@@ -4,7 +4,6 @@ Pyramid::Pyramid(const std::vector<float> &args)
     : height(args[0]), slices(static_cast<std::uint32_t>(args[1])) {
   float step = std::numbers::pi_v<float> * 2 / static_cast<float>(slices);
 
-  // top
   for (int i = 0; i < slices; ++i) {
     float angle = step * static_cast<float>(i);
     float next_angle = step * static_cast<float>(i + 1);
