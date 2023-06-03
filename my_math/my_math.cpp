@@ -177,4 +177,10 @@ Vertex Matrix<float, 4, 4>::operator*(const Vertex &v) const noexcept {
   };
 }
 
+float withinRange(float value, float min, float max) {
+  float range = max - min;
+
+  return (value * range) + min;
+}
+
 }; // namespace maths

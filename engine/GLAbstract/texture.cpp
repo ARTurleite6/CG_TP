@@ -8,7 +8,7 @@ Texture::Texture(std::string_view file_path) : textureid(0) {
   if (!ilLoadImage((ILstring)file_path.data())) {
     ILenum error = ilGetError();
     const char *errorMessage = iluGetString(error);
-    printf("Error to load image: %s", errorMessage);
+    printf("Error to load image: %s", file_path.data());
   }
   tw = ilGetInteger(IL_IMAGE_WIDTH);
   th = ilGetInteger(IL_IMAGE_HEIGHT);

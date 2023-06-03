@@ -14,6 +14,8 @@ public:
   Plane &operator=(const Plane &) = default;
   ~Plane() override = default;
 
+  void computeTextureCoords(float minS, float maxS, float minT, float maxT);
+
 private:
   float dimension{}, divisions{};
 };

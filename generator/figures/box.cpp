@@ -11,61 +11,70 @@ Box::Box(const std::vector<float> &args) noexcept
       maths::translate(Matrix(1.0f),
                        Vertex{0.0f, -dimensions / 2.0f, 0.0f, 0.0f}) *
       maths::rotate(Matrix(1.0f), Vertex{1.0f, 0.0f, 0.0f, 0.0f}, 180.0f));
-  std::for_each(planes[0].normals.begin(), planes[0].normals.end(),
-                [](Vertex &v) { v.y = -1; });
 
+  // planes[1] top
   planes[1].computeOperation(maths::translate(
       Matrix(1.0f), Vertex{0.0f, dimensions / 2.0f, 0.0f, 0.0f}));
 
+  // plantes[2] left
   planes[2].computeOperation(
+      maths::translate(Matrix(1.0f),
+                       Vertex{-dimensions / 2.0f, 0.0f, 0.0f, 0.0f}) *
+      maths::rotate(Matrix(1.0f), Vertex{0.0f, 0.0f, -1.0f, 0.0f}, 90.0f) *
+      maths::rotate(Matrix(1.0f), Vertex{0.0f, 1.0f, 0.0f, 0.0f}, -90.0f));
+
+  // planes[3] front
+  planes[3].computeOperation(
       maths::translate(Matrix(1.0f),
                        Vertex{0.0f, 0.0f, dimensions / 2.0f, 0.0f}) *
       maths::rotate(Matrix(1.0f), Vertex{1.0f, 0.0f, 0.0f, 0.0f}, 90.0f));
 
-  std::for_each(planes[2].normals.begin(), planes[2].normals.end(),
-                [](Vertex &v) {
-                  v.y = 0;
-                  v.z = 1.0f;
-                });
-
-  planes[3].computeOperation(
-      maths::translate(Matrix(1.0f),
-                       Vertex{0.0f, 0.0f, -dimensions / 2.0f, 0.0f}) *
-      maths::rotate(Matrix(1.0f), Vertex{1.0f, 0.0f, 0.0f, 0.0f}, -90.0f));
-
-  std::for_each(planes[3].normals.begin(), planes[3].normals.end(),
-                [](Vertex &v) {
-                  v.y = 0;
-                  v.z = -1.0f;
-                });
-
+  // plantes[4] right
   planes[4].computeOperation(
       maths::translate(Matrix(1.0f),
                        Vertex{dimensions / 2.0f, 0.0f, 0.0f, 0.0f}) *
-      maths::rotate(Matrix(1.0f), Vertex{0.0f, 0.0f, 1.0f, 0.0f}, -90.0f));
+      maths::rotate(Matrix(1.0f), Vertex{0.0f, 0.0f, 1.0f, 0.0f}, -90.0f) *
+      maths::rotate(Matrix(1.0f), Vertex{0.0f, 1.0f, 0.0f, 0.0f}, 90.0f));
 
-  std::for_each(planes[4].normals.begin(), planes[4].normals.end(),
-                [](Vertex &v) {
-                  v.y = 0;
-                  v.x = 1.0f;
-                });
-
+  // planes[5] back
   planes[5].computeOperation(
       maths::translate(Matrix(1.0f),
-                       Vertex{-dimensions / 2.0f, 0.0f, 0.0f, 0.0f}) *
-      maths::rotate(Matrix(1.0f), Vertex{0.0f, 0.0f, -1.0f, 0.0f}, 90.0f));
+                       Vertex{0.0f, 0.0f, -dimensions / 2.0f, 0.0f}) *
+      maths::rotate(Matrix(1.0f), Vertex{1.0f, 0.0f, 0.0f, 0.0f}, -90.0f) * 
+      maths::rotate(Matrix(1.0f), Vertex{0.0f, 1.0f, 0.0f, 0.0f}, 180.0f));
 
-  std::for_each(planes[5].normals.begin(), planes[5].normals.end(),
-                [](Vertex &v) {
-                  v.y = 0;
-                  v.x = -1.0f;
-                });
+  this->texCoords.clear();
+  this->texCoords.reserve(24);
+
+  planes[0].computeTextureCoords((1.0f / 4.0f), 1.0f / 2.0f, 0.0f, 1.0f / 3.0f);
+  planes[1].computeTextureCoords((1.0f / 4.0f), 1.0f / 2.0f, 2.0f / 3.0f, 1.0f);
+  planes[2].computeTextureCoords(0.0f, 1.0f / 4.0f, 1.0f / 3.0f, 2.0f / 3.0f);
+  planes[3].computeTextureCoords(1.0f / 4.0f, 1.0f / 2.0f, 1.0f / 3.0f,
+                                 2.0f / 3.0f);
+
+  for (const auto &tex : planes[3].texCoords) {
+    std::cout << tex << '\n';
+  }
+
+  for (int i = 4; i < 6; ++i) {
+    const float t_factor = 2.0f * static_cast<float>(i);
+
+    planes[i].computeTextureCoords(static_cast<float>(i - 2) / 4.0f,
+                                   static_cast<float>(i - 1) / 4.0f,
+                                   1.0f / 3.0f, 2.0f / 3.0f);
+  }
 
   for (const auto &plane : planes) {
-    for (const auto &triangle : plane.vertices)
-      this->vertices.push_back(triangle);
-    for (const auto &normal : plane.normals) {
-      this->normals.push_back(normal);
-    }
+    this->vertices.insert(this->vertices.end(), plane.vertices.begin(),
+                          plane.vertices.end());
+    this->normals.insert(this->normals.end(), plane.normals.begin(),
+                         plane.normals.end());
+
+    this->texCoords.insert(this->texCoords.end(), plane.texCoords.begin(),
+                           plane.texCoords.end());
   }
+
+  std::cout << "Texture points = " << this->texCoords.size() << '\n';
+  std::cout << "Normals points = " << this->normals.size() << '\n';
+  std::cout << "Points points = " << this->vertices.size() << '\n';
 }

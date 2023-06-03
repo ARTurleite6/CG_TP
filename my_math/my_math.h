@@ -6,6 +6,8 @@
 
 namespace maths {
 
+float withinRange(float value, float min, float max);
+
 template <class T = float, std::uint32_t L = 4, std::uint32_t C = 4>
 class Matrix;
 
@@ -19,6 +21,9 @@ public:
 
   [[nodiscard]] inline float getX() const noexcept { return x; }
   [[nodiscard]] inline float getY() const noexcept { return y; }
+
+  inline void setX(float x) noexcept { this->x = x; }
+  inline void setY(float y) noexcept { this->y = y; }
 
 private:
   float x, y;
@@ -52,46 +57,6 @@ struct Vertex {
 
 Vertex operator*(float x, const Vertex &vertex);
 std::ostream &operator<<(std::ostream &oos, const Vertex &v);
-
-// struct Matrix {
-//   Matrix() = default;
-//   explicit Matrix(std::array<std::array<float, 4>, 4> matrix);
-//   explicit Matrix(float x) noexcept;
-//   Matrix(Matrix &&) = default;
-//   Matrix(const Matrix &) = default;
-//   Matrix &operator=(Matrix &&) = default;
-//   Matrix &operator=(const Matrix &) = default;
-//   Vertex operator*(const Vertex &);
-//   const std::array<float, 4> &operator[](int i) const noexcept;
-//   ~Matrix() = default;
-
-//   Matrix &operator*(const Matrix &m) noexcept;
-
-//   static std::array<std::array<Vertex, 4>, 4>
-//   patchMatrix(const std::array<std::array<Vertex, 4>, 4> &mP);
-
-//     [[nodiscard]] Matrix transpose() const noexcept;
-
-//     std::array<std::array<float, 4>, 4> m{};
-//     template <class First, class Second, class Return, std::uint32_t LF,
-//               std::uint32_t M, std::uint32_t CS>
-//     static std::array<std::array<Return, CS>, LF> gen_multiply_matrix(
-//         const std::array<std::array<First, M>, LF> &first,
-//         const std::array<std::array<Second, CS>, M> &second) {
-
-//       std::array<std::array<Return, CS>, LF> res{};
-
-//       for (int i = 0; i < LF; ++i) {
-//         for (int j = 0; j < CS; ++j) {
-//           for (int w = 0; w < M; ++w) {
-//             res[i][j] += first[i][w] * second[w][j];
-//           }
-//         }
-//       }
-
-//       return res;
-//     }
-//   };
 
 template <class T, std::uint32_t L, std::uint32_t C> class Matrix {
 public:

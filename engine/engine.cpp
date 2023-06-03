@@ -120,6 +120,8 @@ void Engine::run(int argc, char *argv[]) {
 
   glewInit();
   ilInit();
+  ilEnable(IL_ORIGIN_SET);
+  ilOriginFunc(IL_ORIGIN_LOWER_LEFT);
 
   glEnable(GL_DEPTH_TEST);
   glEnable(GL_CULL_FACE);

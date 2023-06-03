@@ -104,4 +104,5 @@ Sphere::Sphere(const std::vector<float> &args)
                                    tex_step_y * (static_cast<float>(i)));
     }
   }
+
 }

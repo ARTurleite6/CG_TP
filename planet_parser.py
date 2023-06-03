@@ -35,7 +35,7 @@ def create_ring_element(root: minidom.Document) -> minidom.Element:
     group = root.createElement("group")
     models = root.createElement("models")
     model = root.createElement("model")
-    model.setAttribute("file", "solar_system_elements/torus.3d")
+    model.setAttribute("file", "models/torus.3d")
     model.appendChild(create_texture(root, "textures/8k_saturn_ring.png"))
 
     models.appendChild(model)
@@ -104,7 +104,7 @@ def generate_asteroids(root: minidom.Document, number_asteroids: int) -> minidom
         transform.appendChild(scale)
 
         model = root.createElement("model")
-        model.setAttribute("file", "solar_system_elements/spherelowquality.3d")
+        model.setAttribute("file", "models/spherelowquality.3d")
         models.appendChild(model)
         group.appendChild(transform)
         group.appendChild(models)
@@ -245,7 +245,7 @@ def create_sun(root: minidom.Document, parent: minidom.Element):
 
     group.appendChild(transform)
     model = root.createElement("model")
-    model.setAttribute("file", "solar_system_elements/sphere.3d")
+    model.setAttribute("file", "models/sphere.3d")
 
     texture = root.createElement("texture")
     texture.setAttribute("file", "textures/Sun.jpg")
@@ -261,7 +261,7 @@ def create_comet(root: minidom.Document) -> minidom.Element:
     group = root.createElement("group")
     models = root.createElement("models")
     model = root.createElement("model")
-    model.setAttribute("file", "solar_system_elements/teapot.3d")
+    model.setAttribute("file", "models/teapot.3d")
 
     transform = root.createElement("transform")
     translate = root.createElement("translate")
@@ -354,7 +354,7 @@ def create_planets(root: minidom.Document, parent: minidom.Element, planets, sat
 
         group.appendChild(transform)
 
-        model.setAttribute("file", "solar_system_elements/sphere.3d")
+        model.setAttribute("file", "models/sphere.3d")
 
         if planet["planet"] in satellites:
             for satellite in satellites[planet["planet"]]:
@@ -391,7 +391,7 @@ def create_planets(root: minidom.Document, parent: minidom.Element, planets, sat
                 scale_sat.setAttribute("z", str(radius_sat))
                 transform_sat.appendChild(scale_sat)
 
-                sat_model.setAttribute("file", "solar_system_elements/spherelowquality.3d")
+                sat_model.setAttribute("file", "models/spherelowquality.3d")
 
                 sat_group.appendChild(transform_sat)
                 sat_group.appendChild(sat_model)
@@ -405,6 +405,43 @@ def create_planets(root: minidom.Document, parent: minidom.Element, planets, sat
         model.appendChild(create_color_element(root, planet["color"]))
         models.appendChild(model)
 
+def create_skybox(root: minidom.Document) -> minidom.Element:
+    group = root.createElement("group")
+    transform = root.createElement("transform")
+
+    scale = root.createElement("scale")
+    scale.setAttribute("x", "-400")
+    scale.setAttribute("y", "-400")
+    scale.setAttribute("z", "-400")
+
+    transform.appendChild(scale)
+
+    models = root.createElement("models")
+
+    model = root.createElement("model")
+    model.setAttribute("file", "models/sphere.3d")
+    color = root.createElement("color")
+    emissive = root.createElement("emissive")
+    emissive.setAttribute("R", "255")
+    emissive.setAttribute("G", "255")
+    emissive.setAttribute("B", "255")
+    shininess = root.createElement("shininess")
+    shininess.setAttribute("value", "0")
+
+    texture = root.createElement("texture")
+    texture.setAttribute("file", "textures/SkyBox.jpg")
+
+
+    color.appendChild(emissive)
+    color.appendChild(shininess)
+    model.appendChild(texture)
+    model.appendChild(color)
+    models.appendChild(model)
+
+    group.appendChild(models)
+    group.appendChild(transform)
+    return group
+
 def main():
 
     root = minidom.Document()
@@ -413,11 +450,12 @@ def main():
     create_window(root, world)
     create_camera(root, world)
     create_sun(root, world)
+    world.appendChild(create_skybox(root))
 
-    run(args=["./build/bin/generator", "torus", "3", "0.75", "100", "2", "solar_system_elements/torus.3d"], text=True)
-    run(args=["./build/bin/generator", "sphere", "1", "100", "100", "solar_system_elements/sphere.3d"], text=True)
-    run(args=["./build/bin/generator", "sphere", "1", "10", "10", "solar_system_elements/spherelowquality.3d"], text=True)
-    run(args=["./build/bin/generator", "bezzier", "patches/teapot.patch", "10", "solar_system_elements/teapot.3d"], text=True)
+    run(args=["./build/bin/generator", "torus", "3", "0.75", "100", "2", "models/torus.3d"], text=True)
+    run(args=["./build/bin/generator", "sphere", "1", "100", "100", "models/sphere.3d"], text=True)
+    run(args=["./build/bin/generator", "sphere", "1", "10", "10", "models/spherelowquality.3d"], text=True)
+    run(args=["./build/bin/generator", "bezzier", "patches/teapot.patch", "10", "models/teapot.3d"], text=True)
 
     names_planets = list()
     with open("data/planets.csv", "r") as file:

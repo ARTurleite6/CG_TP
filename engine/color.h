@@ -1,7 +1,7 @@
 #ifndef COLOR_H
 #define COLOR_H
-#include <tinyxml2.h>
 #include "include.h"
+#include <tinyxml2.h>
 
 class Color {
 public:
@@ -12,10 +12,14 @@ public:
 private:
   struct ParamRGB {
     float r, g, b;
-    void normalize() noexcept { this->r /= 255.0f; this->g /= 255.0f; this->b /= 255.0f;}
+    void normalize() noexcept {
+      this->r /= 255.0f;
+      this->g /= 255.0f;
+      this->b /= 255.0f;
+    }
   };
 
-  ParamRGB diffuse{200, 0, 0};
+  ParamRGB diffuse{200, 200, 200};
   ParamRGB ambient{50, 50, 50};
   ParamRGB specular{0, 0, 0};
   ParamRGB emissive{0, 0, 0};

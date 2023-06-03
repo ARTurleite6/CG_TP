@@ -66,7 +66,13 @@ void Renderer::parse_vertex(const std::string &file) {
     std::array<float, 8> verticesFloat{};
     std::transform(vertices.cbegin(), vertices.cend(), verticesFloat.begin(),
                    [](const std::string_view value) {
-                     return std::stof(std::string(value));
+                     try {
+                       return std::stof(std::string(value));
+                     } catch (std::exception &e) {
+                       std::cout << "Error value: " << value << '\n';
+                       std::cout << "Error: " << e.what();
+                       return 0.0f;
+                     }
                    });
 
     vertex.push_back(verticesFloat[0]);
