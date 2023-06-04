@@ -105,6 +105,7 @@ def generate_asteroids(root: minidom.Document, number_asteroids: int) -> minidom
 
         model = root.createElement("model")
         model.setAttribute("file", "models/spherelowquality.3d")
+        model.appendChild(create_texture(root, "textures/asteroid.jpg"))
         models.appendChild(model)
         group.appendChild(transform)
         group.appendChild(models)
@@ -194,9 +195,10 @@ def create_color_element(root: minidom.Document, color_hex: str, sun = False) ->
 
     specular = root.createElement("specular")
 
-    specular.setAttribute("R", "255")
-    specular.setAttribute("G", "255")
-    specular.setAttribute("B", "255")
+    sun_rgb = to_rgb("#FDB813")
+    specular.setAttribute("R", str(sun_rgb[0]))
+    specular.setAttribute("G", str(sun_rgb[1]))
+    specular.setAttribute("B", str(sun_rgb[2]))
 
     emissive = root.createElement("emissive")
 
@@ -262,6 +264,7 @@ def create_comet(root: minidom.Document) -> minidom.Element:
     models = root.createElement("models")
     model = root.createElement("model")
     model.setAttribute("file", "models/teapot.3d")
+    model.appendChild(create_texture(root, "textures/Teapot.jpg"))
 
     transform = root.createElement("transform")
     translate = root.createElement("translate")
@@ -475,7 +478,7 @@ def main():
 
             create_planets(root, world, planets, planets_satellites)
 
-    world.appendChild(generate_asteroids(root, 1000))
+    world.appendChild(generate_asteroids(root, 10000))
     world.appendChild(create_light(root))
 
     with open("scenes/solar_system.xml", "w") as file:

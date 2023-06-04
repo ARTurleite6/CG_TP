@@ -126,6 +126,7 @@ void Engine::run(int argc, char *argv[]) {
   glEnable(GL_DEPTH_TEST);
   glEnable(GL_CULL_FACE);
   glEnable(GL_TEXTURE_2D);
+  glEnable(GL_RESCALE_NORMAL);
   glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
   glEnableClientState(GL_VERTEX_ARRAY);
@@ -248,6 +249,8 @@ void Engine::configureLights() const noexcept {
   if (this->lights.empty())
     return;
   glEnable(GL_LIGHTING);
+  float amb[4] = {1.0f, 1.0f, 1.0f, 1.0f};
+  glLightModelfv(GL_LIGHT_MODEL_AMBIENT, amb);
   for (const auto &light : this->lights) {
     light->configureColor();
   }

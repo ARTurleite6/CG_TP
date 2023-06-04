@@ -3,9 +3,8 @@
 
 namespace camera_engine {
 
-Camera::Camera(Vertex position, Vertex lookAt, Vertex up,
-               Pov projection, std::uint32_t window_width,
-               std::uint32_t window_height)
+Camera::Camera(Vertex position, Vertex lookAt, Vertex up, Pov projection,
+               std::uint32_t window_width, std::uint32_t window_height)
     : position(position), initialLookAt(lookAt), up(up), projection(projection),
       currentLookAt(lookAt), window_width(window_width),
       window_height(window_height) {
@@ -37,7 +36,7 @@ void Camera::handleInput(
     const std::array<bool, std::numeric_limits<unsigned char>::max()>
         &keyboard) noexcept {
 
-  auto speedToUse = 5.0f;
+  auto speedToUse = 1.0f;
   if (keyboard['f'])
     this->doubleSpeed = (this->doubleSpeed == true) ? false : true;
 
@@ -143,19 +142,20 @@ void Camera::handleMouseMotion(int x, int y) noexcept {
 
   if (betaAux > 85.0f) {
     betaAux = 85.0f;
-  } else if(betaAux < -85.0f) {
+  } else if (betaAux < -85.0f) {
     betaAux = -85.0f;
   }
 
   this->alpha = alphaAux;
   this->beta = betaAux;
 
-  if(this->currentMode == CameraMode::Explorer)
+  if (this->currentMode == CameraMode::Explorer)
     this->setMousePosition(x, y);
   else {
     auto position = this->getPosition();
 
-    this->currentLookAt = position + Vertex::fromSpherical(this->radius, this->alpha, this->beta);
+    this->currentLookAt =
+        position + Vertex::fromSpherical(this->radius, this->alpha, this->beta);
   }
 
 } // namespace camera_engine
@@ -188,7 +188,7 @@ void Camera::place() noexcept {
     glutWarpPointer(static_cast<int>(this->window_width / 2),
                     static_cast<int>(this->window_height / 2));
     this->setMousePosition(static_cast<int>(this->window_width / 2),
-                    static_cast<int>(this->window_height / 2));
+                           static_cast<int>(this->window_height / 2));
   }
   auto lookAt = this->getLookAt();
   auto position = this->getPosition();
