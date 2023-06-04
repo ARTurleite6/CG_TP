@@ -32,10 +32,7 @@ void Renderer::draw(const std::string &file,
 
   normals.bind();
   VBO::setNormalLayout();
-  // glBindBuffer(GL_ARRAY_BUFFER, vbo[1]);
-  // glNormalPointer(GL_FLOAT, 0, nullptr);
 
-  // glDrawArrays(GL_TRIANGLES, 0, static_cast<int>(vertices.size() / 3));
   tex.bind();
   VBO::setTexCoordLayout();
   vertex.draw();
