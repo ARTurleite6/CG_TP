@@ -22,5 +22,5 @@ fi
 
 cmake --build build
 
-python3 planets_generator.py
+python3 planets_parser.py
 

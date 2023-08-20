@@ -30,7 +30,8 @@ void Group::load_transform(tinyxml2::XMLElement *group) noexcept {
   auto *transforms = group->FirstChildElement("transform");
 
   if (transforms != nullptr) {
-      if(transforms->FirstChild() == nullptr) return;
+    if (transforms->FirstChild() == nullptr)
+      return;
     auto *transformation = transforms->FirstChild()->ToElement();
     while (transformation != nullptr) {
       this->push_transformation(
@@ -79,7 +80,6 @@ void Group::apply_transformations(int elapsedTime,
       if (translation != nullptr)
         translation->drawLine();
     }
-    //transformation->apply(elapsedTime);
-    transformation->apply(0);
+    transformation->apply(elapsedTime);
   }
 }
